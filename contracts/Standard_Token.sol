@@ -37,7 +37,7 @@ contract Token is Coin {
     
     function sendCoinFrom(address _from, uint _value, address _to) returns (bool _success) {
         if (balances[_from] >= _value) {
-            var transfer = false;
+            bool transfer = false;
             if(approved[_from][msg.sender]) { 
                 transfer = true; 
             } else {
