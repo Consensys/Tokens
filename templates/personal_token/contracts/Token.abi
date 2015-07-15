@@ -1,0 +1,63 @@
+[
+   {
+      "constant" : true,
+      "inputs" : [
+         {
+            "name" : "",
+            "type" : "address"
+         }
+      ],
+      "name" : "balances",
+      "outputs" : [
+         {
+            "name" : "",
+            "type" : "uint256"
+         }
+      ],
+      "type" : "function"
+   },
+   {
+      "constant" : false,
+      "inputs" : [
+         {
+            "name" : "_to",
+            "type" : "address"
+         },
+         {
+            "name" : "_amount",
+            "type" : "uint256"
+         }
+      ],
+      "name" : "sendToken",
+      "outputs" : [],
+      "type" : "function"
+   },
+   {
+      "constant" : false,
+      "inputs" : [
+         {
+            "name" : "_to",
+            "type" : "address"
+         },
+         {
+            "name" : "_amount",
+            "type" : "uint256"
+         }
+      ],
+      "name" : "createToken",
+      "outputs" : [],
+      "type" : "function"
+   },
+   {
+      "constant" : true,
+      "inputs" : [],
+      "name" : "owner",
+      "outputs" : [
+         {
+            "name" : "",
+            "type" : "address"
+         }
+      ],
+      "type" : "function"
+   }
+]

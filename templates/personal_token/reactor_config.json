@@ -1,0 +1,24 @@
+{
+    "contracts": { 
+        "Token": {
+            "address": "0xbc72cf3079e08295364510917f92a10d0d54f9d2",
+            "path": "contracts/Token.sol",
+            "template_overlay": false,
+            "template": {
+                "sendToken": {
+                    "button": "Send Token",
+                    "inputs": {
+                        "_to": {
+                            "label": "Insert Address",
+                            "default_value": "eg 0xbc72cf3079e08295364510917f92a10d0d54f9d2"
+                        },
+                        "_amount": {
+                            "label": "Amount to send",
+                            "default_value": "eg 12"
+                        }
+                    }
+                }
+            }
+        }
+    }
+} 
