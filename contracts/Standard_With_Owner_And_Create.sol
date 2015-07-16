@@ -1,11 +1,6 @@
-/*Most, basic default, standardised Token contract.
-Allows the creation of a token with a finite issued amount to the creator.
-This can't be changed.
-
-Based on standardised APIs & slightly extended. https://github.com/ethereum/wiki/wiki/Standardized_Contract_APIs
-adds AddressApproval & AddressApprovalOnce events
-approve & approveOnce works on premise that approved always takes precedence.
-adds unapprove to basic coin interface.*/
+/*
+Adds possibility for owner to mint new tokens.
+*/
 
 contract Coin {
     function sendCoin(uint _value, address _to) returns (bool _success) {}
