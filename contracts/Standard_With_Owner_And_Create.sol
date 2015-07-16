@@ -100,3 +100,18 @@ contract Token is Coin {
     mapping (address => mapping (address => bool)) public approved;
     mapping (address => mapping (address => uint256)) public approved_once;
 }
+
+import "owned"; //standard library
+
+contract Token_With_Owner_And_Create is Token, owned {
+    modifier isOwner {
+        if(msg.sender == owner) {
+            _
+        }
+    }
+    
+    function createToken(address _for, uint256 _value) isOwner {
+        balances[_for] += _value;
+    }
+}
+
