@@ -33,6 +33,7 @@ var DeployWrapper = React.createClass({
         } else {
             return (
                 <div>
+                    Specified address of contract is {this.props.instance.address}.
                     Contract does not exist on the blockchain. <button className={"btn btn-default"} onClick={this.deployContract}>Deploy Contract {this.props.name}</button>
                 </div>
             );

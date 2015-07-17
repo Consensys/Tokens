@@ -30,7 +30,7 @@ $.ajax({
     },
     success: function(data) {
         //map through multiple contracts (this includes multiple ones in 1 file + different files).
-        //console.log(data);
+        console.log(data);
         var total_compiled = {};
         var addresses = {}; 
         var templates = {};
@@ -49,14 +49,27 @@ $.ajax({
                     This concatenates them in the scenario where there are multiple files as well.
                     */
                     compiled = web3.eth.compile.solidity(contract);
+                    console.log(compiled);
+                    console.log(data["contracts"]);
                     Object.keys(compiled).map(function(compiled_contract_name) {
-                        if(total_compiled.hasOwnProperty(compiled_contract_name) == false) { //not yet inserted
-                            addresses[compiled_contract_name] = data["contracts"][compiled_contract_name].address; //not sure why I've been doing [] & . notation here.
-                            templates[compiled_contract_name] = data["contracts"][compiled_contract_name].template;
-                            options[compiled_contract_name] = {"template_overlay": data["contracts"][compiled_contract_name].template_overlay};
+                        if(compiled_contract_name in data["contracts"]) {
+                            console.log("compiled name yes");
+                            if(total_compiled.hasOwnProperty(compiled_contract_name) == false) { //not yet inserted
+                                console.log("inserting");
+                                addresses[compiled_contract_name] = data["contracts"][compiled_contract_name].address; //not sure why I've been doing [] & . notation here.
+                                templates[compiled_contract_name] = data["contracts"][compiled_contract_name].template;
+                                options[compiled_contract_name] = {
+                                    "template_overlay": data["contracts"][compiled_contract_name].template_overlay,
+                                    "deploy_overlay": data["contracts"][compiled_contract_name].deploy_overlay
+                                };
+
+                                //feels like really nasty code. rewrite.
+                                var comp = {};
+                                comp[compiled_contract_name] = compiled[compiled_contract_name];
+                                $.extend(total_compiled, comp);
+                            }
                         }
                     });
-                    $.extend(total_compiled, compiled);
                 }
             });
         });
@@ -64,6 +77,7 @@ $.ajax({
         console.log(addresses); 
         console.log(templates); 
         console.log(options); 
+        //fetch template specific config information
         $.ajax({
               url: "../config.json",
                 dataType: 'json',

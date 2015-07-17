@@ -21,7 +21,7 @@
         //connect to either aleth/mist depending what is online. Prefer Mist as is supposed to be more usable one into the future.
         //this looks ugly. There must be better convention.
         try {
-            web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8536')); //mist port
+            web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8545')); //mist port
             console.log(web3.eth.blockNumber);
             console.log("Connected to Mist/Ethereum on port 8545");
         } catch(err) {

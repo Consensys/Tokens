@@ -5,7 +5,6 @@ var Header = React.createClass({
         }
     },
     render: function() {
-        console.log("tring to render");
         return (
         <div>
             <h3 className={"text-center"} >{this.props.data.token_name} </h3>

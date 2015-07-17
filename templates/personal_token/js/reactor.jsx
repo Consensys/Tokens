@@ -15,28 +15,36 @@ var Reactor = React.createClass({
                 var contract_template = {};
                 var new_compiled = this.props.compiled;
                 var abi = this.props.compiled[result].info.abiDefinition;
-                if(this.props.options[result]["template_overlay"] == false) {
-                    //remove parts of the ABI.
-                    $.each(abi, function(i, obj) {
-                        if(obj.name != undefined) {
-                            //console.log(this.props.templates[result]);
-                            if(this.props.templates[result].hasOwnProperty(obj.name) == false) {
-                                console.log("deleting part of abi");
-                                console.log(abi[i]);
-                                delete abi[i];
-                            }
-                        }
-                    }.bind(this));
-                    console.log("false");
-                    
-                }
 
                 if(this.props.templates.hasOwnProperty(result)) {
-                    contract_template = this.props.templates[result]; //if a contract has a template.
+                    if(this.props.templates[result] != undefined) {
+                        contract_template = this.props.templates[result]; //if a contract has a template.
+
+                        if(this.props.options[result]["template_overlay"] == false) {
+                            //remove parts of the ABI.
+                            $.each(abi, function(i, obj) {
+                                if(obj.name != undefined) {
+                                    //console.log(this.props.templates[result]);
+                                    if(this.props.templates[result].hasOwnProperty(obj.name) == false) {
+                                        console.log("deleting part of abi");
+                                        console.log(abi[i]);
+                                        delete abi[i];
+                                    }
+                                }
+                            }.bind(this));
+                            console.log("false");
+                        }
+                    }
+
+                     
+                    if (this.props.options[result].hasOwnProperty("deploy_overlay")) {
+                        console.log(this.props.options[result].deploy_overlay);
+                        deploy = this.props.options[result].deploy_overlay;
+                    } else {deploy = false;}
                 }
                 return  (
                     <div key={result}>
-                    <ContractWrapper key={result} name={result} contract_template={contract_template} compiled={this.props.compiled[result]} instance={instance} />
+                    <ContractWrapper key={result} deploy={deploy} name={result} contract_template={contract_template} compiled={this.props.compiled[result]} instance={instance} />
                     </div>
                 )
             }, this)}
