@@ -19,9 +19,9 @@ contract Coin {
     function isApprovedFor(address _target, address _proxy) constant returns (bool _r) {}
 }
 
-contract Token is Coin {
+contract Standard_Token is Coin {
     
-    function Token(uint _initialAmount) {
+    function Standard_Token(uint _initialAmount) {
         balances[msg.sender] = _initialAmount;
     }
     

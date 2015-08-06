@@ -1,8 +1,0 @@
-{
-    "name": "vinay_coin",
-    "dependencies": {
-        "bootstrap": "~3.2.0",
-        "web3": "develop",
-        "react": "0.13.1"
-    }
-}
