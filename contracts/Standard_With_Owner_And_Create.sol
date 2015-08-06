@@ -14,9 +14,9 @@ contract Coin {
     function isApprovedFor(address _target, address _proxy) constant returns (bool _r) {}
 }
 
-contract Token is Coin {
+contract Standard_Token is Coin {
     
-    function Token(uint _initialAmount) {
+    function Standard_Token(uint _initialAmount) {
         balances[msg.sender] = _initialAmount;
     }
     
@@ -98,7 +98,10 @@ contract Token is Coin {
 
 import "owned"; //standard library
 
-contract Token_With_Owner_And_Create is Token, owned {
+contract Token_With_Owner_And_Create is Standard_Token, owned {
+    
+    function Token_With_Owner_And_Create(uint _initialAmount) Standard_Token(_initialAmount) {}
+    
     modifier isOwner {
         if(msg.sender == owner) {
             _
