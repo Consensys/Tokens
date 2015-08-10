@@ -1,0 +1,26 @@
+{
+    "build": {
+        "index.html": "index.html",
+        "app.js": [
+            "js/jquery-2.1.4.min.js",
+            "js/bootstrap.min.js",
+            "js/react-0.13.3.js",
+            "js/reactor.js",
+            "js/script.jsx"
+        ],
+        "app.css": [
+            "css/bootstrap.min.css",
+            "css/index.css"
+        ],
+        "reactor_config.json": "reactor_config.json",
+        "contracts/": "contracts/"
+    },
+    "deploy": [
+        "Standard_Token"
+    ],
+    "rpc": {
+        "host": "localhost",
+        "port": 8080
+    }
+}
+
