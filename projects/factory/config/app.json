@@ -13,6 +13,7 @@
             "css/index.css"
         ],
         "reactor_config.json": "reactor_config.json",
+        "token_reactor.json": "token_reactor.json",
         "contracts/": "contracts/"
     },
     "deploy": [

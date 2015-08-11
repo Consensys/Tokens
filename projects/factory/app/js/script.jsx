@@ -21,6 +21,10 @@ if("config" in urlParams) {
     var config = './reactor_config.json'; //default
 }
 
+if("address" in urlParams) {
+    config = './token_reactor.json';
+}
+
 $.ajax({
     url: config,
     dataType: 'json',
