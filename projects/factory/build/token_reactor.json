@@ -5,7 +5,7 @@
         "Standard_Token": {
             "address": "0xbc72cf3079e08295364510917f92a10d0d54f9d2",
             "path": "contracts/Standard_Token.sol",
-            "template_overlay": false,
+            "template_overlay": true,
             "deploy_overlay": false,
             "template": {
                 "coinBalanceOf": {

@@ -24887,6 +24887,22 @@ if ("address" in urlParams) {
     config = './token_reactor.json';
 }
 
+var Header = React.createClass({
+    displayName: "Header",
+
+    render: function render() {
+        return React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "h2",
+                null,
+                this.props.title
+            )
+        );
+    }
+});
+
 $.ajax({
     url: config,
     dataType: 'json',
@@ -24902,6 +24918,12 @@ $.ajax({
         var reactor_config = parseConfig(data);
 
         //fetch template specific config information
+        if ("address" in urlParams) {
+            React.render(React.createElement(Header, { title: "Token functions" }), document.getElementById('header'));
+        } else {
+            React.render(React.createElement(Header, { title: "Create & Deploy a Token Contract" }), document.getElementById('header'));
+        }
+
         React.render(React.createElement(ContainerHelper, { templates: reactor_config.templates, compiled: reactor_config.total_compiled, addresses: reactor_config.addresses, options: reactor_config.options }), document.getElementById('contracts'));
     }
 });

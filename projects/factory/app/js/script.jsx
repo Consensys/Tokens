@@ -25,6 +25,12 @@ if("address" in urlParams) {
     config = './token_reactor.json';
 }
 
+var Header = React.createClass({
+    render: function() {
+        return (<div><h2>{this.props.title}</h2></div>);
+    }
+});
+
 $.ajax({
     url: config,
     dataType: 'json',
@@ -40,6 +46,13 @@ $.ajax({
         var reactor_config = parseConfig(data);
 
         //fetch template specific config information
+        if("address" in urlParams) {
+            React.render(<Header title={"Token functions"}/>, document.getElementById('header'));
+        } else {
+            React.render(<Header title={"Create & Deploy a Token Contract"}/>, document.getElementById('header'));
+        }
+
+
         React.render(<ContainerHelper templates={reactor_config.templates} compiled={reactor_config.total_compiled} addresses={reactor_config.addresses} options={reactor_config.options}/>, document.getElementById('contracts'));
     }
 });
