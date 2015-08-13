@@ -1,7 +1,3 @@
-/*
-A factory to mint any Standard Tokens.
-*/
-
 contract Coin {
     function sendCoin(uint _value, address _to) returns (bool _success) {}
     function sendCoinFrom(address _from, uint _value, address _to) returns (bool _success) {}
@@ -97,8 +93,20 @@ contract Standard_Token is Coin {
 }
 
 contract Standard_Token_Factory {
+
+    mapping(address => address[]) public created;
     
+    function createdByMe() returns (address[]) {
+        return created[msg.sender];
+    }
+
     function createStandardToken(uint256 _initialAmount) returns (address) {
-        return address(new Standard_Token(_initialAmount));
+        
+        address newTokenAddr = address(new Standard_Token(_initialAmount));
+        Standard_Token newToken = Standard_Token(newTokenAddr);
+        newToken.sendCoin(_initialAmount, msg.sender); //the factory will own the created tokens. You must transfer them.
+        uint count = created[msg.sender].length += 1;
+        created[msg.sender][count-1] = newTokenAddr;
+        created[msg.sender].length = count;
     }
 }
