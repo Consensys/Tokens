@@ -44,7 +44,7 @@ contract Standard_Token is Coin {
             if(approved[_from][msg.sender]) { 
                 transfer = true; 
             } else {
-                if(_value < approved_once[_from][msg.sender]) { 
+                if(_value <= approved_once[_from][msg.sender]) { 
                     transfer = true; 
                     approved_once[_from][msg.sender] = 0; //reset
                 }
@@ -56,7 +56,7 @@ contract Standard_Token is Coin {
                 CoinTransfer(_from, _to, _value);
                 return true;
             } else { return false; }
-        }
+        } else { return false; }
     }
     
     function coinBalance() constant returns (uint _r) {
