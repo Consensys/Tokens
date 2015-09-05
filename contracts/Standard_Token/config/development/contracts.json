@@ -290,6 +290,7 @@
         "name": "AddressApprovalOnce",
         "anonymous": false
       }
-    ]
+    ],
+    "address": "0xff198ef3b0bf136d6f1c7bf68a02966f24c7d9f4"
   }
 }
