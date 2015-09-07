@@ -1,6 +1,6 @@
 {
     "deploy": [
-        "Standard_Token"
+        "Standard_Token_Factory"
     ],
     "rpc": {
         "host": "localhost",

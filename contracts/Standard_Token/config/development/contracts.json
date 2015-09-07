@@ -1,0 +1,296 @@
+{
+  "Standard_Token": {
+    "source": "./Tokens/contracts/Standard_Token/contracts/Standard_Token.sol",
+    "binary": "0x6060604052604051602080610c8d8339016040526060805190602001505b80600060005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055505b50610c2b806100626000396000f300606060405236156100b6576000357c0100000000000000000000000000000000000000000000000000000000900480631fa03a2b146100b857806321af4feb146100e557806327e235e314610112578063673448dd1461013957806367eae67214610160578063930b7a2314610193578063bbd39ac0146101ac578063c86a90fe146101d3578063d26c8a8a14610200578063daea85c514610221578063f4b1604514610234578063fbf1f78a14610261576100b6565b005b6100cf600480359060200180359060200150610ace565b6040518082815260200191505060405180910390f35b6100fc600480359060200180359060200150610c00565b6040518082815260200191505060405180910390f35b610123600480359060200150610bb0565b6040518082815260200191505060405180910390f35b61014a6004803590602001506109ed565b6040518082815260200191505060405180910390f35b61017d6004803590602001803590602001803590602001506103a8565b6040518082815260200191505060405180910390f35b6101aa600480359060200180359060200150610789565b005b6101bd600480359060200150610674565b6040518082815260200191505060405180910390f35b6101ea600480359060200180359060200150610274565b6040518082815260200191505060405180910390f35b61020b600450610638565b6040518082815260200191505060405180910390f35b6102326004803590602001506106b2565b005b61024b600480359060200180359060200150610bcb565b6040518082815260200191505060405180910390f35b610272600480359060200150610851565b005b600082600060005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050541015156103985782600060005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282825054039250508190555082600060005060008473ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828282505401925050819055508173ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f16cdf1707799c6655baac6e210f52b94b7cec08adcaf9ede7dfe8649da926146856040518082815260200191505060405180910390a3600190506103a2566103a1565b600090506103a2565b5b92915050565b6000600083600060005060008773ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050541015156106265760009050600160005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff161561045c57600190508050610525565b600260005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000505484111515610524576001905080506000600260005060008773ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055505b5b60018114156106185783600060005060008773ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282825054039250508190555083600060005060008573ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828282505401925050819055508273ffffffffffffffffffffffffffffffffffffffff168573ffffffffffffffffffffffffffffffffffffffff167f16cdf1707799c6655baac6e210f52b94b7cec08adcaf9ede7dfe8649da926146866040518082815260200191505060405180910390a36001915061063056610621565b60009150610630565b61062f565b60009150610630565b5b509392505050565b6000600060005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050549050610671565b90565b6000600060005060008373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000505490506106ad565b919050565b6001600160005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908302179055508073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f0e40f4b0b06b7d270eb92aed48caf256e6bbe4f83c5492e7433958cf5566192060016040518082815260200191505060405180910390a35b50565b80600260005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008473ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055508173ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fcc92c05edef6bc5dcdfab43862409620fd81888eec1be99935f19375c4ef704e836040518082815260200191505060405180910390a35b5050565b6000600160005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908302179055506000600260005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055508073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f0e40f4b0b06b7d270eb92aed48caf256e6bbe4f83c5492e7433958cf5566192060006040518082815260200191505060405180910390a38073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fcc92c05edef6bc5dcdfab43862409620fd81888eec1be99935f19375c4ef704e60006040518082815260200191505060405180910390a35b50565b60006001600160005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff161480610aba57506000600260005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005054115b15610ac85760019050610ac9565b5b919050565b60006001600160005060008573ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff161480610b9b57506000600260005060008573ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005054115b15610ba95760019050610baa565b5b92915050565b60006000506020528060005260406000206000915090505481565b60016000506020528160005260406000206000506020528060005260406000206000915091509054906101000a900460ff1681565b600260005060205281600052604060002060005060205280600052604060002060009150915050548156",
+    "abi": [
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_target"
+          },
+          {
+            "type": "address",
+            "name": "_proxy"
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "isApprovedFor",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": "_r"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "approved_once",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "balances",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_proxy"
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "isApproved",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": "_r"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_from"
+          },
+          {
+            "type": "uint256",
+            "name": "_value"
+          },
+          {
+            "type": "address",
+            "name": "_to"
+          }
+        ],
+        "constant": false,
+        "type": "function",
+        "name": "sendCoinFrom",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": "_success"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_addr"
+          },
+          {
+            "type": "uint256",
+            "name": "_maxValue"
+          }
+        ],
+        "constant": false,
+        "type": "function",
+        "name": "approveOnce",
+        "outputs": []
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_addr"
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "coinBalanceOf",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": "_r"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_value"
+          },
+          {
+            "type": "address",
+            "name": "_to"
+          }
+        ],
+        "constant": false,
+        "type": "function",
+        "name": "sendCoin",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": "_success"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "type": "function",
+        "name": "coinBalance",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": "_r"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_addr"
+          }
+        ],
+        "constant": false,
+        "type": "function",
+        "name": "approve",
+        "outputs": []
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "type": "function",
+        "name": "approved",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_addr"
+          }
+        ],
+        "constant": false,
+        "type": "function",
+        "name": "unapprove",
+        "outputs": []
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_initialAmount"
+          }
+        ],
+        "type": "constructor"
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "from"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "to"
+          },
+          {
+            "indexed": false,
+            "type": "uint256",
+            "name": "value"
+          }
+        ],
+        "type": "event",
+        "name": "CoinTransfer",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "from"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "to"
+          },
+          {
+            "indexed": false,
+            "type": "bool",
+            "name": "result"
+          }
+        ],
+        "type": "event",
+        "name": "AddressApproval",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "from"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "to"
+          },
+          {
+            "indexed": false,
+            "type": "uint256",
+            "name": "value"
+          }
+        ],
+        "type": "event",
+        "name": "AddressApprovalOnce",
+        "anonymous": false
+      }
+    ],
+    "address": "0xff198ef3b0bf136d6f1c7bf68a02966f24c7d9f4"
+  }
+}
