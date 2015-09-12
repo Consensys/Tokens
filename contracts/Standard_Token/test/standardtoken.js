@@ -67,7 +67,7 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    it("approveOnce to accounts[1] should allow withdrawal", function(done) {
+    it("should allow withdrawal from accounts[1] with approveOnce", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
@@ -87,6 +87,28 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
+    it("should not allow withdrawal from accounts[1]", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.sendCoin(2000, accounts[1]);
+        }).then(function (result) {
+            return ctr.coinBalanceOf.call(accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 2000);
+            return ctr.sendCoinFrom(accounts[1], 500, accounts[0]);
+        }).then(function (result) {
+            return ctr.coinBalanceOf.call(accounts[0]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 8000);
+            return ctr.coinBalanceOf.call(accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 2000);
+            done();
+        }).catch(done);
+    });
+
+
     /*TEST TODO*
 
     unapprove
@@ -94,7 +116,6 @@ contract("Standard_Token", function(accounts) {
     should unapprove all if approve of msg.sender for proxy
 
     sendCoin
-    should transfer value of 10 to new address
     should not transfer if value exceeds balance
     should transfer if sending exact balance
 
