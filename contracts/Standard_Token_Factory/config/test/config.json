@@ -1,9 +1,5 @@
 {
     "deploy": [
         "TokenTester"
-    ],
-    "rpc": {
-        "host": "localhost",
-        "port": 8081
-    }
+    ]
 }

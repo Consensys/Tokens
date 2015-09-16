@@ -1,3 +1,12 @@
+/*Most, basic default, standardised Token contract.
+Allows the creation of a token with a finite issued amount to the creator.
+This can't be changed.
+
+Based on standardised APIs & slightly extended. https://github.com/ethereum/wiki/wiki/Standardized_Contract_APIs
+adds AddressApproval & AddressApprovalOnce events
+approve & approveOnce works on premise that approved always takes precedence.
+adds unapprove to basic coin interface.*/
+
 import "Coin";
 
 contract Standard_Token is Coin {
@@ -25,7 +34,7 @@ contract Standard_Token is Coin {
             if(approved[_from][msg.sender]) {
                 transfer = true;
             } else {
-                if(_value < approved_once[_from][msg.sender]) {
+                if(_value <= approved_once[_from][msg.sender]) {
                     transfer = true;
                     approved_once[_from][msg.sender] = 0; //reset
                 }
@@ -37,7 +46,7 @@ contract Standard_Token is Coin {
                 CoinTransfer(_from, _to, _value);
                 return true;
             } else { return false; }
-        }
+        } else { return false; }
     }
 
     function coinBalance() constant returns (uint _r) {
