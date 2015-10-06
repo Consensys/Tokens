@@ -1,9 +1,6 @@
 {
-    "deploy": [
-        "Standard_Token_Factory"
-    ],
     "rpc": {
         "host": "localhost",
-        "port": 8081
+        "port": 8545
     }
 }
