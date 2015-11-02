@@ -1,6 +1,6 @@
 contract("Standard_Token", function(accounts) {
 
-    it("should create an initial balance of 10000 for the creator", function(done) {
+    it("should create an initial balance of 10000 at identifier address of ST for the creator", function(done) {
         Standard_Token.new(10000, {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
     }).then(function (result) {
