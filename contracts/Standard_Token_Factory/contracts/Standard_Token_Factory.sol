@@ -12,7 +12,7 @@ contract Standard_Token_Factory {
 
         address newTokenAddr = address(new Standard_Token(_initialAmount));
         Standard_Token newToken = Standard_Token(newTokenAddr);
-        newToken.transfer(_initialAmount, bytes32(newTokenAddr), msg.sender); //the factory will own the created tokens. You must transfer them.
+        newToken.transfer(msg.sender, _initialAmount); //the factory will own the created tokens. You must transfer them.
         uint count = created[msg.sender].length += 1;
         created[msg.sender][count-1] = newTokenAddr;
         created[msg.sender].length = count;
