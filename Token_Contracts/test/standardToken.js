@@ -1,6 +1,6 @@
 contract("Standard_Token", function(accounts) {
 
-    it("should create an initial balance of 10000 at identifier address of ST for the creator", function(done) {
+    it("should create an initial balance of 10000 for the creator", function(done) {
         Standard_Token.new(10000, {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
     }).then(function (result) {
@@ -13,7 +13,7 @@ contract("Standard_Token", function(accounts) {
         var ctr;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.transfer(2000, accounts[1]);
+            return ctr.transfer(accounts[1], 2000);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
         }).then(function (result) {
@@ -53,14 +53,14 @@ contract("Standard_Token", function(accounts) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.transfer(2000, accounts[1]); //first give other account tokens
+            return ctr.transfer(accounts[1], 2000); //first give other account tokens
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
         }).then(function (result) {
             assert.strictEqual(result.c[0], 2000);
             return ctr.approveOnce(accounts[0], 500, {from: accounts[1]});
         }).then(function (result) {
-            return ctr.transferFrom(accounts[1], 500, accounts[0]);
+            return ctr.transferFrom(accounts[1], accounts[0], 500);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
@@ -73,14 +73,14 @@ contract("Standard_Token", function(accounts) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.transfer(2000, accounts[1]);
+            return ctr.transfer(accounts[1], 2000);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
         }).then(function (result) {
             assert.strictEqual(result.c[0], 2000);
             return ctr.approveOnce(accounts[0], 500, {from: accounts[1]});
         }).then(function (result) {
-            return ctr.transferFrom(accounts[1], 501, accounts[0]);
+            return ctr.transferFrom(accounts[1], accounts[0], 501);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
@@ -96,12 +96,12 @@ contract("Standard_Token", function(accounts) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.transfer(2000, accounts[1]);
+            return ctr.transfer(accounts[1], 2000);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
         }).then(function (result) {
             assert.strictEqual(result.c[0], 2000);
-            return ctr.transferFrom(accounts[1], 500, accounts[0]);
+            return ctr.transferFrom(accounts[1], accounts[0], 500);
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
