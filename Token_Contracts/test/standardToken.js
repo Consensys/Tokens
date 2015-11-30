@@ -23,7 +23,7 @@ contract("Standard_Token", function(accounts) {
     });
 
     //approve
-    it("should approve address of msg.sender", function(done) {
+    /*it("should approve address of msg.sender", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
@@ -111,6 +111,6 @@ contract("Standard_Token", function(accounts) {
             assert.strictEqual(result.c[0], 2000);
             done();
         }).catch(done);
-    });
+    });*/
 
 });
