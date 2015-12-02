@@ -38,12 +38,12 @@ contract Standard_Token is Token {
 
     function unapprove(address _spender) returns (bool success) {
         allowed[msg.sender][_spender] = 0;
-        //todo: insert correct event after community has decided upon it.
+        Unnaproved(msg.sender, _spender);
     }
 
     function approve(address _spender, uint256 _value) returns (bool success) {
         allowed[msg.sender][_spender] += _value;
-        Approval(msg.sender, _spender, _value);
+        Approved(msg.sender, _spender, _value);
         return true;
     }
 
