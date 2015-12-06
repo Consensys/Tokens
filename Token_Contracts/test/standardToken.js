@@ -1,5 +1,7 @@
 contract("Standard_Token", function(accounts) {
 
+/*CREATION*/
+
     it("should create an initial balance of 10000 for the creator", function(done) {
         Standard_Token.new(10000, {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
@@ -9,7 +11,18 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    it("should transfer 2000 to accounts[1]", function(done) {
+    it("should succeed in creating over 2^256 - 1 (max) tokens", function(done) {
+        //2^256 - 1
+        Standard_Token.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', {from: accounts[0]}).then(function(ctr) {
+            return ctr.totalSupply();
+    }).then(function (result) {
+        var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
+        assert.isTrue(match);
+        done();
+        }).catch(done);
+    });
+
+    /*it("should transfer 2000 to accounts[1]", function(done) {
         var ctr;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
@@ -23,7 +36,7 @@ contract("Standard_Token", function(accounts) {
     });
 
     //approve
-    /*it("should approve address of msg.sender", function(done) {
+    it("should approve address of msg.sender", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;

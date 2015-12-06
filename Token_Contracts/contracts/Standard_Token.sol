@@ -52,7 +52,7 @@ contract Standard_Token is Token {
         return total_supply;
     }
 
-    mapping (address => uint) balances;
+    mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
     uint256 total_supply;
 }
