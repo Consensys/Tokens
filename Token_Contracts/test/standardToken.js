@@ -22,6 +22,35 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
+/*TRANSERS*/
+//normal transfers without approvals.
+
+    it("transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000", function(done) {
+        var ctr;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.transfer(accounts[1], 10000, {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.balanceOf.call(accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 10000);
+            done();
+        }).catch(done);
+    });
+
+    it("transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000", function(done) {
+        var ctr;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.transfer.call(accounts[1], 10001, {from: accounts[0]});
+        }).then(function (result) {
+            assert.isFalse(result);
+            done();
+        }).catch(done);
+    });
+
+    //todo: transfer max amounts.
+
 /*APPROVALS*/
 
     it("approvals: msg.sender should approve 100 to accounts[1]", function(done) {
@@ -37,9 +66,8 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    //add more approvals
-
-    it("approvals: should approve 100 of msg.sender & withdraw 10 once.", function(done) {
+    //bit overkill. But is for testing a bug
+    it("approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
@@ -48,130 +76,108 @@ contract("Standard_Token", function(accounts) {
             assert.strictEqual(result.c[0], 10000);
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
+            return ctr.balanceOf.call(accounts[2]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 0);
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
             assert.strictEqual(result.c[0], 100);
-            return ctr.transferFrom(accounts[0], accounts[2], 10, {from: accounts[1]});
+            return ctr.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]});
         }).then(function (result) {
-            console.log(result);
+            return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
+        }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            console.log(result);
-            assert.strictEqual(result.c[0], 90);
+            assert.strictEqual(result.c[0], 80);
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            console.log(result);
-            assert.strictEqual(result.c[0], 10);
+            assert.strictEqual(result.c[0], 20);
+            return ctr.balanceOf.call(accounts[0]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 9980);
             done();
         }).catch(done);
     });
 
     //should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
+    it("approvals: msg.sender approves accounts[1] of 100 & withdraws 20 twice.", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.approve(accounts[1], 100, {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 100);
+            return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
+        }).then(function (result) {
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 80);
+            return ctr.balanceOf.call(accounts[2]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 20);
+            return ctr.balanceOf.call(accounts[0]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 9980);
+            //FIRST tx done.
+            //onto next.
+            return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
+        }).then(function (result) {
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 60);
+            return ctr.balanceOf.call(accounts[2]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 40);
+            return ctr.balanceOf.call(accounts[0]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 9960);
+            done();
+        }).catch(done);
+    });
+
     //should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
-
-
-    /*it("should transfer 2000 to accounts[1]", function(done) {
-        var ctr;
-        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
-            ctr = result;
-            return ctr.transfer(accounts[1], 2000);
-        }).then(function (result) {
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            done();
-        }).catch(done);
-    });
-
-    //approve
-    it("should approve address of msg.sender", function(done) {
+    it("approvals: msg.sender approves accounts[1] of 100 & withdraws 50 & 60 (2nd tx should fail)", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.approve(accounts[1], {from: accounts[0]});
+            return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
-            return ctr.isApprovedFor.call(accounts[0], accounts[1]);
+            return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.isTrue(result);
-            done();
-        }).catch(done);
-    });
-
-    it("should approveOnce address of msg.sender", function(done) {
-        var ctr = null;
-        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
-            ctr = result;
-            return ctr.approveOnce(accounts[1], 10, {from: accounts[0]});
+            assert.strictEqual(result.c[0], 100);
+            return ctr.transferFrom(accounts[0], accounts[2], 50, {from: accounts[1]});
         }).then(function (result) {
-            return ctr.isApprovedOnceFor.call(accounts[0], accounts[1]);
+            return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 10);
-            done();
-        }).catch(done);
-    });
-
-    it("should allow withdrawal from accounts[1] with approveOnce", function(done) {
-        var ctr = null;
-        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
-            ctr = result;
-            return ctr.transfer(accounts[1], 2000); //first give other account tokens
+            assert.strictEqual(result.c[0], 50);
+            return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            return ctr.approveOnce(accounts[0], 500, {from: accounts[1]});
-        }).then(function (result) {
-            return ctr.transferFrom(accounts[1], accounts[0], 500);
-        }).then(function (result) {
+            assert.strictEqual(result.c[0], 50);
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 8500);
+            assert.strictEqual(result.c[0], 9950);
+            //FIRST tx done.
+            //onto next.
+            return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]});
+        }).then(function (result) {
+            assert.isFalse(result);
             done();
         }).catch(done);
     });
 
-    it("should not allow excess withdrawal from accounts[1]", function(done) {
+    it("approvals: attempt withdrawal from acconut with no allowance (should fail)", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return ctr.transfer(accounts[1], 2000);
+            return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]});
         }).then(function (result) {
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            return ctr.approveOnce(accounts[0], 500, {from: accounts[1]});
-        }).then(function (result) {
-            return ctr.transferFrom(accounts[1], accounts[0], 501);
-        }).then(function (result) {
-            return ctr.balanceOf.call(accounts[0]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 8000);
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            done();
+              assert.isFalse(result);
+              done();
         }).catch(done);
     });
 
-    it("should not allow withdrawal from accounts[1]", function(done) {
-        var ctr = null;
-        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
-            ctr = result;
-            return ctr.transfer(accounts[1], 2000);
-        }).then(function (result) {
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            return ctr.transferFrom(accounts[1], accounts[0], 500);
-        }).then(function (result) {
-            return ctr.balanceOf.call(accounts[0]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 8000);
-            return ctr.balanceOf.call(accounts[1]);
-        }).then(function (result) {
-            assert.strictEqual(result.c[0], 2000);
-            done();
-        }).catch(done);
-    });*/
+    //todo, max approvals.
 
 });
