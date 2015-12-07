@@ -23,10 +23,10 @@ contract Standard_Token is Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        if (balances[_from] >= _value && allowed[_from][_to] >= _value) {
+        if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value) {
             balances[_from] -= _value;
             balances[_to] += _value;
-            allowed[_from][_to] -= _value;
+            allowed[_from][msg.sender] -= _value;
             Transfer(_from, _to, _value);
             return true;
         } else { return false; }
@@ -47,6 +47,9 @@ contract Standard_Token is Token {
         return true;
     }
 
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+      return allowed[_owner][_spender];
+    }
 
     function totalSupply() constant returns (uint256 _total) {
         return total_supply;

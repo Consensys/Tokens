@@ -22,6 +22,54 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
+/*APPROVALS*/
+
+    it("approvals: msg.sender should approve 100 to accounts[1]", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.approve(accounts[1], 100, {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 100);
+            done();
+        }).catch(done);
+    });
+
+    //add more approvals
+
+    it("approvals: should approve 100 of msg.sender & withdraw 10 once.", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.balanceOf.call(accounts[0]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 10000);
+            return ctr.approve(accounts[1], 100, {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            assert.strictEqual(result.c[0], 100);
+            return ctr.transferFrom(accounts[0], accounts[2], 10, {from: accounts[1]});
+        }).then(function (result) {
+            console.log(result);
+            return ctr.allowance.call(accounts[0], accounts[1]);
+        }).then(function (result) {
+            console.log(result);
+            assert.strictEqual(result.c[0], 90);
+            return ctr.balanceOf.call(accounts[2]);
+        }).then(function (result) {
+            console.log(result);
+            assert.strictEqual(result.c[0], 10);
+            done();
+        }).catch(done);
+    });
+
+    //should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
+    //should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
+
+
     /*it("should transfer 2000 to accounts[1]", function(done) {
         var ctr;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
