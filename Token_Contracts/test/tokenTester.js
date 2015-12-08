@@ -1,4 +1,4 @@
-/*contract("TokenTester", function(accounts) {
+contract("TokenTester", function(accounts) {
     it("creates 10000 initial tokens", function(done) {
         var tester = TokenTester.at(TokenTester.deployed_address);
         tester.tokenContractAddress.call()
@@ -10,4 +10,6 @@
             done();
         }).catch(done);
     });
-});*/
+
+    //todo:add test on retrieving addresses
+});
