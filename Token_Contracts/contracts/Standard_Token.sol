@@ -23,7 +23,7 @@ contract Standard_Token is Token {
     }
 
     //NOTE: This function suffers from a bug atm. It is a hack. It only works if arranged like this.
-    //Here be dragons.  
+    //Here be dragons.
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
         if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value) {
             balances[_to] += _value;
@@ -41,6 +41,7 @@ contract Standard_Token is Token {
     function unapprove(address _spender) returns (bool success) {
         allowed[msg.sender][_spender] = 0;
         Unapproved(msg.sender, _spender);
+        return true;
     }
 
     function approve(address _spender, uint256 _value) returns (bool success) {
