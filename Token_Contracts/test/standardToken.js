@@ -222,7 +222,7 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    it("approvals: approve max (2^256 - 1) & try to approve more (should fail)", function(done) {
+    it("approvals: approve max (2^256 - 1) & try to approve 1 more (should fail)", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
