@@ -51,9 +51,12 @@ contract Standard_Token is Token {
     }
 
     function approve(address _spender, uint256 _value) returns (bool success) {
-        allowed[msg.sender][_spender] += _value;
-        Approved(msg.sender, _spender, _value);
-        return true;
+        //this is a check to make sure you don't wrap around for approving max (2^256 -1)
+        if(allowed[msg.sender][_spender] + _value > allowed[msg.sender][_spender]) {
+          allowed[msg.sender][_spender] += _value;
+          Approved(msg.sender, _spender, _value);
+          return true;
+        } else { return false; }
     }
 
     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {

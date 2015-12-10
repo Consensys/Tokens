@@ -208,6 +208,37 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
+    it("approvals: approve max (2^256 - 1)", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.approve(accounts[1],'115792089237316195423570985008687907853269984665640564039457584007913129639935' , {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.allowance(accounts[0], accounts[1]);
+        }).then(function (result) {
+            var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
+            assert.isTrue(match);
+            done();
+        }).catch(done);
+    });
+
+    it("approvals: approve max (2^256 - 1) & try to approve more (should fail)", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.approve(accounts[1],'115792089237316195423570985008687907853269984665640564039457584007913129639935' , {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.allowance(accounts[0], accounts[1]);
+        }).then(function (result) {
+            var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
+            assert.isTrue(match);
+            return ctr.approve.call(accounts[1], 1, {from: accounts[0]});
+        }).then(function (result) {
+            assert.isFalse(result);
+            done();
+        }).catch(done);
+
+    });
 
     //todo, max approvals.
 
