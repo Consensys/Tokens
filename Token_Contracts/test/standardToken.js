@@ -2,7 +2,7 @@ contract("Standard_Token", function(accounts) {
 
 /*CREATION*/
 
-    it("should create an initial balance of 10000 for the creator", function(done) {
+    it("creation: should create an initial balance of 10000 for the creator", function(done) {
         Standard_Token.new(10000, {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
     }).then(function (result) {
@@ -11,7 +11,7 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    it("should succeed in creating over 2^256 - 1 (max) tokens", function(done) {
+    it("creation: should succeed in creating over 2^256 - 1 (max) tokens", function(done) {
         //2^256 - 1
         Standard_Token.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', {from: accounts[0]}).then(function(ctr) {
             return ctr.totalSupply();
@@ -48,6 +48,19 @@ contract("Standard_Token", function(accounts) {
             done();
         }).catch(done);
     });
+
+    it("transfers: should fail when trying to transfer zero.", function(done) {
+        var ctr;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.transfer.call(accounts[1], 0, {from: accounts[0]});
+        }).then(function (result) {
+            assert.isFalse(result);
+            done();
+        }).catch(done);
+    });
+
+    //NOTE: testing uint256 wrapping is impossible in this standard token since you can't supply > 2^256 -1.
 
     //todo: transfer max amounts.
 
@@ -177,6 +190,24 @@ contract("Standard_Token", function(accounts) {
               done();
         }).catch(done);
     });
+
+    it("approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then unapprove.", function(done) {
+        var ctr = null;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return ctr.approve(accounts[1], 100, {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]});
+        }).then(function (result) {
+            return ctr.unapprove(accounts[1], {from: accounts[0]});
+        }).then(function (result) {
+            return ctr.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]});
+        }).then(function (result) {
+              assert.isFalse(result);
+              done();
+        }).catch(done);
+    });
+
 
     //todo, max approvals.
 
