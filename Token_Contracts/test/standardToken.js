@@ -191,7 +191,7 @@ contract("Standard_Token", function(accounts) {
         }).catch(done);
     });
 
-    it("approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then unapprove.", function(done) {
+    it("approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.", function(done) {
         var ctr = null;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
             ctr = result;
@@ -199,7 +199,7 @@ contract("Standard_Token", function(accounts) {
         }).then(function (result) {
             return ctr.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]});
         }).then(function (result) {
-            return ctr.unapprove(accounts[1], {from: accounts[0]});
+            return ctr.approve(accounts[1], 0, {from: accounts[0]});
         }).then(function (result) {
             return ctr.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]});
         }).then(function (result) {
@@ -220,24 +220,6 @@ contract("Standard_Token", function(accounts) {
             assert.isTrue(match);
             done();
         }).catch(done);
-    });
-
-    it("approvals: approve max (2^256 - 1) & try to approve 1 more (should fail)", function(done) {
-        var ctr = null;
-        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
-            ctr = result;
-            return ctr.approve(accounts[1],'115792089237316195423570985008687907853269984665640564039457584007913129639935' , {from: accounts[0]});
-        }).then(function (result) {
-            return ctr.allowance(accounts[0], accounts[1]);
-        }).then(function (result) {
-            var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
-            assert.isTrue(match);
-            return ctr.approve.call(accounts[1], 1, {from: accounts[0]});
-        }).then(function (result) {
-            assert.isFalse(result);
-            done();
-        }).catch(done);
-
     });
 
     //todo, max approvals.
