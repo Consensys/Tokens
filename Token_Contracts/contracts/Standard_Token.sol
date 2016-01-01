@@ -26,8 +26,9 @@ contract Standard_Token is Token {
         } else { return false; }
     }
 
-    //NOTE: This function suffers from a bug atm. It is a hack. It only works if arranged like this.
-    //Here be dragons.
+    //NOTE: This function suffers from a bug atm. It is a hack. It only works if the calls are arranged as is below.
+    //Here be dragons. Not sure if VM or Solidity bug. More testing needs to be done.
+    //See: https://github.com/ethereum/solidity/issues/281
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
         //same as above. Replace this line with the following if you want to protect against wrapping uints.
         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
