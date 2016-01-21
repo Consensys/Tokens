@@ -26,7 +26,7 @@ contract Standard_Token is Token {
         } else { return false; }
     }
 
-    //NOTE: This error will throw errors wrt changing storage where it should not, due to the optimizer errors, IF not careful.
+    //NOTE: This function will throw errors wrt changing storage where it should not, due to the optimizer errors, IF not careful.
     //As it is now, it works for both earlier and newer solc versions. (NO need to change anything)
     //In the future, the Transfer event will be moved to just before "return true;" in order to make it more elegant (once the new solc version is out of develop).
     //If you want to move parts of this function around and it breaks, you'll need at least:
