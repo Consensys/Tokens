@@ -36,7 +36,7 @@ var factory = function factory(Pudding) {
     Token.deployed_address = "";
   }
 
-  Token.generated_with = "1.0.2";
+  Token.generated_with = "1.0.3";
   Token.contract_name = "Token";
 
   return Token;

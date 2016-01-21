@@ -26,9 +26,12 @@ contract Standard_Token is Token {
         } else { return false; }
     }
 
-    //NOTE: This function suffers from a bug atm. It is a hack. It only works if the calls are arranged as is below.
-    //Here be dragons. Not sure if VM or Solidity bug. More testing needs to be done.
-    //See: https://github.com/ethereum/solidity/issues/281
+    //NOTE: This error will throw errors wrt changing storage where it should not, due to the optimizer errors, IF not careful.
+    //As it is now, it works for both earlier and newer solc versions. (NO need to change anything)
+    //In the future, the Transfer event will be moved to just before "return true;" in order to make it more elegant (once the new solc version is out of develop).
+    //If you want to move parts of this function around and it breaks, you'll need at least:
+    //Over commit: https://github.com/ethereum/solidity/commit/67c855c583042ddee6261a9921239a3afd086c14 (last successfully working commit)
+    //See issue for details: https://github.com/ethereum/solidity/issues/333 & issue: https://github.com/ethereum/solidity/issues/281
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
         //same as above. Replace this line with the following if you want to protect against wrapping uints.
         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
