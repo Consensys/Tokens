@@ -1,7 +1,7 @@
 /*Most, basic default, standardised Token contract.
 Allows the creation of a token with a finite issued amount to the creator.
 
-Based on standardised APIs: https://github.com/ethereum/wiki/wiki/Standardized_Contract_APIs
+Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
 
 import "Token";
