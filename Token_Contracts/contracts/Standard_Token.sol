@@ -2,6 +2,8 @@
 Allows the creation of a token with a finite issued amount to the creator.
 
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
+Has additional event called TransferFrom that is not standard (instead of just Transfer in transferFrom()).
+This is to recreate state using only events.
 .*/
 
 import "Token";
@@ -28,7 +30,7 @@ contract Standard_Token is Token {
 
     //NOTE: This function will throw errors wrt changing storage where it should not, due to the optimizer errors, IF not careful.
     //As it is now, it works for both earlier and newer solc versions. (NO need to change anything)
-    //In the future, the Transfer event will be moved to just before "return true;" in order to make it more elegant (once the new solc version is out of develop).
+    //In the future, the TransferFrom event will be moved to just before "return true;" in order to make it more elegant (once the new solc version is out of develop).
     //If you want to move parts of this function around and it breaks, you'll need at least:
     //Over commit: https://github.com/ethereum/solidity/commit/67c855c583042ddee6261a9921239a3afd086c14 (last successfully working commit)
     //See issue for details: https://github.com/ethereum/solidity/issues/333 & issue: https://github.com/ethereum/solidity/issues/281
@@ -37,7 +39,7 @@ contract Standard_Token is Token {
         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
         if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0) {
             balances[_to] += _value;
-            Transfer(_from, _to, _value);
+            TransferFrom(_from, _to, _value);
             balances[_from] -= _value;
             allowed[_from][msg.sender] -= _value;
             return true;
