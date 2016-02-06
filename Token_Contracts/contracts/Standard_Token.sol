@@ -10,9 +10,9 @@ import "Token";
 
 contract Standard_Token is Token {
 
-    function Standard_Token(uint256 _initial_amount) {
-        balances[msg.sender] = _initial_amount;
-        total_supply = _initial_amount;
+    function Standard_Token(uint256 _initialAmount) {
+        balances[msg.sender] = _initialAmount;
+        totalSupply = _initialAmount;
     }
 
     function transfer(address _to, uint256 _value) returns (bool success) {
@@ -60,11 +60,7 @@ contract Standard_Token is Token {
       return allowed[_owner][_spender];
     }
 
-    function totalSupply() constant returns (uint256 _total) {
-        return total_supply;
-    }
-
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
-    uint256 total_supply;
+    uint256 public totalSupply;
 }
