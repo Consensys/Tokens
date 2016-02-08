@@ -39,7 +39,7 @@ contract Standard_Token is Token {
         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
         if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0) {
             balances[_to] += _value;
-            TransferFrom(_from, _to, _value);
+            Transfer(_from, _to, _value); //TransferFrom event to replace this is currently being discussed in ERC 20.
             balances[_from] -= _value;
             allowed[_from][msg.sender] -= _value;
             return true;

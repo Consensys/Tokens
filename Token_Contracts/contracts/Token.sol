@@ -32,7 +32,7 @@ contract Token {
     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    //TransferFrom event is not standard yet (wrt ERC20), but is required to recreate state when only using events.
-    event TransferFrom(address indexed _from, address indexed _to, uint256 _value);
+    //TransferFrom event is currently being discussed in ERC 20. Not yet implemented.
+    //event TransferFrom(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 }
