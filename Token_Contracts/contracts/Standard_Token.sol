@@ -2,8 +2,6 @@
 Allows the creation of a token with a finite issued amount to the creator.
 
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
-Has additional event called TransferFrom that is not standard (instead of just Transfer in transferFrom()).
-This is to recreate state using only events.
 .*/
 
 import "Token";
