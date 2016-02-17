@@ -25,6 +25,20 @@ contract("Standard_Token", function(accounts) {
 /*TRANSERS*/
 //normal transfers without approvals.
 
+    //this is not *good* enough as the contract could still throw an error otherwise.
+    //ideally one should check balances before and after, but estimateGas currently always throws an error.
+    //it's not giving estimate on gas used in the event of an error.
+    it("transfers: ether transfer should be reversed.", function(done) {
+        var ctr;
+        Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei("10", "Ether")});
+        }).catch(function(result) {
+            done();
+        }).catch(done);
+    });
+
+
     it("transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000", function(done) {
         var ctr;
         Standard_Token.new(10000, {from: accounts[0]}).then(function(result) {

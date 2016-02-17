@@ -1,4 +1,4 @@
-import "Standard_Token";
+import "Standard_Token.sol";
 
 contract Standard_Token_Factory {
 

@@ -4,13 +4,18 @@ Allows the creation of a token with a finite issued amount to the creator.
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
 
-import "Token";
+import "Token.sol";
 
 contract Standard_Token is Token {
 
     function Standard_Token(uint256 _initialAmount) {
         balances[msg.sender] = _initialAmount;
         totalSupply = _initialAmount;
+    }
+
+    function () {
+        //if ether is sent to this address, send it back.
+        throw;
     }
 
     function transfer(address _to, uint256 _value) returns (bool success) {

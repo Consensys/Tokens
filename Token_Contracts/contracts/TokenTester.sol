@@ -1,4 +1,4 @@
-import "Standard_Token_Factory";
+import "Standard_Token_Factory.sol";
 
 contract TokenTester {
     address public tokenContractAddress;
