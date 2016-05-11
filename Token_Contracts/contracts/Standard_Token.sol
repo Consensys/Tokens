@@ -6,12 +6,35 @@ Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 
 import "Token.sol";
 
+contract tokenRecipient { 
+    /* A Generic receiving function for contracts that accept tokens */
+    function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData); 
+}
+
 contract Standard_Token is Token {
 
-    function Standard_Token(uint256 _initialAmount) {
-        balances[msg.sender] = _initialAmount;
-        totalSupply = _initialAmount;
+    /* Public variables of the token */
+    string public standard = 'Token 0.1';
+    string public name;
+    string public symbol;
+    string public version;
+    uint8 public decimals;
+    uint256 public totalSupply;
+        
+    /* Initializes contract with initial supply tokens to the creator of the contract */
+    function Standard_Token(
+        uint256 _initialAmount,
+        string _tokenName,
+        uint8 _decimalUnits,
+        string _tokenSymbol
+        ) {
+        balances[msg.sender] = _initialAmount;              // Give the creator all initial tokens
+        totalSupply = _initialAmount;                        // Update total supply
+        name = tokenName;                                   // Set the name for display purposes
+        symbol = tokenSymbol;                               // Set the symbol for display purposes
+        decimals = decimalUnits;                            // Amount of decimals for display purposes
     }
+        
 
     function () {
         //if ether is sent to this address, send it back.
@@ -58,6 +81,16 @@ contract Standard_Token is Token {
         Approval(msg.sender, _spender, _value);
         return true;
     }
+    
+     /* Approves and then calls the receiving contract */
+     function approveAndCall(address _spender, uint256 _value, bytes _extraData)
+         returns (bool success) {
+         allowed[msg.sender][_spender] = _value;
+         tokenRecipient spender = tokenRecipient(_spender);
+         spender.receiveApproval(msg.sender, _value, this, _extraData);
+         Approval(msg.sender, _spender, _value);
+         return true;
+     }    
 
     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
       return allowed[_owner][_spender];
