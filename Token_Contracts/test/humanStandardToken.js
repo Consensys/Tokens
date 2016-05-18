@@ -10,7 +10,7 @@ Test approveAndCall.
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
     }).then(function (result) {
-        assert.strictEqual(result.c[0], 10000);
+        assert.strictEqual(result.toNumber(), 10000);
         done();
         }).catch(done);
     });
@@ -24,7 +24,7 @@ Test approveAndCall.
         assert.strictEqual(result, 'Simon Bucks');
         return ctr.decimals.call();
     }).then(function(result) {
-        assert.strictEqual(result.c[0], 1);
+        assert.strictEqual(result.toNumber(), 1);
         return ctr.symbol.call();
     }).then(function(result) {
         assert.strictEqual(result, 'SBX');
@@ -68,7 +68,7 @@ Test approveAndCall.
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 10000);
+            assert.strictEqual(result.toNumber(), 10000);
             done();
         }).catch(done);
     });
@@ -109,7 +109,7 @@ Test approveAndCall.
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             done();
         }).catch(done);
     });
@@ -126,10 +126,10 @@ Test approveAndCall.
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], sampleCtr.address);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             return sampleCtr.value.call();
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             done();
         }).catch(done);
     });
@@ -141,28 +141,28 @@ Test approveAndCall.
             ctr = result;
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 10000);
+            assert.strictEqual(result.toNumber(), 10000);
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 0);
+            assert.strictEqual(result.toNumber(), 0);
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             return ctr.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]});
         }).then(function (result) {
             return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 80);
+            assert.strictEqual(result.toNumber(), 80);
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 20);
+            assert.strictEqual(result.toNumber(), 20);
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 9980);
+            assert.strictEqual(result.toNumber(), 9980);
             done();
         }).catch(done);
     });
@@ -176,31 +176,31 @@ Test approveAndCall.
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 80);
+            assert.strictEqual(result.toNumber(), 80);
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 20);
+            assert.strictEqual(result.toNumber(), 20);
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 9980);
+            assert.strictEqual(result.toNumber(), 9980);
             //FIRST tx done.
             //onto next.
             return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]});
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 60);
+            assert.strictEqual(result.toNumber(), 60);
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 40);
+            assert.strictEqual(result.toNumber(), 40);
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 9960);
+            assert.strictEqual(result.toNumber(), 9960);
             done();
         }).catch(done);
     });
@@ -214,18 +214,18 @@ Test approveAndCall.
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 100);
+            assert.strictEqual(result.toNumber(), 100);
             return ctr.transferFrom(accounts[0], accounts[2], 50, {from: accounts[1]});
         }).then(function (result) {
             return ctr.allowance.call(accounts[0], accounts[1]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 50);
+            assert.strictEqual(result.toNumber(), 50);
             return ctr.balanceOf.call(accounts[2]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 50);
+            assert.strictEqual(result.toNumber(), 50);
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 9950);
+            assert.strictEqual(result.toNumber(), 9950);
             //FIRST tx done.
             //onto next.
             return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]});

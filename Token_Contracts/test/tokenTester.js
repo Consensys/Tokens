@@ -6,7 +6,7 @@ contract("TokenTester", function(accounts) {
             var tokenContract = HumanStandardToken.at(tokenContractAddr);
             return tokenContract.balanceOf.call(TokenTester.deployed_address);
         }).then(function (result) {
-            assert.strictEqual(result.c[0], 10000);  // 10000 as specified in TokenTester.sol
+            assert.strictEqual(result.toNumber(), 10000);  // 10000 as specified in TokenTester.sol
             done();
         }).catch(done);
     });
