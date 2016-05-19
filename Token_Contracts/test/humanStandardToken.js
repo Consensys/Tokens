@@ -1,10 +1,6 @@
 contract("HumanStandardToken", function(accounts) {
 
-/*TODO:
-Test approveAndCall.
-*/
-
-/*CREATION*/
+//CREATION
 
     it("creation: should create an initial balance of 10000 for the creator", function(done) {
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
@@ -43,7 +39,7 @@ Test approveAndCall.
         }).catch(done);
     });
 
-/*TRANSERS*/
+//TRANSERS
 //normal transfers without approvals.
 
     //this is not *good* enough as the contract could still throw an error otherwise.
@@ -99,7 +95,7 @@ Test approveAndCall.
 
     //todo: transfer max amounts.
 
-/*APPROVALS*/
+//APPROVALS
 
     it("approvals: msg.sender should approve 100 to accounts[1]", function(done) {
         var ctr = null;
