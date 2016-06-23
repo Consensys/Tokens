@@ -8,7 +8,7 @@
     abi: [{"constant":true,"inputs":[],"name":"tokenContractAddress","outputs":[{"name":"","type":"address"}],"type":"function"}],
     binary: "606060405260428060106000396000f3606060405260e060020a600035046382edaf948114601a575b005b603860005473ffffffffffffffffffffffffffffffffffffffff1681565b6060908152602090f3",
     unlinked_binary: "606060405260428060106000396000f3606060405260e060020a600035046382edaf948114601a575b005b603860005473ffffffffffffffffffffffffffffffffffffffff1681565b6060908152602090f3",
-    address: "0xbc5862ed04de6e04a21d87e4cd81744a889112ff",
+    address: "0xb75224409e8ed656c8ec9231f4b3536cd8083b80",
     generated_with: "2.0.9",
     contract_name: "TokenTester"
   };
