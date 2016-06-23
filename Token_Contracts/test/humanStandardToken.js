@@ -110,12 +110,12 @@ contract("HumanStandardToken", function(accounts) {
         }).catch(done);
     });
 
-    it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient", function(done) {
+    it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.", function(done) {
         var ctr = null;
         var sampleCtr = null
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
-            return SampleRecipient.new({from: accounts[0]});
+            return SampleRecipientSuccess.new({from: accounts[0]});
         }).then(function(result) {
             sampleCtr = result;
             return ctr.approveAndCall(sampleCtr.address, 100, '0x42', {from: accounts[0]});
@@ -128,6 +128,21 @@ contract("HumanStandardToken", function(accounts) {
             assert.strictEqual(result.toNumber(), 100);
             done();
         }).catch(done);
+    });
+
+    it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.", function(done) {
+        var ctr = null;
+        var sampleCtr = null
+        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+            ctr = result;
+            return SampleRecipientThrow.new({from: accounts[0]});
+        }).then(function(result) {
+            sampleCtr = result;
+            return ctr.approveAndCall.call(sampleCtr.address, 100, '0x42', {from: accounts[0]});
+        }).catch(function (result) {
+            //It will catch OOG.
+            done();
+        }).catch(done)
     });
 
     //bit overkill. But is for testing a bug
@@ -272,7 +287,5 @@ contract("HumanStandardToken", function(accounts) {
             done();
         }).catch(done);
     });
-
-    //todo, max approvals.
 
 });
