@@ -10,12 +10,12 @@
     unlinked_binary: "60606040526102ff806100126000396000f3606060405260e060020a60003504633fa4f245811461004757806355a373d614610050578063609d3334146100625780638f4ffcb1146100bf578063d5ce3389146101c0575b005b6101d260015481565b6101dc600254600160a060020a031681565b6101ef60038054602060026001831615610100026000190190921691909104601f810182900490910260809081016040526060828152929190828280156102885780601f1061025d57610100808354040283529160200191610288565b60806020600460643581810135601f81018490049093028401604052606083815261004594833594602480359560443595909460849490939290910191908190838280828437509496505050505050506000805473ffffffffffffffffffffffffffffffffffffffff199081168617825560018581556002805490921685178255835160038054948190529360209281161561010002600019011692909204601f908101919091047fc2575a0e9e593c00f959f8c92f12db2869c3395a3b0502d05e2516446f71f85b908101929160809083901061029057805160ff19168380011785555b506102c09291505b808211156102fb57600081556001016101ac565b6101dc600054600160a060020a031681565b6060908152602090f35b600160a060020a03166060908152602090f35b60405180806020018281038252838181518152602001915080519060200190808383829060006004602084601f0104600f02600301f150905090810190601f16801561024f5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b820191906000526020600020905b81548152906001019060200180831161026b57829003601f168201915b505050505081565b828001600101855582156101a4579182015b828111156101a45782518260005055916020019190600101906102a2565b50506040805184815290517f2db24179b782aab7c5ab64add7f84d4f6c845d0779695371f29be1f658d043cd9181900360200190a150505050565b509056",
     address: "",
     generated_with: "2.0.9",
-    contract_name: "SampleRecipient"
+    contract_name: "SampleRecipientSuccess"
   };
 
   function Contract() {
     if (Contract.Pudding == null) {
-      throw new Error("SampleRecipient error: Please call load() first before creating new instance of this contract.");
+      throw new Error("SampleRecipientSuccess error: Please call load() first before creating new instance of this contract.");
     }
 
     Contract.Pudding.apply(this, arguments);
@@ -32,7 +32,7 @@
 
   Contract.new = function() {
     if (Contract.Pudding == null) {
-      throw new Error("SampleRecipient error: Please call load() first before calling new().");
+      throw new Error("SampleRecipientSuccess error: Please call load() first before calling new().");
     }
 
     return Contract.Pudding.new.apply(Contract, arguments);
@@ -40,7 +40,7 @@
 
   Contract.at = function() {
     if (Contract.Pudding == null) {
-      throw new Error("SampleRecipient error: Please call load() first before calling at().");
+      throw new Error("SampleRecipientSuccess error: Please call load() first before calling at().");
     }
 
     return Contract.Pudding.at.apply(Contract, arguments);
@@ -48,7 +48,7 @@
 
   Contract.deployed = function() {
     if (Contract.Pudding == null) {
-      throw new Error("SampleRecipient error: Please call load() first before calling deployed().");
+      throw new Error("SampleRecipientSuccess error: Please call load() first before calling deployed().");
     }
 
     return Contract.Pudding.deployed.apply(Contract, arguments);
@@ -59,7 +59,7 @@
   } else {
     // There will only be one version of Pudding in the browser,
     // and we can use that.
-    window.SampleRecipient = Contract;
+    window.SampleRecipientSuccess = Contract;
   }
 
 })();

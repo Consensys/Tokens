@@ -1,7 +1,8 @@
 /*
 This is an example contract that helps test the functionality of the approveAndCall() functionality of HumanStandardToken.sol.
+This one assumes successful receival of approval.
 */
-contract SampleRecipient {
+contract SampleRecipientSuccess {
   /* A Generic receiving function for contracts that accept tokens */
   address public from;
   uint256 public value;
