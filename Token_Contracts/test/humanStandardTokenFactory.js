@@ -11,14 +11,14 @@ contract("HumanStandardTokenFactory", function(accounts) {
 
         return factory.createHumanStandardToken.call(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(tokenContractAddr) {
-            console.log(tokenContractAddr);
             newTokenAddr = tokenContractAddr;
             return factory.createHumanStandardToken(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(result) {
-            console.log(result);
             return factory.verifyHumanStandardToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
-            console.log(result);
+            assert.strictEqual(result, true);
+            return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]}); //use other check as well.
+        }).then(function (result) {
             assert.strictEqual(result, true);
             done();
         }).catch(done);

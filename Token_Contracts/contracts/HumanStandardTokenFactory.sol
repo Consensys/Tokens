@@ -3,16 +3,13 @@ import "HumanStandardToken.sol";
 contract HumanStandardTokenFactory {
 
     mapping(address => address[]) public created;
+    mapping(address => bool) public isHumanToken; //verify without having to do a bytecode check.
     bytes public humanStandardByteCode;
 
     function HumanStandardTokenFactory() {
       //upon creation of the factory, deploy a HumanStandardToken (parameters are meaningless) and store the bytecode provably.
       address verifiedToken = createHumanStandardToken(10000, "Verify Token", 3, "VTX");
       humanStandardByteCode = codeAt(verifiedToken);
-    }
-
-    function createdByMe() returns (address[]) {
-        return created[msg.sender];
     }
 
     //verifies if a contract that has been deployed is a Human Standard Token.
@@ -55,8 +52,9 @@ contract HumanStandardTokenFactory {
     function createHumanStandardToken(uint256 _initialAmount, string _name, uint8 _decimals, string _symbol) returns (address) {
 
         HumanStandardToken newToken = (new HumanStandardToken(_initialAmount, _name, _decimals, _symbol));
-        newToken.transfer(msg.sender, _initialAmount); //the factory will own the created tokens. You must transfer them.
         created[msg.sender].push(address(newToken));
+        isHumanToken[address(newToken)] = true;
+        newToken.transfer(msg.sender, _initialAmount); //the factory will own the created tokens. You must transfer them.
         return address(newToken);
     }
 }
