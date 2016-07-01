@@ -3,7 +3,7 @@
 
 contract("HumanStandardTokenFactory", function(accounts) {
 
-    it("Verify A Human Standard Token Once Deployed", function(done) {
+    it("Verify a Human Standard Token once deployed using both verification functions.", function(done) {
         var factory = null;
         var newTokenAddr = null;
         HumanStandardTokenFactory.new().then(function(ctr) {
@@ -17,7 +17,7 @@ contract("HumanStandardTokenFactory", function(accounts) {
             return factory.verifyHumanStandardToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
             assert.strictEqual(result, true);
-            return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]}); //use other check as well.
+            return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
             assert.strictEqual(result, true);
             done();
