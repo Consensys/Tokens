@@ -1,8 +1,8 @@
 /*
-This implements ONLY the standard functions and NOTHING else.
-For a token like you would want to deploy in something like Mist, see HumanStandardToken.sol.
-
-If you deploy this, you won't have anything useful.
+You should inherit from StandardToken or, for a token like you would want to
+deploy in something like Mist, see HumanStandardToken.sol.
+(This implements ONLY the standard functions and NOTHING else.
+If you deploy this, you won't have anything useful.)
 
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
@@ -52,5 +52,4 @@ contract StandardToken is Token {
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
-    uint256 public totalSupply;
 }
