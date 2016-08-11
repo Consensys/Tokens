@@ -33,7 +33,6 @@ function setupEventHandlers(){
     if (error) {
       setStatus(error);
     } else {
-      console.log(event.args)
       if (event.args._owner==account_me){
         $('#reserved').text(balance_me=event.args._value);
       } else {
@@ -42,24 +41,36 @@ function setupEventHandlers(){
       return $("#currentfund").text(parseInt(balance_me)+parseInt(allowed_me));
     }
   });
+  token.Transfer().watch(function (error, event) {
+    if (error) {
+      setStatus(error);
+    } else {
+      if (event.args._to==account_me){
+        token.balanceOf(account_me, {from: account_me}).then(function (value) {
+          $("[name=balance]").text(balance_me=value);
+          $("#currentfund").text(balance_me.plus(allowed_me));
+        })
+      }
+    }
+  });
 }
 
 function fetchTokenData() {
   var token = HumanStandardToken.deployed();
   return Promise.all([
     token.totalSupply({from: account_me}).then(function(value) {
-      return $("#total_supply").text(value.valueOf());
+      return $("#total_supply").text(value);
     }),
     token.balanceOf(account_me, {from: account_me}).then(function (value) {
-      return $("[name=balance]").text(balance_me=value.valueOf());
+      return $("[name=balance]").text(balance_me=value);
     }),
     token.allowance(account_me, account_other, {from: account_me}).then(function (value) {
-      return $("#reserved").text(value.valueOf());
+      return $("#reserved").text(value);
     }),
     token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
-      return $("#credit").text(allowed_me=value.valueOf());
+      return $("#credit").text(allowed_me=value);
     }).then(()=>{
-      return $("#currentfund").text(parseInt(balance_me)+parseInt(allowed_me));
+      return $("#currentfund").text(balance_me.plus(allowed_me));
     })
   ]);
 }
