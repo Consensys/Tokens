@@ -1,3 +1,3 @@
 module.exports = function(deployer) {
-  deployer.deploy(TokenTester);
+  deployer.deploy(Migrations);
 };

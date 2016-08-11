@@ -16,6 +16,19 @@ input {
   font-size: 16px;
 }
 
+
+input.short {
+  width: 85%;
+  padding: 5px;
+  font-size: 16px;
+}
+
+input.middle {
+  width: 150px;
+  padding: 5px;
+  font-size: 16px;
+}
+
 button {
   font-size: 16px;
   padding: 5px;
@@ -45,4 +58,30 @@ h3 {
 
 #balance {
   color: black;
+}
+
+table thead td {
+  background-color: #EEEEEE;
+  text-align: center;
+  font-weight: bold;
+}
+
+table td {
+  white-space:nowrap;
+}
+
+table, th, td {
+  text-align: center;
+  border: 1px solid black;
+}
+
+button {
+  display:inline-block;
+  width: 160px;
+  height: 40px;
+}
+
+td.label {
+  text-align: right;
+  font-weight: bold;
 }

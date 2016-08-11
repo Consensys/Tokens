@@ -325,7 +325,8 @@ var Web3 = require("web3");
   "default": {
     "abi": [],
     "unlinked_binary": "0x606060405260108060106000396000f360606040523615600a575b6000600256",
-    "updated_at": 1470341670173
+    "updated_at": 1470831595502,
+    "links": {}
   }
 };
 

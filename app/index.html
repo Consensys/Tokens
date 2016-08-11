@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Default Truffle App</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <title>Upchain Coin - Default Upchain App</title>
   <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>MetaCoin</h1>
-  <h2>Example Truffle Dapp</h2>
-  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
-
+  <h1>Upchain Examples v1.0</h1>
+  <h2>Upchain Token Dapp</h2>
+  <h3>Total supply is <span class="black"><span id="total_supply"></span> tokens</span></h3>
+  <h3>Hello, <span id="hello"></span>!  You have <span class="black"><span name="balance"></span> tokens</span></h3>
   <br>
-  <h1>Send</h1>
-  <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
-  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="send" onclick="sendCoin()">Send MetaCoin</button>
-  <br><br>
+  <h1>Transfer Token</h1>
+  <table>
+    <thead>
+      <td></td>
+      <td>Actual</td>
+      <td>Amount to Operate</td>
+      <td>Action</td>
+    </thead>
+    <tr>
+      <td class="label">my balance:</td>
+      <td><span name="balance"></span></td>
+      <td><input class="short" type="text" id="amount_send" placeholder="e.g., 5"></input></td>
+      <td><button id="send" onclick="transfer()">send to <span name="other"></span></button></td>
+    </tr><tr>
+      <td class="label">allowed for <span name="other"></span>:</td>
+      <td><span id="reserved"></span></td>
+      <td><input class="short" type="text" id="amount_reserve" placeholder="e.g., 5"></input></td>
+      <td><button id="reserve" onclick="reserve()">allow for <span name="other"></span></button></td>
+    </tr><tr>
+      <td class="label">allowed for me:</td>
+      <td><span id="credit"></span></td>
+      <td><input class="short" type="text" id="amount_claim" placeholder="e.g., 5"></input></td>
+      <td><button id="claim" onclick="claim()"><nobr>claim from <span name="other"></span></nobr></button></td>
+    </tr><tr>
+  </table>
   <span id="status"></span>
 </body>
 </html>

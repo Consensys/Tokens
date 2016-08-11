@@ -1,0 +1,6 @@
+1. Browser automated GUI testing.
+2. rework element referencing schema based on accId instead of on my/other keywords.
+3. create nodejs modules for test/web libraries.
+4. use required() in webjs code.
+5. find the way to access objects (addresses) from deployment (migration) script.
+6. test in test network.

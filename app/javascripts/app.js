@@ -1,56 +1,132 @@
-var accounts;
-var account;
-var balance;
+var account_me, account_other;
+var name_me, name_other;
 
 function setStatus(message) {
   var status = document.getElementById("status");
   status.innerHTML = message;
-};
+}
 
-function refreshBalance() {
-  var meta = MetaCoin.deployed();
 
-  meta.getBalance.call(account, {from: account}).then(function(value) {
-    var balance_element = document.getElementById("balance");
-    balance_element.innerHTML = value.valueOf();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error getting balance; see log.");
+function readAttributesPromise(contract, attributes){
+  var allPromises=[];
+  attributes.forEach(e=>{
+    try{
+      var val = contract[e]();
+  allPromises.push(val);
+  }catch(e){
+      console.log(e);
+    }
+  });
+  return Promise.all(allPromises).then(values =>{
+          var result={'id':contract.address};
+    attributes.forEach((attr,i)=>{
+      result[attr]=values[i];
+  });
+    return result;
+  })
+}
+
+function setupEventHandlers(){
+  var token = HumanStandardToken.deployed();
+  token.Approval().watch(function (error, event) {
+    if (error) {
+      setStatus(error);
+    } else {
+      console.log(event.args)
+      if (event.args._owner==account_me){
+        $('#reserved').text(event.args._value);
+      } else {
+        $('#credit').text(event.args._value);
+      }
+    }
+  });
+}
+
+function fetchTokenData() {
+  var token = HumanStandardToken.deployed();
+  return Promise.all([
+    token.totalSupply({from: account_me}).then(function(value) {
+      return $("#total_supply").text(value.valueOf());
+    }),
+    token.balanceOf(account_me, {from: account_me}).then(function (value) {
+      return $("[name=balance]").text(value.valueOf());
+    }),
+    token.allowance(account_me, account_other, {from: account_me}).then(function (value) {
+      return $("#reserved").text(value.valueOf());
+    }),
+    token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
+      return $("#credit").text(value.valueOf());
+    })
+  ]);
+}
+
+function transfer() {
+  var token = HumanStandardToken.deployed();
+  var amount = parseInt($("#amount_send").val());
+  if (isNaN(amount)) {
+    setStatus("invalid or missed amount!");
+    return;
+  }
+  setStatus("Initiating transaction... (please wait)");
+  return token.transfer(account_other, amount, {from: account_me}).then(function(tx,err) {
+    setStatus("Transaction complete!");
+    return fetchTokenData();
   });
 };
 
-function sendCoin() {
-  var meta = MetaCoin.deployed();
-
-  var amount = parseInt(document.getElementById("amount").value);
-  var receiver = document.getElementById("receiver").value;
-
+function reserve() {
+  var token = HumanStandardToken.deployed();
+  var amount = parseInt($("#amount_reserve").val());
+  if (isNaN(amount)) {
+    setStatus("invalid or missed amount!");
+  }
   setStatus("Initiating transaction... (please wait)");
-
-  meta.sendCoin(receiver, amount, {from: account}).then(function() {
+  token.approve(account_other, amount, {from: account_me}).then(function() {
     setStatus("Transaction complete!");
-    refreshBalance();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error sending coin; see log.");
+    fetchTokenData();
+  });
+};
+
+function claim() {
+  var token = HumanStandardToken.deployed();
+  var amount = parseInt($("#amount_claim").val());
+  if (isNaN(amount)) {
+    setStatus("invalid or missed amount!");
+  }
+  setStatus("Initiating transaction... (please wait)");
+  token.transferFrom(account_other, account_me, amount, {from: account_me}).then(function() {
+    setStatus("Transaction complete!");
+    fetchTokenData();
   });
 };
 
 window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
+  web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
       return;
     }
 
-    if (accs.length == 0) {
+    if (accounts.length == 0) {
       alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
       return;
     }
 
-    accounts = accs;
-    account = accounts[0];
-
-    refreshBalance();
+    var url = window.location.href;
+    if (url.substring(url.indexOf("#")+1) == 'bob'){
+      name_me='Bob';
+      name_other='Alice';
+      account_me=accounts[1];
+      account_other=accounts[0];
+    } else {
+      name_me='Alice';
+      name_other='Bob';
+      account_me=accounts[0];
+      account_other=accounts[1];
+    }
+    $('#hello').append(name_me)
+    $('[name="other"]').append(name_other);
+    fetchTokenData();
+    setupEventHandlers();
   });
 }
