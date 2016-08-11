@@ -33,7 +33,7 @@ function setupEventHandlers(){
       setStatus(error);
     } else {
       if (event.args._owner==account_me){
-        $('#reserved').text(balance_me=event.args._value).hide().fadeIn();
+        $('#allowed').text(balance_me=event.args._value).hide().fadeIn();
       } else {
         $('#credit').text(allowed_me=event.args._value).hide().fadeIn();
       }
@@ -48,6 +48,9 @@ function setupEventHandlers(){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
             $("[name=balance]").text(balance_me=value).hide().fadeIn();
             $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
+            return token.allowance(account_me, account_other, {from: account_me});
+        }).then(function (value) {
+          return $("#allowed").text(value).hide().fadeIn();
         })
       }
     }
@@ -64,7 +67,7 @@ function fetchTokenData() {
       return $("[name=balance]").text(balance_me=value);
     }),
     token.allowance(account_me, account_other, {from: account_me}).then(function (value) {
-      return $("#reserved").text(value);
+      return $("#allowed").text(value);
     }),
     token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
       return $("#credit").text(allowed_me=value);
@@ -88,9 +91,9 @@ function transfer() {
   });
 };
 
-function reserve() {
+function allow() {
   var token = HumanStandardToken.deployed();
-  var amount = parseInt($("#amount_reserve").val());
+  var amount = parseInt($("#amount_allow").val());
   if (isNaN(amount)) {
     setStatus("invalid or missed amount!");
   }
