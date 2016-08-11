@@ -7,7 +7,6 @@ function setStatus(message) {
   status.innerHTML = message;
 }
 
-
 function readAttributesPromise(contract, attributes){
   var allPromises=[];
   attributes.forEach(e=>{
@@ -34,21 +33,21 @@ function setupEventHandlers(){
       setStatus(error);
     } else {
       if (event.args._owner==account_me){
-        $('#reserved').text(balance_me=event.args._value);
+        $('#reserved').text(balance_me=event.args._value).hide().fadeIn();
       } else {
-        $('#credit').text(allowed_me=event.args._value);
+        $('#credit').text(allowed_me=event.args._value).hide().fadeIn();
       }
-      return $("#currentfund").text(parseInt(balance_me)+parseInt(allowed_me));
+      return $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
     }
   });
   token.Transfer().watch(function (error, event) {
     if (error) {
       setStatus(error);
     } else {
-      if (event.args._to==account_me){
+      if (event.args._to==account_me || event.args._from==account_me){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
-          $("[name=balance]").text(balance_me=value);
-          $("#currentfund").text(balance_me.plus(allowed_me));
+            $("[name=balance]").text(balance_me=value).hide().fadeIn();
+            $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
         })
       }
     }
