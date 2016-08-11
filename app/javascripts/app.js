@@ -1,5 +1,6 @@
 var account_me, account_other;
 var name_me, name_other;
+var balance_me, allowed_me;
 
 function setStatus(message) {
   var status = document.getElementById("status");
@@ -34,10 +35,11 @@ function setupEventHandlers(){
     } else {
       console.log(event.args)
       if (event.args._owner==account_me){
-        $('#reserved').text(event.args._value);
+        $('#reserved').text(balance_me=event.args._value);
       } else {
-        $('#credit').text(event.args._value);
+        $('#credit').text(allowed_me=event.args._value);
       }
+      return $("#currentfund").text(parseInt(balance_me)+parseInt(allowed_me));
     }
   });
 }
@@ -49,13 +51,15 @@ function fetchTokenData() {
       return $("#total_supply").text(value.valueOf());
     }),
     token.balanceOf(account_me, {from: account_me}).then(function (value) {
-      return $("[name=balance]").text(value.valueOf());
+      return $("[name=balance]").text(balance_me=value.valueOf());
     }),
     token.allowance(account_me, account_other, {from: account_me}).then(function (value) {
       return $("#reserved").text(value.valueOf());
     }),
     token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
-      return $("#credit").text(value.valueOf());
+      return $("#credit").text(allowed_me=value.valueOf());
+    }).then(()=>{
+      return $("#currentfund").text(parseInt(balance_me)+parseInt(allowed_me));
     })
   ]);
 }

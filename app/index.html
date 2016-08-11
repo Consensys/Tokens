@@ -20,21 +20,25 @@
       <td>Action</td>
     </thead>
     <tr>
-      <td class="label">my balance:</td>
+      <td class="label">my current balance:</td>
       <td><span name="balance"></span></td>
       <td><input class="short" type="text" id="amount_send" placeholder="e.g., 5"></input></td>
       <td><button id="send" onclick="transfer()">send to <span name="other"></span></button></td>
     </tr><tr>
-      <td class="label">allowed for <span name="other"></span>:</td>
+      <td class="label">thereof allowed for <span name="other"></span>:</td>
       <td><span id="reserved"></span></td>
       <td><input class="short" type="text" id="amount_reserve" placeholder="e.g., 5"></input></td>
       <td><button id="reserve" onclick="reserve()">allow for <span name="other"></span></button></td>
     </tr><tr>
-      <td class="label">allowed for me:</td>
+      <td class="label">in addition for me:</td>
       <td><span id="credit"></span></td>
       <td><input class="short" type="text" id="amount_claim" placeholder="e.g., 5"></input></td>
       <td><button id="claim" onclick="claim()"><nobr>claim from <span name="other"></span></nobr></button></td>
-    </tr><tr>
+    </tr><tfoot>
+      <td class="label">my currend fund:</td>
+      <td><span id="currentfund"></span></td>
+      <td colspan="2"></td>
+  </tfoot>
   </table>
   <span id="status"></span>
 </body>
