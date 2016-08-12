@@ -141,8 +141,8 @@ window.onload = function() {
       account_me=accounts[0];
       account_other=accounts[1];
     }
-    $('#hello').append(name_me)
-    $('[name="other"]').append(name_other);
+    $('[name=me]').append(name_me)
+    $('[name=other]').append(name_other);
     fetchTokenData();
     setupEventHandlers();
   });
