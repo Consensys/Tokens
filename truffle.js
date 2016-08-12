@@ -3,6 +3,7 @@ module.exports = {
     "index.html": "index.html",
     "app.js": [
       "javascripts/jquery-3.1.0.min.js",
+      "javascripts/jquery.color-2.1.2.min.js",
       "javascripts/app.js",
       "javascripts/web3-util.js"
     ],
