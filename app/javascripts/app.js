@@ -130,7 +130,7 @@ window.onload = function() {
     }
 
     var url = window.location.href;
-    if (url.substring(url.indexOf("#")+1) == 'bob'){
+    if (url.substring(url.indexOf("?")+1) == 'bob'){
       name_me='Bob';
       name_other='Alice';
       account_me=accounts[1];
