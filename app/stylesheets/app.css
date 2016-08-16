@@ -52,6 +52,13 @@ h3 {
   font-size: 24px;
 }
 
+#errmsg {
+  font-weight: bold;
+  color: red;
+  font-size: 18px;
+}
+
+
 .black {
   color: black;
 }
@@ -93,4 +100,9 @@ button {
 td.label {
   text-align: right;
   font-weight: bold;
+}
+
+td.message {
+  text-align: left;
+  font-weight: normal;
 }

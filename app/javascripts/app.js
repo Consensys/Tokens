@@ -3,9 +3,8 @@ var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
 
-function setStatus(message) {
-  var status = document.getElementById("status");
-  status.innerHTML = message;
+function setErrMsg(message) {
+  $("#errmsg").text(message).stop().css({opacity:100}).delay(3000).fadeTo('slow',0);
 }
 
 const MAX_LOG_ROWS=3;
@@ -25,11 +24,11 @@ function log(msgType,message,txId, rowId) {
     var newRowHtml = noTx
         ? '<tr id="row_'+rowId+'">' +
             '<td>'+msgType+'</td>' +
-            '<td>'+message+'</td><td>'+dateTime+'</td>' +
+            '<td class="message">'+message+'</td><td>'+dateTime+'</td>' +
           '</tr>'
         : '<tr id="row_'+rowId+'" txId="'+txId+'">' +
             '<td><a href="'+TX_BROWSER+'/'+txId+'" target="__blank">'+msgType+'</a></td>' +
-            '<td>'+message+'</td><td>'+dateTime+'</td>' +
+            '<td class="message">'+message+'</td><td>'+dateTime+'</td>' +
           '</tr>'
         ;
     var targetRow = rowByRowId.add(rowByTxId);
@@ -65,8 +64,7 @@ function setupEventHandlers(){
   var token = HumanStandardToken.deployed();
   token.Approval().watch(function (error, event) {
     if (error) {
-      log("ERR",error);
-      setStatus(error);
+      setErrMsg(error);
     } else {
       if (event.args._owner == account_me) {
           log("RCVD",event.args._value+" tokens  approved for "+name_other,event.transactionHash);
@@ -82,7 +80,7 @@ function setupEventHandlers(){
   });
   token.Transfer().watch(function (error, event) {
     if (error) {
-      setStatus(error);
+      setErrMsg(error);
     } else {
       if (event.args._to==account_me || event.args._from==account_me){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
@@ -93,6 +91,8 @@ function setupEventHandlers(){
         }).then(function (value) {
           return $("#allowed").text(value).hide().fadeIn();
         })
+      } else {
+          //do nothing: it is unrelated event.
       }
     }
   });
@@ -119,64 +119,82 @@ function fetchTokenData() {
 }
 
 function transfer() {
-  var token = HumanStandardToken.deployed();
-  var amount = parseInt($("#amount_send").val());
-  if (isNaN(amount)) {
-    setStatus("invalid or missed amount!");
-    return;
-  }
-  var rowId;
-  token.transfer(account_other, amount, {from: account_me}).then(function(tx,err) {
-      if (err) {
-          var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-          log("ERR", amount + " tokens sent to " + name_other, txId, rowId);
-      } else {
-          var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-          log("ACK", amount + " tokens sent to " + name_other, txId, rowId);
-      }
-    return fetchTokenData();
-  });
-  rowId = log("SENT", amount + " tokens sent to " + name_other);
+    var token = HumanStandardToken.deployed();
+    var amount = parseInt($("#amount_send").val());
+    if (isNaN(amount)) {
+        setErrMsg("invalid or missed amount!");
+    } else if (amount > balance_me) {
+        setErrMsg("not enough money");
+    } else {
+        var rowId;
+        token.transfer(account_other, amount, {from: account_me}).then(function (tx, err) {
+            if (err) {
+                var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+                log("ERR", amount + " tokens sent to " + name_other, txId, rowId);
+            } else {
+                var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+                log("ACK", amount + " tokens sent to " + name_other, txId, rowId);
+            }
+            return fetchTokenData();
+        });
+        rowId = log("SENT", amount + " tokens sent to " + name_other);
+    }
 }
 
 function allow() {
   var token = HumanStandardToken.deployed();
   var amount = parseInt($("#amount_allow").val());
   if (isNaN(amount)) {
-    setStatus("invalid or missed amount!");
+      setErrMsg("invalid or missed amount!");
+  } else if (amount > balance_me) {
+      setErrMsg("not enough money");
+  } else {
+      var rowId;
+      token.approve(account_other, amount, {from: account_me}).then(function(tx,err) {
+          if (err) {
+              var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+              log("ERR", amount + " tokens approved to " + name_other, txId, rowId);
+          } else {
+              var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+              log("ACK", amount + " tokens approved to " + name_other, txId, rowId);
+          }
+        fetchTokenData();
+      });
+      rowId = log("SENT", amount + " tokens approved to " + name_other);
   }
-  var rowId;
-  token.approve(account_other, amount, {from: account_me}).then(function(tx,err) {
-      if (err) {
-          var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-          log("ERR", amount + " tokens approved to " + name_other, txId, rowId);
-      } else {
-          var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-          log("ACK", amount + " tokens approved to " + name_other, txId, rowId);
-      }
-    fetchTokenData();
-  });
-  rowId = log("SENT", amount + " tokens approved to " + name_other);
 }
 
 function claim() {
   var token = HumanStandardToken.deployed();
   var amount = parseInt($("#amount_claim").val());
   if (isNaN(amount)) {
-    setStatus("invalid or missed amount!");
+    setErrMsg("invalid or missed amount!");
+  } else {
+      var rowId;
+      token.transferFrom(account_other, account_me, amount, {from: account_me}).then(function (tx, err) {
+          if (err) {
+              var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+              log("ERR", amount + " tokens transfered from " + name_other, txId, rowId);
+          } else {
+              var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
+              log("ACK", amount + " tokens transfered from " + name_other, txId, rowId);
+          }
+          fetchTokenData();
+      });
+      rowId = log("SENT", amount + " tokens transfered from " + name_other);
   }
-  var rowId;
-  token.transferFrom(account_other, account_me, amount, {from: account_me}).then(function(tx,err) {
-    if (err) {
-        var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-        log("ERR", amount + " tokens transfered from " + name_other, txId, rowId);
-    } else {
-        var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-        log("ACK", amount + " tokens transfered from " + name_other, txId, rowId);
-    }
-    fetchTokenData();
-  });
-  rowId = log("SENT", amount + " tokens transfered from " + name_other);
+}
+
+function setupOnEnter(){
+    ['send','allow','claim'].forEach(actionName => {
+        $('#amount_'+actionName).keypress(function(e) {
+            if(e.which == 13) {
+                $(this).blur();
+                $('#'+actionName).focus().click().blur();
+                $(this).focus();
+            }
+        });
+    })
 }
 
 window.onload = function() {
@@ -207,5 +225,6 @@ window.onload = function() {
     $('[name=other]').append(name_other);
     fetchTokenData();
     setupEventHandlers();
+    setupOnEnter();
   });
 }
