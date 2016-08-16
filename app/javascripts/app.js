@@ -15,9 +15,11 @@ function log(msgType,message,txId, rowId) {
     var rowByRowId = $('tr#row_'+rowId);
     var noTx = typeof txId === 'undefined';
     if (typeof rowId === 'undefined') {
-        rowId = !noTx && rowByTxId.length==1
-              ? parseInt(rowByTxId.attr('id').substring('row_'.length)) //recover rowId from existing row
-              : nextRowId++ % (MAX_LOG_ROWS+1);                         //create new rowId for new row
+        if (rowByTxId.length == 1) {
+            return; // Tx is already confirmed.
+        }
+        // event from unconfirmed Tx just send.
+        rowId = nextRowId++ % (MAX_LOG_ROWS+1);                         //create new rowId for new row
     }
     var dateTime = new Date($.now()).toLocaleTimeString().toLowerCase();
     var newRowHtml = noTx
@@ -34,7 +36,7 @@ function log(msgType,message,txId, rowId) {
     if (targetRow.length==0) {
         $(newRowHtml).prependTo('table#log > tbody');
         $('[id^="row_"]:nth-child('+MAX_LOG_ROWS+')').nextAll().remove();
-    } else  {
+    } else {
         targetRow.replaceWith(newRowHtml);
     }
     return rowId;
@@ -67,10 +69,10 @@ function setupEventHandlers(){
       setStatus(error);
     } else {
       if (event.args._owner == account_me) {
-          log("ACK",event.args._value+" tokens  approved for "+name_other,event.transactionHash);
+          log("RCVD",event.args._value+" tokens  approved for "+name_other,event.transactionHash);
           $('#allowed').text(balance_me = event.args._value).hide().fadeIn();
       } else if (event.args._spender == account_me) {
-          log("ACK",event.args._value+" tokens approved for me",event.transactionHash);
+          log("RCVD",event.args._value+" tokens approved for me",event.transactionHash);
           $('#credit').text(allowed_me = event.args._value).hide().fadeIn();
       } else {
           //do nothing: it is unrelated event.
@@ -84,7 +86,7 @@ function setupEventHandlers(){
     } else {
       if (event.args._to==account_me || event.args._from==account_me){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
-           // log("ACK",event.args._value+" tokens received by me ",event.transactionHash);
+            log("RCVD",event.args._value+" tokens received by me ",event.transactionHash);
             $("[name=balance]").text(balance_me=value).hide().fadeIn();
             $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
             return token.allowance(account_me, account_other, {from: account_me});
