@@ -32,7 +32,7 @@ import static groovyx.net.http.ContentType.*
 
 
 class UpchainTokenPage extends Page {
-    static at = { $('h2').text() == 'Upchain Token Dapp' }
+    static at = { $('h2.subtitle').text() == 'Upchain Token Dapp' }
     static content = {
         lbls_nameMe     { $(name:'me') }
         lbls_nameOther  { $(name:'other') }
@@ -91,8 +91,8 @@ class UpchainTokenSpecification extends GebReportingSpec  {
 
         where:
         NN | myPage    | balance | myName  | otherName
-         1 | AlicePage | 93623   | 'Alice' | 'Bob'
-         2 | BobPage   | 6378    | 'Bob'   | 'Alice'
+         1 | AlicePage | 100001  | 'Alice' | 'Bob'
+         2 | BobPage   | 0       | 'Bob'   | 'Alice'
     }
 
     @Unroll
