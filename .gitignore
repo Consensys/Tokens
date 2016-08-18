@@ -9,3 +9,5 @@ contracts/Standard_Token_Factory/config/test/contracts.json
 /.idea/
 /build/
 /node_modules/
+npm-debug.log
+test-gui/report/
