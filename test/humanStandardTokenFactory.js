@@ -8,7 +8,7 @@ contract("HumanStandardTokenFactory", function(accounts) {
         var newTokenAddr = null;
         HumanStandardTokenFactory.new().then(function(ctr) {
         factory = ctr;
-
+        // setup and 2 it()
         return factory.createHumanStandardToken.call(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(tokenContractAddr) {
             newTokenAddr = tokenContractAddr;

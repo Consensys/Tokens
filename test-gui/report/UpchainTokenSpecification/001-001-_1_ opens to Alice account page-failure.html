@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <title>Upchain Coin - Default Upchain App</title>
+  <link type="text/css" rel="stylesheet" href="./app.css" />
+  <script src="./app.js"></script>
+</head>
+<body>
+  <h1>Upchain Examples v1.0</h1>
+  <h2 class="subtitle">Upchain Token Dapp</h2>
+  <h3>Total supply is <span class="black"><span id="total_supply">100001</span> tokens</span></h3>
+  <h3>Hello, <span name="me">Alice</span>!  You have <span class="black"><span name="balance" id="balance_hd">99901</span> tokens</span></h3>
+  <br />
+  <h1>Transfer Token</h1>
+  <div id="errmsg"> </div>
+  <table>
+    <thead>
+      <tr><td></td>
+      <td>Actual</td>
+      <td>Amount to Operate</td>
+      <td>Action</td>
+    </tr></thead>
+    <tbody><tr>
+      <td class="label">my current balance:</td>
+      <td><span name="balance" id="balance_td">99901</span></td>
+      <td><input type="text" placeholder="e.g., 5" id="amount_send" class="short" /></td>
+      <td><button onclick="transfer()" id="send">send to <span name="other">Bob</span></button></td>
+    </tr><tr>
+      <td class="label">thereof allowed for <span name="other">Bob</span>:</td>
+      <td><span id="allowed">0</span></td>
+      <td><input type="text" placeholder="e.g., 5" id="amount_allow" class="short" /></td>
+      <td><button onclick="allow()" id="allow">allow for <span name="other">Bob</span></button></td>
+    </tr><tr>
+      <td class="label">in addition for me:</td>
+      <td><span id="credit">0</span></td>
+      <td><input type="text" placeholder="e.g., 5" id="amount_claim" class="short" /></td>
+      <td><button onclick="claim()" id="claim"><nobr>claim from <span name="other">Bob</span></nobr></button></td>
+    </tr></tbody><tfoot>
+      <tr><td class="label">my currend fund:</td>
+      <td><span id="currentfund">99901</span></td>
+      <td colspan="2"></td>
+  </tr></tfoot>
+  </table>
+  <h2>Log</h2>
+  <table id="log">
+    <thead>
+    <tr><td width="10em">Status</td>
+    <td width="100em">Mesage</td>
+    <td width="20em">TStamp</td>
+    </tr></thead>
+    <tbody>
+    </tbody>
+  </table>
+
+
+</body></html>

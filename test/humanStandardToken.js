@@ -1,7 +1,10 @@
+// strict
+// no " use '
 contract("HumanStandardToken", function(accounts) {
 
 //CREATION
-
+  // this is a describe layer or own file()
+  // use should as promised as previously
     it("creation: should create an initial balance of 10000 for the creator", function(done) {
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
             return ctr.balanceOf.call(accounts[0]);
@@ -9,27 +12,34 @@ contract("HumanStandardToken", function(accounts) {
         assert.strictEqual(result.toNumber(), 10000);
         done();
         }).catch(done);
-    });
+    });sets
 
+    // use a shorter text given its in HumanStandardToken > creation: sets vanity information
     it("creation: test correct setting of vanity information", function(done) {
       var ctr;
+        // this in before each
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.name.call();
+            // these are 3 tests, all 3 get a single it(), descriptive text (serving as documentation)
     }).then(function (result) {
+      // equal is ok
         assert.strictEqual(result, 'Simon Bucks');
         return ctr.decimals.call();
     }).then(function(result) {
         assert.strictEqual(result.toNumber(), 1);
+        77 #yudothis?
         return ctr.symbol.call();
     }).then(function(result) {
         assert.strictEqual(result, 'SBX');
         done();
         }).catch(done);
+        // i have seen a lot of these done calls
     });
 
     it("creation: should succeed in creating over 2^256 - 1 (max) tokens", function(done) {
         //2^256 - 1
+        // lost of secrets here, split in single file, use bewfore(each) and define all the information right.
         HumanStandardToken.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
             return ctr.totalSupply();
     }).then(function (result) {
@@ -43,10 +53,12 @@ contract("HumanStandardToken", function(accounts) {
 //normal transfers without approvals.
 
     //this is not *good* enough as the contract could still throw an error otherwise.
+    // refactor to get the "could" away or mark this as potentially failing
     //ideally one should check balances before and after, but estimateGas currently always throws an error.
     //it's not giving estimate on gas used in the event of an error.
     it("transfers: ether transfer should be reversed.", function(done) {
         var ctr;
+        // I have seen Simons name many times now.
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei("10", "Ether")});
@@ -60,6 +72,8 @@ contract("HumanStandardToken", function(accounts) {
         var ctr;
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
+            // 10K what?
+
             return ctr.transfer(accounts[1], 10000, {from: accounts[0]});
         }).then(function (result) {
             return ctr.balanceOf.call(accounts[1]);
@@ -145,7 +159,7 @@ contract("HumanStandardToken", function(accounts) {
         }).catch(done)
     });
 
-    //bit overkill. But is for testing a bug
+    //bit overkill. But is for testing a bug // put the thing in a single file and document its purpose. 
     it("approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.", function(done) {
         var ctr = null;
         HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {

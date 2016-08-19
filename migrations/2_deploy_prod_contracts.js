@@ -1,5 +1,7 @@
 module.exports = function(deployer) {
   deployer.deploy(HumanStandardToken, 100001, "UpChain Coins", 2, "UPC");
+  // we need that log here ;)
+  // nice point to hook up all sorts of things 
   /*
   deployer.then(()=>{
 

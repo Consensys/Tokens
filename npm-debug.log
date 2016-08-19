@@ -1,0 +1,48 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/sebs/.nvm/versions/node/v6.3.1/bin/node',
+1 verbose cli   '/Users/sebs/.nvm/versions/node/v6.3.1/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'jshint' ]
+2 info using npm@3.10.3
+3 info using node@v6.3.1
+4 verbose run-script [ 'prejshint', 'jshint', 'postjshint' ]
+5 info lifecycle UpchainTokens@0.1.0~prejshint: UpchainTokens@0.1.0
+6 silly lifecycle UpchainTokens@0.1.0~prejshint: no script for prejshint, continuing
+7 info lifecycle UpchainTokens@0.1.0~jshint: UpchainTokens@0.1.0
+8 verbose lifecycle UpchainTokens@0.1.0~jshint: unsafe-perm in lifecycle true
+9 verbose lifecycle UpchainTokens@0.1.0~jshint: PATH: /Users/sebs/.nvm/versions/node/v6.3.1/lib/node_modules/npm/bin/node-gyp-bin:/Users/sebs/projects/customers/upchain/Tokens/node_modules/.bin:/Users/sebs/.nvm/versions/node/v6.3.1/bin:/Users/sebs/.nvm/versions/node/v6.3.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin
+10 verbose lifecycle UpchainTokens@0.1.0~jshint: CWD: /Users/sebs/projects/customers/upchain/Tokens
+11 silly lifecycle UpchainTokens@0.1.0~jshint: Args: [ '-c', 'jshint app/javascripts' ]
+12 silly lifecycle UpchainTokens@0.1.0~jshint: Returned: code: 2  signal: null
+13 info lifecycle UpchainTokens@0.1.0~jshint: Failed to exec jshint script
+14 verbose stack Error: UpchainTokens@0.1.0 jshint: `jshint app/javascripts`
+14 verbose stack Exit status 2
+14 verbose stack     at EventEmitter.<anonymous> (/Users/sebs/.nvm/versions/node/v6.3.1/lib/node_modules/npm/lib/utils/lifecycle.js:242:16)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
+14 verbose stack     at ChildProcess.<anonymous> (/Users/sebs/.nvm/versions/node/v6.3.1/lib/node_modules/npm/lib/utils/spawn.js:40:14)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:852:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:215:5)
+15 verbose pkgid UpchainTokens@0.1.0
+16 verbose cwd /Users/sebs/projects/customers/upchain/Tokens
+17 error Darwin 15.6.0
+18 error argv "/Users/sebs/.nvm/versions/node/v6.3.1/bin/node" "/Users/sebs/.nvm/versions/node/v6.3.1/bin/npm" "run" "jshint"
+19 error node v6.3.1
+20 error npm  v3.10.3
+21 error code ELIFECYCLE
+22 error UpchainTokens@0.1.0 jshint: `jshint app/javascripts`
+22 error Exit status 2
+23 error Failed at the UpchainTokens@0.1.0 jshint script 'jshint app/javascripts'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the UpchainTokens package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     jshint app/javascripts
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs UpchainTokens
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls UpchainTokens
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

@@ -1,15 +1,21 @@
+// use strict
 var TX_BROWSER="https://morden.ether.camp/transaction";
+// camel case or uderscore. one of them
 var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
 
+// docs and own file
 function setErrMsg(message) {
   $("#errmsg").text(message).stop().css({opacity:100}).delay(3000).fadeTo('slow',0);
 }
 
 const MAX_LOG_ROWS=3;
 var nextRowId=0;
+// apidcos
 function log(msgType,message,txId, rowId) {
+    // 2 spaces indent on JS
+
     var rowByTxId = $('tr[txId="'+txId+'"]');
     var rowByRowId = $('tr#row_'+rowId);
     var noTx = typeof txId === 'undefined';
@@ -18,9 +24,10 @@ function log(msgType,message,txId, rowId) {
             return; // Tx is already confirmed.
         }
         // event from unconfirmed Tx just send.
-        rowId = nextRowId++ % (MAX_LOG_ROWS+1);                         //create new rowId for new row
+        rowId = nextRowId++ % (MAX_LOG_ROWS+1);                         //create new rowId for new row // and put docs even more to the right side ;)
     }
     var dateTime = new Date($.now()).toLocaleTimeString().toLowerCase();
+    // not so sexy, html
     var newRowHtml = noTx
         ? '<tr id="row_'+rowId+'">' +
             '<td>'+msgType+'</td>' +
@@ -38,24 +45,32 @@ function log(msgType,message,txId, rowId) {
     } else {
         targetRow.replaceWith(newRowHtml);
     }
+    // 3 ifs in one piece of code, you might want to split this along the lines
+
     return rowId;
 }
 
 function readAttributesPromise(contract, attributes){
   var allPromises=[];
+  // map?
   attributes.forEach(e=>{
+    // #yutrycatch?
     try{
       var val = contract[e]();
+      // indent
   allPromises.push(val);
   }catch(e){
+    //  #yu console log. Never for end customer code. Handle a error in the ui
       console.log(e);
     }
   });
   return Promise.all(allPromises).then(values =>{
+          // some spaces help reading.
           var result={'id':contract.address};
     attributes.forEach((attr,i)=>{
       result[attr]=values[i];
   });
+  // formatting is important, if you decide to use that many
     return result;
   })
 }
@@ -78,10 +93,13 @@ function setupEventHandlers(){
       return $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
    }
   });
+
+  // return token.Transfer().watch(functionName) would be more readable
   token.Transfer().watch(function (error, event) {
     if (error) {
       setErrMsg(error);
     } else {
+      // all this needs comments and cleanup
       if (event.args._to==account_me || event.args._from==account_me){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
             log("RCVD",event.args._value+" tokens received by me ",event.transactionHash);
@@ -98,6 +116,7 @@ function setupEventHandlers(){
   });
 }
 
+// here you can build something testable
 function fetchTokenData() {
   var token = HumanStandardToken.deployed();
   return Promise.all([
