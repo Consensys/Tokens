@@ -34,6 +34,7 @@ import static groovyx.net.http.ContentType.*
 class UpchainTokenPage extends Page {
     static at = { $('h2.subtitle').text() == 'Upchain Token Dapp' }
     static content = {
+        lnk_other_page  { $("#other_href") }
         lbls_nameMe     { $(name:'me') }
         lbls_nameOther  { $(name:'other') }
         lbls_balance    { $(name:'balance') }
@@ -63,20 +64,86 @@ class BobPage extends UpchainTokenPage {
     static url = "http://localhost:9090/index.html?bob"
 }
 
-class UpchainTokenSpecification extends GebReportingSpec  {
+/**
+ * base class for geb/spock tests with testrpc in backend.
+ * it snapshot/resets testrpc.
+ */
+class TestRPCReportingSpec extends GebReportingSpec {
 
+    def static testrpc = new RESTClient('http://localhost:8545')
+    def static call_testRPC = { evm_method, snapshotNr ->
+        try {
+            def resp = testrpc.post(
+                    body: [
+                            "jsonrpc": "2.0",
+                            "method" : evm_method,
+                            "params" : snapshotNr ? [snapshotNr]: [],
+                            "id"     : 1
+                    ],
+                    requestContentType: JSON)
+            return resp.data
+        } catch (ex) {
+            println ex.getMessage();
+            ex.printStackTrace();
+        }
+    }
+
+    def static testrpc_snapshot = call_testRPC.curry("evm_snapshot",null)
+    def static testrpc_revert = call_testRPC.curry("evm_revert")
+
+    @Shared def data;
     // fields
     // fixture methods
-    def setup() {}          // run before every feature method
-    def cleanup() {}        // run after every feature method
+    def setup() { // run before every feature method
+    }
+
+    def cleanup() { // run after every feature method
+    }
+
     def setupSpec() {       // run before the first feature method
-        testRPC_snap();
+        println (data = testrpc_snapshot())
     }
 
     def cleanupSpec() {     // run after the last feature method
-        testRPC_revert();
+        println testrpc_revert(data.result)
     }
+}
 
+@Stepwise
+class TwoWindowTest extends TestRPCReportingSpec {
+    // feature methods
+    @Unroll
+    def "[#NN] opens two windows to #myName account page"() {
+        when:
+        def oldBalance_Bob
+        def oldCurrentFund_Bob
+        to AlicePage
+        withNewWindow(close: false, page: BobPage, { lnk_other_page.click() }) {
+            at BobPage
+            oldBalance_Bob = int_balance_hd
+            oldCurrentFund_Bob = int_currentFund
+        }
+        def oldBalance_Alice = int_balance_hd
+        def oldCurrentFund_Alice = int_currentFund
+        inp_amountSend = 100
+        btn_send.click()
+
+        then:
+        at AlicePage
+        int_balance_hd == oldBalance_Alice - 100
+        int_balance_td == oldBalance_Alice - 100
+        int_currentFund == oldCurrentFund_Alice - 100
+        withWindow('bob') {
+            at BobPage
+            int_balance_hd == oldBalance_Bob + 100
+            int_balance_td == oldBalance_Bob + 100
+            int_currentFund == oldCurrentFund_Bob + 100
+        }
+    }
+}
+
+@Stepwise
+class TransferTest extends TestRPCReportingSpec {
     // feature methods
     @Unroll
     def "[#NN] opens to #myName account page"(NN, myPage, balance, myName, otherName) {
@@ -117,19 +184,10 @@ class UpchainTokenSpecification extends GebReportingSpec  {
          1 | AlicePage | 'Alice' | 'Bob'
          2 | BobPage   | 'Bob'   | 'Alice'
     }
-
-    // helper methods
-    def static call_testRPC = { evm_method ->
-        return new RESTClient('http://localhost:8545').post(
-                body: ["jsonrpc": "2.0", "method" : evm_method,"params" : [],"id":1]
-                ,requestContentType: JSON
-        ).data.result
-    }
-    def static testRPC_snap = call_testRPC.curry("evm_snapshot")
-    def static testRPC_revert = call_testRPC.curry("evm_revert")
 }
 
 println "starting tests...";
 def JUnitCore junit = new JUnitCore();
 junit.addListener(new org.junit.internal.TextListener(System.out));
-junit.run(UpchainTokenSpecification.class);
+junit.run(TransferTest.class);
+junit.run(TwoWindowTest.class);

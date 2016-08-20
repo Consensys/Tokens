@@ -223,6 +223,8 @@ window.onload = function() {
     }
     $('[name=me]').append(name_me)
     $('[name=other]').append(name_other);
+    $('#other_href').attr('href','?'+name_other.toLowerCase());
+    $('#other_href').attr('target',name_other.toLowerCase());
     fetchTokenData();
     setupEventHandlers();
     setupOnEnter();

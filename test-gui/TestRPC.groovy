@@ -22,21 +22,23 @@ evm_revert : Run at the end of each test, reverting back to a known clean state.
 curl -X POST --data '{"jsonrpc":"2.0","method":"evm_snapshot","params":[],"id":1}' localhost:8545
 {"id":1,"jsonrpc":"2.0","result":"0x2b"}
 
+curl -X POST --data '{"jsonrpc":"2.0","method":"evm_revert","params":["<snapshot_number>"],"id":1}' localhost:8545
+{"id":1,"jsonrpc":"2.0","result":"true"}
+
 */
 
-abstract class TestRPC extends Script {
    def testrpc = new RESTClient('http://localhost:8545')
-   def call_testRPC = { evm_method ->
+   def call_testRPC = { evm_method, snapshotNr ->
         try {
             def resp = testrpc.post(
                     body: [
                             "jsonrpc": "2.0",
                             "method" : evm_method,
-                            "params" : [],
+                            "params" : snapshotNr ? [snapshotNr]: [],
                             "id"     : 1
                     ],
                     requestContentType: JSON)
-            return resp.data.result
+            return resp.data
         }
         catch (ex) {
             println ex.getMessage();
@@ -44,6 +46,9 @@ abstract class TestRPC extends Script {
         }
     }
 
-    def testRPC_snap = call_testRPC.curry("evm_snapshot")
+    def testRPC_snapshot = call_testRPC.curry("evm_snapshot",null)
     def testRPC_revert = call_testRPC.curry("evm_revert")
-}
+
+def data=testRPC_snap()
+println data;
+println testRPC_revert(data.result)
