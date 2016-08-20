@@ -46,14 +46,11 @@ function log(msgType,message,txId, rowId) {
   return rowId;
 }
 
+
 function readAttributesPromise(contract, attributes){
-  var allPromises=[];
-  //ToDo:  map?
-  attributes.forEach(e=>{
-    var val = contract[e]();
-    allPromises.push(val);
-  });
-  return Promise.all(allPromises).then(values =>{
+  return Promise.all(attributes.map(e=>{
+      return contract[e]();
+  })).then(values =>{
     var result = {'id' : contract.address};    //always add 'id' to result set
     attributes.forEach((attr,i)=>{
       result[attr]=values[i];
