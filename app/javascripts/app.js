@@ -49,7 +49,7 @@ function log(msgType,message,txId, rowId) {
 
 function readAttributesPromise(contract, attributes){
   return Promise.all(attributes.map(e=>{
-      return contract[e]();
+    return contract[e]();
   })).then(values =>{
     var result = {'id' : contract.address};    //always add 'id' to result set
     attributes.forEach((attr,i)=>{
@@ -84,7 +84,8 @@ function setupEventHandlers(){
       //handle only events sent by me or sent to me.
       if (event.args._to==account_me || event.args._from==account_me){
         token.balanceOf(account_me, {from: account_me}).then(function (value) {
-          log("RCVD",event.args._value+" tokens received by me ",event.transactionHash);
+          var operationText = event.args._to==account_me ? "received by me" : "sent to "+name_other;
+          log("RCVD",event.args._value+" tokens "+operationText,event.transactionHash);
           $("[name=balance]").text(balance_me=value).hide().fadeIn();
           $("#currentfund").text(balance_me.plus(allowed_me)).hide().fadeIn();
           return token.allowance(account_me, account_other, {from: account_me});
@@ -154,14 +155,14 @@ function allow() {
     token.approve(account_other, amount, {from: account_me}).then(function(tx,err) {
       if (err) {
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-        log("ERR", amount + " tokens approved to " + name_other, txId, rowId);
+        log("ERR", amount + " tokens approved for " + name_other, txId, rowId);
       } else {
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
-        log("ACK", amount + " tokens approved to " + name_other, txId, rowId);
+        log("ACK", amount + " tokens approved for " + name_other, txId, rowId);
       }
       fetchTokenData();
     });
-    rowId = log("SENT", amount + " tokens approved to " + name_other);
+    rowId = log("SENT", amount + " tokens approved for " + name_other);
   }
 }
 
