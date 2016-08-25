@@ -22,7 +22,8 @@
     "posttest-gui": "npm run truffle-serve-stop",
     "test-gui": "cd test-gui && groovy -Dgroovy.grape.report.downloads=false ./gui-test.groovy && cd ..",
     "testrpc": "pm2 start testrpc",
-    "start": "pm2 start truffle -- serve"
+    "start": "pm2 start truffle -- serve",
+    "postinstall": "cp node_modules/upchain-web3-http-provider/dist/bundle.js app/javascripts/upchain-web3-http-provider.js"
   },
   "repository": {
     "type": "git",
