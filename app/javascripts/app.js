@@ -231,6 +231,7 @@ window.onload = function() {
     $('#other_href').attr('href','?'+name_other.toLowerCase());
     $('#other_href').attr('target',name_other.toLowerCase());
     $('#token_contract_ref').attr('href',ACC_BROWSER+HumanStandardToken.deployed().address);
+    $('#account_me_ref').attr('href',ACC_BROWSER+account_me.valueOf());
     fetchTokenData();
     setupEventHandlers();
     setupOnEnter();
