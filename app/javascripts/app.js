@@ -15,8 +15,8 @@ const MAX_LOG_ROWS=3;
 var nextRowId=0;
 //ToDo: apidcos
 function log(msgType,message,txId, rowId) {
-  var rowByTxId = $('tr[txId="'+txId+'"]');
-  var rowByRowId = $('tr#row_'+rowId);
+  var rowByTxId = $('table#log tr[txId="'+txId+'"]');
+  var rowByRowId = $('table#log tr#row_'+rowId);
   var noTx = typeof txId === 'undefined';
   if (typeof rowId === 'undefined') {
     if (rowByTxId.length == 1) {
@@ -40,8 +40,9 @@ function log(msgType,message,txId, rowId) {
   var targetRow = rowByRowId.add(rowByTxId);
   if (targetRow.length==0) {
     $(newRowHtml).prependTo('table#log > tbody');
-    $('[id^="row_"]:nth-child('+MAX_LOG_ROWS+')').nextAll().remove();
+    $('table#log tr[id^="row_"]').slice(MAX_LOG_ROWS).remove();
   } else {
+    targetRow.slice(1).remove(); //remove possible duplicates if envent comes first.
     targetRow.replaceWith(newRowHtml);
   }
   //ToDo: 3 ifs in one piece of code, you might want to split this along the lines
