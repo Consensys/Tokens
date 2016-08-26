@@ -1,5 +1,6 @@
 "use strict"
 const TX_BROWSER="https://morden.ether.camp/transaction";
+const ACC_BROWSER="https://morden.ether.camp/account/";
 var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
@@ -117,10 +118,10 @@ function fetchTokenData() {
     }),
     token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
       return $("#credit").text(allowed_me=value);
-    }).then(()=>{
-      return $("#currentfund").text(balance_me.plus(allowed_me));
     })
-  ]);
+  ]).then(()=>{
+      return $("#currentfund").text(balance_me.plus(allowed_me));
+  });
 }
 
 function transfer() {
@@ -229,6 +230,7 @@ window.onload = function() {
     $('[name=other]').append(name_other);
     $('#other_href').attr('href','?'+name_other.toLowerCase());
     $('#other_href').attr('target',name_other.toLowerCase());
+    $('#token_contract_ref').attr('href',ACC_BROWSER+HumanStandardToken.deployed().address);
     fetchTokenData();
     setupEventHandlers();
     setupOnEnter();
