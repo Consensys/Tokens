@@ -15,7 +15,8 @@ module.exports = {
     "fonts/": "fonts/"
   },
   rpc: {
+    secure: true,
     host: "localhost",
-    port: 8545
+    port: 8546
   }
 };
