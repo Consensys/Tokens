@@ -21,8 +21,8 @@ module.exports = {
     },
     certificate: './cert/localhost.crt',
     key: './cert/localhost.key',
-    secure: false,
+    secure: true,
     host: "localhost",
-    port: 8545
+    port: 8546
   }
 };
