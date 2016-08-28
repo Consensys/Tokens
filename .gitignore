@@ -11,3 +11,4 @@ contracts/Standard_Token_Factory/config/test/contracts.json
 /node_modules/
 npm-debug.log
 test-gui/report/
+cert

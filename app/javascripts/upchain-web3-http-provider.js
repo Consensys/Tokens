@@ -88,7 +88,10 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
  * @return {Object} object additional headers
  */
 var HttpProvider = function (host, additionalHeaders) {
-    this.host = host || 'http://localhost:8545';
+    if (!host) {
+      throw Error('Missing host');
+    }
+    this.host = host;
     this.headers = additionalHeaders;
 };
 

@@ -206,6 +206,7 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
+  console.log(__contracts__, 'cs')
   web3.setProvider(upchainProvider);
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
