@@ -4,8 +4,6 @@ const ACC_BROWSER="https://morden.ether.camp/account/";
 var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
-//var UpchainHttpProvider = require('upchain-web3-http-provider');
-//var upchainProvider = new window.UpchainHttpProvider('https://localhost:8546', {'X-API-KEY': '239239'});
 
 //ToDo:  docs and own file
 function setErrMsg(message) {
@@ -135,11 +133,9 @@ function transfer() {
     var rowId;
     token.transfer(account_other, amount, {from: account_me}).then(function (tx, err) {
       if (err) {
-        web3.setProvider(upchainProvider);
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
         log("ERR", amount + " tokens sent to " + name_other, txId, rowId);
       } else {
-        web3.setProvider(upchainProvider);
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
         log("ACK", amount + " tokens sent to " + name_other, txId, rowId);
       }
