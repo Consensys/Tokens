@@ -128,7 +128,7 @@ function transfer() {
   var token = HumanStandardToken.deployed();
   var amount = parseInt($("#amount_send").val());
   if (isNaN(amount)) {
-    setErrMsg("invalid or missed amount!");
+    setErrMsg("invalid or missing amount!");
   } else if (amount > balance_me) {
     setErrMsg("not enough money");
   } else {
@@ -204,7 +204,7 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
-  web3.setProvider(upchainProvider);
+  //web3.setProvider(upchainProvider);
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
