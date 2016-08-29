@@ -32,7 +32,7 @@ import static groovyx.net.http.ContentType.*
 
 
 class UpchainTokenPage extends Page {
-    static at = { $('h2.subtitle').text() == 'Upchain Token Dapp' }
+    static at = { $('h1.subtitle').text() == 'Upchain Examples: Token Dapp' }
     static content = {
         lnk_other_page  { $("#other_href") }
         lbls_nameMe     { $(name:'me') }
