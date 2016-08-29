@@ -6,38 +6,36 @@
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>Upchain Examples v1.0</h1>
-  <h2 class="subtitle">Upchain Token Dapp</h2>
-  <h3>Total supply is <span class="black"><a id="token_contract_ref" href="" target="txbrowser"><span id="total_supply"></span> tokens</a></span></h3>
+  <h1 class="subtitle">Upchain Examples: Token Dapp</h1>
   <h3>Hello, <a id="account_me_ref" href="" target="txbrowser"><span name="me"></span></a>!  You have <span class="black"><span id="balance_hd" name="balance"></span> tokens</span></h3>
-  <div>(<span name="other"></span>, please click <a id="other_href" href="" target="_new">here</a>)</div>
+  <div>(Total supply is <span class="black"><a id="token_contract_ref" href="" target="txbrowser"><span id="total_supply"></span> tokens</a></span>. <span name="other"></span>, please click <a id="other_href" href="" target="_new">here</a>)</div>
   <br>
-  <h1>Transfer Token</h1>
+  <h2>Transfer Token</h2>
   <div id="errmsg">&nbsp;</div>
   <table>
     <thead>
       <td></td>
       <td>Actual</td>
-      <td>Amount to Operate</td>
+      <td>Amount</td>
       <td>Action</td>
     </thead>
     <tr>
-      <td class="label">my current balance:</td>
+      <td class="label">My current balance:</td>
       <td><span id="balance_td" name="balance"></span></td>
       <td><input class="short" type="text" id="amount_send" placeholder="e.g., 5"></input></td>
       <td><button id="send" onclick="transfer()">send to <span name="other"></span></button></td>
     </tr><tr>
-      <td class="label">thereof allowed for <span name="other"></span>:</td>
+      <td class="label">Thereof allowed for <span name="other"></span>:</td>
       <td><span id="allowed"></span></td>
       <td><input class="short" type="text" id="amount_allow" placeholder="e.g., 5"></input></td>
       <td><button id="allow" onclick="allow()">allow for <span name="other"></span></button></td>
     </tr><tr>
-      <td class="label">in addition for me:</td>
+      <td class="label">In addition for me:</td>
       <td><span id="credit"></span></td>
       <td><input class="short" type="text" id="amount_claim" placeholder="e.g., 5"></input></td>
       <td><button id="claim" onclick="claim()"><nobr>claim from <span name="other"></span></nobr></button></td>
     </tr><tfoot>
-      <td class="label">my currend fund:</td>
+      <td class="label">My current fund:</td>
       <td><span id="currentfund"></span></td>
       <td colspan="2"></td>
   </tfoot>

@@ -34,7 +34,7 @@ button {
   padding: 5px;
 }
 
-h1, h2 {
+h1 {
 //  display: inline-block;
   vertical-align: middle;
   margin-top: 0px;
@@ -43,6 +43,9 @@ h1, h2 {
 
 h2 {
   color: #AAA;
+  vertical-align: middle;
+  margin-top: 30px;
+  margin-bottom: 10px;
   font-size: 32px;
 }
 
@@ -89,6 +92,7 @@ thead td {
 tfoot td {
   text-align: center;
   border-top: 1px solid black;
+  font-weight: bold;
 }
 
 button {
@@ -98,8 +102,8 @@ button {
 }
 
 td.label {
-  text-align: right;
-  font-weight: bold;
+  text-align: left;
+  //font-weight: bold;
 }
 
 td.message {

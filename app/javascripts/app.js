@@ -126,7 +126,7 @@ function transfer() {
   var token = HumanStandardToken.deployed();
   var amount = parseInt($("#amount_send").val());
   if (isNaN(amount)) {
-    setErrMsg("invalid or missed amount!");
+    setErrMsg("invalid or missing amount!");
   } else if (amount > balance_me) {
     setErrMsg("not enough money");
   } else {

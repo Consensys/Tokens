@@ -1,5 +1,5 @@
 module.exports = function(deployer) {
-  deployer.deploy(HumanStandardToken, 100001, "UpChain Coins", 2, "UPC");
+  deployer.deploy(HumanStandardToken, 10, "UpChain Coins", 0, "UPC");
   /*
   deployer.then(()=>{
 
