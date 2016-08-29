@@ -16,7 +16,14 @@ module.exports = {
     "fonts/": "fonts/"
   },
   rpc: {
+    providerName: "UpchainHttpProvider",
+    additionalHeaders: {
+      'X-API-KEY': '239239'
+    },
+    certificate: './cert/localhost.crt',
+    key: './cert/localhost.key',
+    secure: true,
     host: "localhost",
-    port: 8545
+    port: 8546
   }
 };

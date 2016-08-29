@@ -4,6 +4,29 @@
 
 * Groovy
 
+## Quirks
+
+### Setup patched truffle
+
+from [https://github.com/sebs/truffle](https://github.com/sebs/truffle)
+which contains [https://github.com/sebs/truffle-default-builder](https://github.com/sebs/truffle-default-builder)
+
+1. clone repo
+2. npm install
+3. npm install -g
+
+**In order to deploy, the secure option must be set to false.
+Additional headers are not yet patched into truffle.**
+
+## CORS / HTTPS Server Mode
+
+* deploy with options.rpc.secure = false
+* serve with
+  * options.rpc.secure = true
+  * options.rpc.providerName
+  * options.rpc.certificate: './cert/localhost.crt',
+  * options.rpc.key: './cert/localhost.key'
+
 
 ## Development workflow
 Upchain Tokens Dapp built on Ethereum Standard Token.

@@ -1,8 +1,11 @@
 "use strict"
 const TX_BROWSER="https://morden.ether.camp/transaction";
+const ACC_BROWSER="https://morden.ether.camp/account/";
 var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
+//var UpchainHttpProvider = require('upchain-web3-http-provider');
+var upchainProvider = new window.UpchainHttpProvider('https://localhost:8546', {'X-API-KEY': '239239'});
 
 //ToDo:  docs and own file
 function setErrMsg(message) {
@@ -13,8 +16,8 @@ const MAX_LOG_ROWS=3;
 var nextRowId=0;
 //ToDo: apidcos
 function log(msgType,message,txId, rowId) {
-  var rowByTxId = $('tr[txId="'+txId+'"]');
-  var rowByRowId = $('tr#row_'+rowId);
+  var rowByTxId = $('table#log tr[txId="'+txId+'"]');
+  var rowByRowId = $('table#log tr#row_'+rowId);
   var noTx = typeof txId === 'undefined';
   if (typeof rowId === 'undefined') {
     if (rowByTxId.length == 1) {
@@ -38,8 +41,9 @@ function log(msgType,message,txId, rowId) {
   var targetRow = rowByRowId.add(rowByTxId);
   if (targetRow.length==0) {
     $(newRowHtml).prependTo('table#log > tbody');
-    $('[id^="row_"]:nth-child('+MAX_LOG_ROWS+')').nextAll().remove();
+    $('table#log tr[id^="row_"]').slice(MAX_LOG_ROWS).remove();
   } else {
+    targetRow.slice(1).remove(); //remove possible duplicates if envent comes first.
     targetRow.replaceWith(newRowHtml);
   }
   //ToDo: 3 ifs in one piece of code, you might want to split this along the lines
@@ -114,10 +118,10 @@ function fetchTokenData() {
     }),
     token.allowance(account_other, account_me, {from: account_me}).then(function (value) {
       return $("#credit").text(allowed_me=value);
-    }).then(()=>{
-      return $("#currentfund").text(balance_me.plus(allowed_me));
     })
-  ]);
+  ]).then(()=>{
+      return $("#currentfund").text(balance_me.plus(allowed_me));
+  });
 }
 
 function transfer() {
@@ -131,9 +135,11 @@ function transfer() {
     var rowId;
     token.transfer(account_other, amount, {from: account_me}).then(function (tx, err) {
       if (err) {
+        web3.setProvider(upchainProvider);
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
         log("ERR", amount + " tokens sent to " + name_other, txId, rowId);
       } else {
+        web3.setProvider(upchainProvider);
         var txId = web3.eth.getTransactionReceipt(tx).transactionHash;
         log("ACK", amount + " tokens sent to " + name_other, txId, rowId);
       }
@@ -200,6 +206,8 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
+  console.log(__contracts__, 'cs')
+  web3.setProvider(upchainProvider);
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
@@ -225,6 +233,8 @@ window.onload = function() {
     $('[name=other]').append(name_other);
     $('#other_href').attr('href','?'+name_other.toLowerCase());
     $('#other_href').attr('target',name_other.toLowerCase());
+    $('#token_contract_ref').attr('href',ACC_BROWSER+HumanStandardToken.deployed().address);
+    $('#account_me_ref').attr('href',ACC_BROWSER+account_me.valueOf());
     fetchTokenData();
     setupEventHandlers();
     setupOnEnter();

@@ -12,3 +12,4 @@ contracts/Standard_Token_Factory/config/test/contracts.json
 npm-debug.log
 test-gui/report/
 app/javascripts/upchain-web3-http-provider.js
+cert
