@@ -4,8 +4,6 @@ const ACC_BROWSER="https://morden.ether.camp/account/";
 var account_me, account_other;
 var name_me, name_other;
 var balance_me, allowed_me;
-//var UpchainHttpProvider = require('upchain-web3-http-provider');
-var upchainProvider = new window.UpchainHttpProvider('http://localhost:8545', {'X-API-KEY': '239239'});
 
 //ToDo:  docs and own file
 function setErrMsg(message) {
@@ -204,7 +202,6 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
-  //web3.setProvider(upchainProvider);
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
