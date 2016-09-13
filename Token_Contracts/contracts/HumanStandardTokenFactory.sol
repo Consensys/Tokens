@@ -1,4 +1,4 @@
-import "HumanStandardToken.sol";
+import "./HumanStandardToken.sol";
 
 contract HumanStandardTokenFactory {
 
