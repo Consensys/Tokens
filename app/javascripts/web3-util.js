@@ -1,3 +1,4 @@
+
 var SolidityCoder = require('web3/lib/solidity/coder.js');
 
 module.exports = function(web3,contractList) {
