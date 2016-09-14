@@ -202,15 +202,17 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
-
-
-  var headers = {
-    'X-API-KEY': 'foo'
+  if (window.location.protocol == 'https:') {
+    var headers = {
+      'X-API-KEY': 'foo'
+    };
+    var provider = new window.UpchainHttpProvider('https://localhost:8546', headers);
+    // reset web3
+    window.web3 = new Web3(provider);
+  } else {
+    var provider = new window.UpchainHttpProvider('http://localhost:8545', {});
+    window.web3 = new Web3(provider);
   };
-  var provider = new window.UpchainHttpProvider('https://localhost:8546', headers);
-  // reset web3
-  window.web3 = new Web3(provider);
-
 
   // in a pudding / truffle app, reset your
   var contracts = [HumanStandardToken,HumanStandardTokenFactory,Token,TokenTester];
