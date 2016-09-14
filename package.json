@@ -1,6 +1,6 @@
 {
   "name": "UpchainTokens",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Upchain Token Demo",
   "main": "truffle.js",
   "directories": {
