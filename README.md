@@ -16,7 +16,7 @@ Installation
 npm install
 ```
 
-Test
+[Test](./test) contracts
 
 ```bash
 truffle test
@@ -28,9 +28,9 @@ Serve
 truffle test
 ```
 
-Application acessible hia http://localhost:8080
+Application accessible via http://localhost:8080
 
-## CORS / HTTPS Server Mode
+## (optional) CORS / HTTPS Server Mode
 
 * client checks if https is used
 * For https:// the server assumes a node running on port 8546
