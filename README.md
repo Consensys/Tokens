@@ -1,36 +1,46 @@
 # Upchains Tokens
 
-## Dependencies
+This repo contains Solidity smart contract code to issue simple, standards-compliant tokens on Ethereum. It can be used to create any form of asset, currency, coin, hours, usage tokens, vunk, etc.
 
-* Groovy
+The default is StandardToken.sol which ONLY implements the core ERC20 standard functionality #20.
 
-## Quirks
+HumanStandardToken.sol is an example of a token that has optional extras fit for your issuing your own tokens, to be mainly used by other humans. It includes:
 
-### Setup patched truffle
+1. Initial Finite Supply (upon creation one specifies how much is minted).
+2. In the absence of a token registry: Optional Decimal, Symbol & Name.
+3. Optional approveAndCall() functionality to notify a contract if an approval() has occurred.
 
-from [https://github.com/sebs/truffle](https://github.com/sebs/truffle)
-which contains [https://github.com/sebs/truffle-default-builder](https://github.com/sebs/truffle-default-builder)
+Installation
 
-1. clone repo
-2. npm install
-3. npm install -g
+```bash
+npm install
+```
 
-**In order to deploy, the secure option must be set to false.
-Additional headers are not yet patched into truffle.**
+Test
+
+```bash
+truffle test
+```
+
+Serve
+
+```bash
+truffle test
+```
+
+Application acessible hia http://localhost:8080
 
 ## CORS / HTTPS Server Mode
 
-* deploy with options.rpc.secure = false
-* serve with
-  * options.rpc.secure = true
-  * options.rpc.providerName
-  * options.rpc.certificate: './cert/localhost.crt',
-  * options.rpc.key: './cert/localhost.key'
+* client checks if https is used
+* For https:// the server assumes a node running on port 8546
+* A X-API-HEADER can be added
 
+* No error messages for "secure and non secure"
+* quirky cors implementations (or spec writers) are even covered. Please give feedback about cors hickups
 
 ## Development workflow
 Upchain Tokens Dapp built on Ethereum Standard Token.
-
 
   * "testrpc-snapshot": "./scripts/create-snapshot.sh",
   * "testrpc-revert": "./scripts/revert-snapshot.sh",
@@ -42,27 +52,3 @@ Upchain Tokens Dapp built on Ethereum Standard Token.
   * "test": "truffle test $NODE_DEBUG_OPTION",
   * "testrpc": "pm2 start testrpc",
   * "start": "pm2 start truffle -- serve"
-
-
-## Demo notes
-Ausgangssituation: Standard Token Contract + simple GUI + Upchain Infra
-
-Was man an der Demo zeigen kann:
-* Link zu Contract und wie dieser gespeichert wird + Metadaten sind öffentlich (stress this point!!!)
-* Link zu den beiden Adressen von Alice und Bob (aber pseudonym, man weiss nicht wer es ist) und den durchgeführten Transaktionen -> Schreiben hinterlässt Spuren in der Blockchain. Lesen nicht (jeder kann unbemerkt lesen)!
-* Tokens können von Alice zu Bob überwiesen werden (Ratz-fatz -> quasi in Echtzeit - läuft alles immer mit 15 Sekunden Blockzeit ab). 
-* Wichtig: Alice und Bob sollten jeweils private keys halten (in der demo liegen die Keys einfach auf der Node)
-* Tokens können jedes digitale Asset (via Hash) oder Assets, die eindeutig beschrieben werden können, repräsentieren
-* Alice (Bob) kann Bob (Alice) berechtigen, über eigene Tokens zu verfügen (ähnlich einer Lastschrift)
-* Fehlermeldung werden sinnvollerweise im Browser abgefangen, nicht im Smart Contract
-* Gas-Konzept bei Transaktionen
-
-
-Was bringt Upchain dabei Tolles mit:
-* Demo funktioniert einfach im Internet und kann zugänglich gemacht werden (z.B. für Review) ohne, dass sich Mitarbeiter die vollst. Infra installieren
-* Sichere Verbindung zur Node (nicht jeder kann einfach zugreifen und Transaktionen durchführen)
-* Tool-kit um die Anwendung zu erstellen (nur Front-End und Smart contract müssen entwickelt werden) sowie zusätzliche Libraries (z.B. Signaturen im Browser)
-
-
-Was noch kommen sollte
-* Link zum Monitoring/Logging (aus dem Transaktionslog), anstelle von Blockchain Explorer
