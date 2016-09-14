@@ -202,6 +202,19 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
+  var headers = {
+    'X-API-KEY': 'foo'
+  };
+  var provider = new window.UpchainHttpProvider('https://localhost:8546', headers);
+
+  // reset web3
+  window.web3 = new Web3(provider);
+  // in a pudding / truffle app, reset your
+  var contracts = [HumanStandardToken,HumanStandardTokenFactory,Token,TokenTester];
+  // just collect thge contracts and reset the providers as you do it with pudding
+  contracts.map(function(contract) {
+    contract.setProvider(window.web3.currentProvider);
+  });
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
