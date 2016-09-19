@@ -202,23 +202,14 @@ function setupOnEnter(){
 }
 
 window.onload = function() {
-  if (window.location.protocol == 'https:') {
-    var headers = {
-      'X-API-KEY': 'foo'
-    };
-    var provider = new window.UpchainHttpProvider('https://localhost:8546', headers);
-    // reset web3
-    window.web3 = new Web3(provider);
-  } else {
-    var provider = new window.UpchainHttpProvider('http://localhost:8545', {});
-    window.web3 = new Web3(provider);
-  };
 
-  // in a pudding / truffle app, reset your
+  var headers = {};
+  var provider = new window.UpchainHttpProvider('https://eth.chain.host/testnet', headers, 'up', 'chain');
+
   var contracts = [HumanStandardToken,HumanStandardTokenFactory,Token,TokenTester];
   // just collect thge contracts and reset the providers as you do it with pudding
   contracts.map(function(contract) {
-    contract.setProvider(window.web3.currentProvider);
+    contract.setProvider(provider);
   });
   web3.eth.getAccounts(function(err, accounts) {
     if (err != null) {
