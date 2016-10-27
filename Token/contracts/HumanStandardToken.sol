@@ -13,7 +13,11 @@ Machine-based, rapid creation of many tokens would not necessarily need these ex
 
 pragma solidity ^0.4.2;
 
+// inherit locally
 import "StandardToken.sol";
+
+// inherit from zeppelin-solidity
+//import "./zeppelin/StandardToken.sol";
 
 contract HumanStandardToken is StandardToken {
 
