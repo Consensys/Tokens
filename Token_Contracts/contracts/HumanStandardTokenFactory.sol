@@ -1,4 +1,6 @@
-import "HumanStandardToken.sol";
+import "./HumanStandardToken.sol";
+
+pragma solidity ^0.4.6;
 
 contract HumanStandardTokenFactory {
 

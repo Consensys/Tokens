@@ -2,6 +2,8 @@
 This is an example contract that helps test the functionality of the approveAndCall() functionality of HumanStandardToken.sol.
 This one assumes successful receival of approval.
 */
+pragma solidity ^0.4.6;
+
 contract SampleRecipientSuccess {
   /* A Generic receiving function for contracts that accept tokens */
   address public from;

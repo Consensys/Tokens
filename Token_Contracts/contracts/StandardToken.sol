@@ -6,8 +6,9 @@ If you deploy this, you won't have anything useful.)
 
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
+pragma solidity ^0.4.6;
 
-import "Token.sol";
+import "./Token.sol";
 
 contract StandardToken is Token {
 
