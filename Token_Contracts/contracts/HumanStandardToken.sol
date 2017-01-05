@@ -11,7 +11,9 @@ Machine-based, rapid creation of many tokens would not necessarily need these ex
 
 .*/
 
-import "StandardToken.sol";
+import "./StandardToken.sol";
+
+pragma solidity ^0.4.6;
 
 contract HumanStandardToken is StandardToken {
 
