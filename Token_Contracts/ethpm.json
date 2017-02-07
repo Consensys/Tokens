@@ -1,0 +1,13 @@
+{
+  "package_name": "tokens",
+  "version": "0.0.1",
+  "description": "Ethereum Token Contracts",
+  "authors": [
+    "Simon de la Rouviere <simon.delarouviere@consensys.net>"
+  ],
+  "keywords": [
+    "tokens",
+    "consensys"
+  ],
+  "license": "MIT"
+}
