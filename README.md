@@ -14,6 +14,16 @@ There is a set of tests written for the HumanStandardToken.sol using the Truffle
 
 Standards allows other contract developers to easily incorporate your token into their application (governance, exchanges, games, etc). It will be updated as often as possible.  
 
+## Testing
+
+```npm install```
+
+For getting truffle-hdwallet-provider. Solidity tests have to still be written.
+
+## ethpm
+
+This is published under tokens at ethpm.
+
 ### Pull requests are welcome! Please keep standards discussions to the EIP repos.
 
 > "You get a token, you get a token, everyone gets a token!" - Token the 3rd: the fun gerbil.  
