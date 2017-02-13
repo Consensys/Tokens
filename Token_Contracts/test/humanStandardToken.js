@@ -1,3 +1,6 @@
+var HumanStandardToken = artifacts.require("./HumanStandardToken.sol");
+var SampleRecipientSuccess = artifacts.require("./SampleRecipientSuccess.sol");
+
 contract("HumanStandardToken", function(accounts) {
 
 //CREATION

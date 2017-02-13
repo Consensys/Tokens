@@ -13,7 +13,7 @@ Machine-based, rapid creation of many tokens would not necessarily need these ex
 
 import "./StandardToken.sol";
 
-pragma solidity ^0.4.6;
+pragma solidity ^0.4.8;
 
 contract HumanStandardToken is StandardToken {
 

@@ -1,0 +1,31 @@
+{
+  "name": "erc20-tokens",
+  "version": "0.0.1",
+  "description": "Ethereum Token Contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConsenSys/Tokens.git"
+  },
+  "keywords": [
+    "ethereum"
+  ],
+  "authors": [
+     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
+     "Joseph Chow <joseph.chow@consensys.net>",
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ConsenSys/Tokens/issues"
+  },
+  "homepage": "https://github.com/ConsenSys/Tokens#readme",
+  "dependencies": {
+    "truffle-hdwallet-provider": "0.0.3"
+  }
+}
