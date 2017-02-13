@@ -20,6 +20,8 @@ Standards allows other contract developers to easily incorporate your token into
 
 For getting truffle-hdwallet-provider. Solidity tests have to still be written.
 
+Uses Truffle 3.x.
+
 ## ethpm
 
 This is published under tokens at ethpm.
