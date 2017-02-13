@@ -16,7 +16,10 @@
   "keywords": [
     "ethereum"
   ],
-  "author": "Simon de la Rouviere <simon.delarouviere@consensys.net>",
+  "authors": [
+     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
+     "Joseph Chow <joseph.chow@consensys.net>",
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ConsenSys/Tokens/issues"

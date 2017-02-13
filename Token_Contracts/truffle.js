@@ -10,14 +10,10 @@ if(fs.existsSync("secrets.json")) {
 } else {
   console.log("No secrets.json found. If you are trying to publish EPM " +
               "this will fail. Otherwise, you can ignore this message!")
-  mnemonic = "" 
+  mnemonic = ""
 }
 
 module.exports = {
-  rpc: {
-    host: "localhost",
-    port: 8545
-  },
   networks: {
     live: {
       network_id: 1, // Ethereum public network
@@ -39,7 +35,9 @@ module.exports = {
     testrpc: {
       network_id: "default"
     },
-    test: { //truffle test hardcodes the "test" network.
+    development: { //truffle test hardcodes the "test" network.
+      host: "localhost",
+      port: "8545",
       network_id: "default",
     }
   }

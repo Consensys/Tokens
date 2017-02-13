@@ -1,5 +1,6 @@
 //This currently throws a stack underflow, and thus commented out. Contract is correctly deployed, but createHumanStandardToken throws underflow.
 //Replicated under testrpc and debugging to fix this.
+var HumanStandardTokenFactory = artifacts.require("./HumanStandardTokenFactory.sol");
 
 contract("HumanStandardTokenFactory", function(accounts) {
 
