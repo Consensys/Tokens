@@ -22,6 +22,6 @@ contract("HumanStandardTokenFactory", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result, true);
             done();
-        }).catch(done);
+        })
     });
 });

@@ -28,7 +28,7 @@ contract("HumanStandardToken", function(accounts) {
     }).then(function(result) {
         assert.strictEqual(result, 'SBX');
         done();
-        }).catch(done);
+        })
     });
 
     it("creation: should succeed in creating over 2^256 - 1 (max) tokens", function(done) {
@@ -39,7 +39,7 @@ contract("HumanStandardToken", function(accounts) {
         var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
         assert.isTrue(match);
         done();
-        }).catch(done);
+        })
     });
 
 //TRANSERS
@@ -55,7 +55,7 @@ contract("HumanStandardToken", function(accounts) {
             return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei("10", "Ether")});
         }).catch(function(result) {
             done();
-        }).catch(done);
+        })
     });
 
 
@@ -69,7 +69,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 10000);
             done();
-        }).catch(done);
+        })
     });
 
     it("transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000", function(done) {
@@ -80,7 +80,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.isFalse(result);
             done();
-        }).catch(done);
+        })
     });
 
     it("transfers: should fail when trying to transfer zero.", function(done) {
@@ -91,7 +91,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.isFalse(result);
             done();
-        }).catch(done);
+        })
     });
 
     //NOTE: testing uint256 wrapping is impossible in this standard token since you can't supply > 2^256 -1.
@@ -110,7 +110,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 100);
             done();
-        }).catch(done);
+        })
     });
 
     it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.", function(done) {
@@ -130,7 +130,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 100);
             done();
-        }).catch(done);
+        })
     });
 
     it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.", function(done) {
@@ -145,7 +145,7 @@ contract("HumanStandardToken", function(accounts) {
         }).catch(function (result) {
             //It will catch OOG.
             done();
-        }).catch(done)
+        })
     });
 
     //bit overkill. But is for testing a bug
@@ -178,7 +178,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 9980);
             done();
-        }).catch(done);
+        })
     });
 
     //should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
@@ -216,7 +216,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 9960);
             done();
-        }).catch(done);
+        })
     });
 
     //should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
@@ -246,7 +246,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
             assert.isFalse(result);
             done();
-        }).catch(done);
+        })
     });
 
     it("approvals: attempt withdrawal from acconut with no allowance (should fail)", function(done) {
@@ -257,7 +257,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
               assert.isFalse(result);
               done();
-        }).catch(done);
+        })
     });
 
     it("approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.", function(done) {
@@ -274,7 +274,7 @@ contract("HumanStandardToken", function(accounts) {
         }).then(function (result) {
               assert.isFalse(result);
               done();
-        }).catch(done);
+        })
     });
 
     it("approvals: approve max (2^256 - 1)", function(done) {
@@ -288,7 +288,7 @@ contract("HumanStandardToken", function(accounts) {
             var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
             assert.isTrue(match);
             done();
-        }).catch(done);
+        })
     });
 
 });
