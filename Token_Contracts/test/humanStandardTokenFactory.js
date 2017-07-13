@@ -4,7 +4,7 @@ var HumanStandardTokenFactory = artifacts.require("./HumanStandardTokenFactory.s
 
 contract("HumanStandardTokenFactory", function(accounts) {
 
-    it("Verify a Human Standard Token once deployed using both verification functions.", function(done) {
+    it("Verify a Human Standard Token once deployed using both verification functions.", function() {
         var factory = null;
         var newTokenAddr = null;
         HumanStandardTokenFactory.new().then(function(ctr) {
@@ -21,7 +21,7 @@ contract("HumanStandardTokenFactory", function(accounts) {
             return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
             assert.strictEqual(result, true);
-            done();
-        }).catch(done);
+        }).catch((err) => { throw new Error(err); });
     });
 });
+
