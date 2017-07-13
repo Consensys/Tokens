@@ -7,19 +7,22 @@ contract("HumanStandardTokenFactory", function(accounts) {
     it("Verify a Human Standard Token once deployed using both verification functions.", function() {
         var factory = null;
         var newTokenAddr = null;
-        HumanStandardTokenFactory.new().then(function(ctr) {
-        factory = ctr;
-
-        return factory.createHumanStandardToken.call(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
+        return HumanStandardTokenFactory.new().then(function(ctr) {
+            factory = ctr;
+            return factory.createHumanStandardToken.call(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(tokenContractAddr) {
+            console.log(`FINAL ASSERT`);
             newTokenAddr = tokenContractAddr;
             return factory.createHumanStandardToken(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(result) {
+            console.log(`FINAL ASSERT`);
             return factory.verifyHumanStandardToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
+            console.log(`FINAL ASSERT`);
             assert.strictEqual(result, true);
             return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]});
         }).then(function (result) {
+            console.log(`FINAL ASSERT`);
             assert.strictEqual(result, true);
         }).catch((err) => { throw new Error(err); });
     });

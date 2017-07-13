@@ -14,8 +14,8 @@ contract("HumanStandardToken", function(accounts) {
     });
 
     it("creation: test correct setting of vanity information", function() {
-      var ctr;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        var ctr;
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.name.call();
     }).then(function (result) {
@@ -31,7 +31,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("creation: should succeed in creating over 2^256 - 1 (max) tokens", function() {
         //2^256 - 1
-        HumanStandardToken.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
+        return HumanStandardToken.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(ctr) {
             return ctr.totalSupply();
     }).then(function (result) {
         var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77');
@@ -47,7 +47,7 @@ contract("HumanStandardToken", function(accounts) {
     //it's not giving estimate on gas used in the event of an error.
     it("transfers: ether transfer should be reversed.", function() {
         var ctr;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei("10", "Ether")});
         }).catch(function(result) {
@@ -58,7 +58,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000", function() {
         var ctr;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.transfer(accounts[1], 10000, {from: accounts[0]});
         }).then(function (result) {
@@ -70,7 +70,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000", function() {
         var ctr;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.transfer.call(accounts[1], 10001, {from: accounts[0]});
         }).then(function (result) {
@@ -80,7 +80,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("transfers: should fail when trying to transfer zero.", function() {
         var ctr;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.transfer.call(accounts[1], 0, {from: accounts[0]});
         }).then(function (result) {
@@ -96,7 +96,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("approvals: msg.sender should approve 100 to accounts[1]", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
@@ -109,7 +109,7 @@ contract("HumanStandardToken", function(accounts) {
     it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.", function() {
         var ctr = null;
         var sampleCtr = null
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return SampleRecipientSuccess.new({from: accounts[0]});
         }).then(function(result) {
@@ -128,7 +128,7 @@ contract("HumanStandardToken", function(accounts) {
     it("approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.", function() {
         var ctr = null;
         var sampleCtr = null
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return SampleRecipientThrow.new({from: accounts[0]});
         }).then(function(result) {
@@ -143,7 +143,7 @@ contract("HumanStandardToken", function(accounts) {
     //bit overkill. But is for testing a bug
     it("approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.balanceOf.call(accounts[0]);
         }).then(function (result) {
@@ -175,7 +175,7 @@ contract("HumanStandardToken", function(accounts) {
     //should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
     it("approvals: msg.sender approves accounts[1] of 100 & withdraws 20 twice.", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
@@ -212,7 +212,7 @@ contract("HumanStandardToken", function(accounts) {
     //should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
     it("approvals: msg.sender approves accounts[1] of 100 & withdraws 50 & 60 (2nd tx should fail)", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
@@ -240,7 +240,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("approvals: attempt withdrawal from acconut with no allowance (should fail)", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]});
         }).then(function (result) {
@@ -250,7 +250,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.approve(accounts[1], 100, {from: accounts[0]});
         }).then(function (result) {
@@ -266,7 +266,7 @@ contract("HumanStandardToken", function(accounts) {
 
     it("approvals: approve max (2^256 - 1)", function() {
         var ctr = null;
-        HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
+        return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function(result) {
             ctr = result;
             return ctr.approve(accounts[1],'115792089237316195423570985008687907853269984665640564039457584007913129639935' , {from: accounts[0]});
         }).then(function (result) {
