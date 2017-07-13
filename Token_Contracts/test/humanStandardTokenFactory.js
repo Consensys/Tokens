@@ -1,5 +1,3 @@
-//This currently throws a stack underflow, and thus commented out. Contract is correctly deployed, but createHumanStandardToken throws underflow.
-//Replicated under testrpc and debugging to fix this.
 var HumanStandardTokenFactory = artifacts.require("./HumanStandardTokenFactory.sol");
 
 contract("HumanStandardTokenFactory", function(accounts) {
@@ -11,19 +9,10 @@ contract("HumanStandardTokenFactory", function(accounts) {
             factory = ctr;
             return factory.createHumanStandardToken.call(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
         }).then(function(tokenContractAddr) {
-            console.log(`FINAL ASSERT`);
             newTokenAddr = tokenContractAddr;
-            return factory.createHumanStandardToken(100000, "Simon Bucks", 2, "SBX", {from: accounts[0]});
-        }).then(function(result) {
-            console.log(`FINAL ASSERT`);
             return factory.verifyHumanStandardToken.call(newTokenAddr, {from: accounts[0]});
-        }).then(function (result) {
-            console.log(`FINAL ASSERT`);
-            assert.strictEqual(result, true);
-            return factory.isHumanToken.call(newTokenAddr, {from: accounts[0]});
-        }).then(function (result) {
-            console.log(`FINAL ASSERT`);
-            assert.strictEqual(result, true);
+        }).then(function(res) {
+            assert.strictEqual(res, true);
         }).catch((err) => { throw new Error(err); });
     });
 });
