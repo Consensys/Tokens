@@ -56,7 +56,25 @@ contract HumanStandardToken is StandardToken {
         //call the receiveApproval function on the contract you want to be notified. This crafts the function signature manually so one doesn't have to include a contract in here just for this.
         //receiveApproval(address _from, uint256 _value, address _tokenContract, bytes _extraData)
         //it is assumed that when does this that the call *should* succeed, otherwise one would use vanilla approve instead.
-        if(!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) { throw; }
+
+        // Bytes parameter needs to be ABI encoded: https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI#formal-specification-of-the-encoding
+
+        if(!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, uint256(byte(0x80)), uint256(_extraData.length), rightPad(_extraData))) { throw; }
         return true;
+    }
+
+    function rightPad(bytes _data) constant returns (bytes) {
+      uint k = 32; // Pad in 32 byte sequences
+      uint n = _data.length / k + _data.length % k > 0 ? 1 : 0; // number of needed sequences
+      uint l = n * k; // Total number of bytes
+
+      if (_data.length == l) return _data; // Doesnt need padding because it is correct length
+
+      bytes memory paddedData = new bytes(l);
+      for (uint i = 0; i < _data.length; i++) {
+        paddedData[i] = _data[i];   // copy bytes one by one
+      }
+
+      return paddedData;
     }
 }

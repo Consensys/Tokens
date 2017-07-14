@@ -119,6 +119,9 @@ contract("HumanStandardToken", function(accounts) {
             return ctr.allowance.call(accounts[0], sampleCtr.address);
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 100);
+            return sampleCtr.extraData.call();
+        }).then(function (result) {
+            assert.strictEqual(result, '0x42');
             return sampleCtr.value.call();
         }).then(function (result) {
             assert.strictEqual(result.toNumber(), 100);
