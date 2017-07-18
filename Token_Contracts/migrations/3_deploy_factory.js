@@ -1,7 +1,6 @@
 const HumanStandardTokenFactory =
-  artifacts.require(`./HumanStandardTokenFactory.sol`);
+  artifacts.require(`./HumanStandardTokenFactory.sol`)
 
 module.exports = (deployer) => {
-  deployer.deploy(HumanStandardTokenFactory);
-};
-
+  deployer.deploy(HumanStandardTokenFactory)
+}
