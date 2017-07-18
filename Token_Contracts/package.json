@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test",
+    "lint": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,8 @@
     "ethereum"
   ],
   "authors": [
-     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
-     "Joseph Chow <joseph.chow@consensys.net>"
+    "Simon de la Rouviere <simon.delarouviere@consensys.net>",
+    "Joseph Chow <joseph.chow@consensys.net>"
   ],
   "license": "MIT",
   "bugs": {
@@ -27,5 +28,15 @@
   "homepage": "https://github.com/ConsenSys/Tokens#readme",
   "dependencies": {
     "truffle-hdwallet-provider": "0.0.3"
+  },
+  "devDependencies": {
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "standard": "^10.0.2"
+  },
+  "standard": {
+    "globals": [ "assert", "it", "artifacts", "contract", "web3" ]
   }
 }

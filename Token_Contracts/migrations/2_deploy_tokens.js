@@ -1,6 +1,5 @@
-const HumanStandardToken = artifacts.require(`./HumanStandardToken.sol`);
+const HumanStandardToken = artifacts.require(`./HumanStandardToken.sol`)
 
 module.exports = (deployer) => {
-  deployer.deploy(HumanStandardToken);
-};
-
+  deployer.deploy(HumanStandardToken)
+}
