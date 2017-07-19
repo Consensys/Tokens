@@ -37,6 +37,12 @@
     "standard": "^10.0.2"
   },
   "standard": {
-    "globals": [ "assert", "it", "artifacts", "contract", "web3" ]
+    "globals": [
+      "assert",
+      "it",
+      "artifacts",
+      "contract",
+      "web3"
+    ]
   }
 }
