@@ -77,13 +77,13 @@ contract('HumanStandardToken', function (accounts) {
     }).catch((err) => { throw new Error(err) })
   })
 
-  it('transfers: should fail when trying to transfer zero.', function () {
+  it('transfers: should handle zero-transfers normally', function () {
     var ctr
     return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
       ctr = result
       return ctr.transfer.call(accounts[1], 0, {from: accounts[0]})
     }).then(function (result) {
-      assert.isFalse(result)
+      assert.isTrue(result)
     }).catch((err) => { throw new Error(err) })
   })
 
