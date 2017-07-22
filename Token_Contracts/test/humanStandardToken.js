@@ -275,4 +275,21 @@ contract('HumanStandardToken', function (accounts) {
       assert.isTrue(match)
     }).catch((err) => { throw new Error(err) })
   })
+
+  it('events: should fire Transfer event properly', function () {
+    var ctr = null
+    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    .then(function (result) {
+      ctr = result
+      return ctr.transfer(accounts[1], '2666', {from: accounts[0]})
+    }).then(function (result) {
+      var transferLog = result.logs.find((element) => {
+        if (element.event.match('Transfer')) { return true } else { return false }
+      })
+      assert.strictEqual(transferLog.args._from, accounts[0])
+      assert.strictEqual(transferLog.args._to, accounts[1])
+      assert.strictEqual(transferLog.args._value.toString(), '2666')
+    }).catch((err) => { throw new Error(err) })
+  })
+
 })
