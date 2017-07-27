@@ -6,6 +6,6 @@ pragma solidity ^0.4.8;
 
 contract SampleRecipientThrow {
   function () {
-    throw;
+    revert();
   }
 }
