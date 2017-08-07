@@ -5,7 +5,4 @@ This one will throw and thus needs to propagate the error up.
 pragma solidity ^0.4.8;
 
 contract SampleRecipientThrow {
-  function () {
-    throw;
-  }
 }

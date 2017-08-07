@@ -3,6 +3,13 @@ var SampleRecipientSuccess = artifacts.require('./SampleRecipientSuccess.sol')
 var SampleRecipientThrow = artifacts.require('./SampleRecipientThrow.sol')
 
 contract('HumanStandardToken', function (accounts) {
+  const evmThrewError = (err) => {
+    if (err.toString().includes('VM Exception while executing eth_call: invalid opcode')) {
+      return true
+    }
+    return false
+  }
+
 // CREATION
 
   it('creation: should create an initial balance of 10000 for the creator', function () {
@@ -73,8 +80,11 @@ contract('HumanStandardToken', function (accounts) {
       ctr = result
       return ctr.transfer.call(accounts[1], 10001, {from: accounts[0]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('transfers: should handle zero-transfers normally', function () {
@@ -233,8 +243,11 @@ contract('HumanStandardToken', function (accounts) {
             // onto next.
       return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: attempt withdrawal from acconut with no allowance (should fail)', function () {
@@ -243,8 +256,11 @@ contract('HumanStandardToken', function (accounts) {
       ctr = result
       return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', function () {
@@ -259,8 +275,11 @@ contract('HumanStandardToken', function (accounts) {
     }).then(function (result) {
       return ctr.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: approve max (2^256 - 1)', function () {
