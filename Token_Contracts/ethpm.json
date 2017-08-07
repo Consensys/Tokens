@@ -1,10 +1,10 @@
 {
   "package_name": "tokens",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Ethereum Token Contracts",
   "authors": [
     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
-    "Joseph Chow <joseph.chow@consensys.net>",
+    "Joseph Chow <joseph.chow@consensys.net>"
   ],
   "keywords": [
     "tokens",
