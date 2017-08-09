@@ -3,6 +3,13 @@ var SampleRecipientSuccess = artifacts.require('./SampleRecipientSuccess.sol')
 var SampleRecipientThrow = artifacts.require('./SampleRecipientThrow.sol')
 
 contract('HumanStandardToken', function (accounts) {
+  const evmThrewError = (err) => {
+    if (err.toString().includes('VM Exception while executing eth_call: invalid opcode')) {
+      return true
+    }
+    return false
+  }
+
 // CREATION
 
   it('creation: should create an initial balance of 10000 for the creator', function () {
@@ -73,8 +80,11 @@ contract('HumanStandardToken', function (accounts) {
       ctr = result
       return ctr.transfer.call(accounts[1], 10001, {from: accounts[0]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('transfers: should handle zero-transfers normally', function () {
@@ -233,8 +243,11 @@ contract('HumanStandardToken', function (accounts) {
             // onto next.
       return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: attempt withdrawal from acconut with no allowance (should fail)', function () {
@@ -243,8 +256,11 @@ contract('HumanStandardToken', function (accounts) {
       ctr = result
       return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', function () {
@@ -259,8 +275,11 @@ contract('HumanStandardToken', function (accounts) {
     }).then(function (result) {
       return ctr.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]})
     }).then(function (result) {
-      assert.isFalse(result)
-    }).catch((err) => { throw new Error(err) })
+      assert(false, 'The preceding call should have thrown an error.')
+    }).catch((err) => {
+      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
+                                 'throw the expected error')
+    })
   })
 
   it('approvals: approve max (2^256 - 1)', function () {
@@ -273,6 +292,54 @@ contract('HumanStandardToken', function (accounts) {
     }).then(function (result) {
       var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
       assert.isTrue(match)
+    }).catch((err) => { throw new Error(err) })
+  })
+
+  it('events: should fire Transfer event properly', function () {
+    var ctr = null
+    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    .then(function (result) {
+      ctr = result
+      return ctr.transfer(accounts[1], '2666', {from: accounts[0]})
+    }).then(function (result) {
+      var transferLog = result.logs.find((element) => {
+        if (element.event.match('Transfer')) { return true } else { return false }
+      })
+      assert.strictEqual(transferLog.args._from, accounts[0])
+      assert.strictEqual(transferLog.args._to, accounts[1])
+      assert.strictEqual(transferLog.args._value.toString(), '2666')
+    }).catch((err) => { throw new Error(err) })
+  })
+
+  it('events: should fire Transfer event normally on a zero transfer', function () {
+    var ctr = null
+    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    .then(function (result) {
+      ctr = result
+      return ctr.transfer(accounts[1], '0', {from: accounts[0]})
+    }).then(function (result) {
+      var transferLog = result.logs.find((element) => {
+        if (element.event.match('Transfer')) { return true } else { return false }
+      })
+      assert.strictEqual(transferLog.args._from, accounts[0])
+      assert.strictEqual(transferLog.args._to, accounts[1])
+      assert.strictEqual(transferLog.args._value.toString(), '0')
+    }).catch((err) => { throw new Error(err) })
+  })
+
+  it('events: should fire Approval event properly', function () {
+    var ctr = null
+    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    .then(function (result) {
+      ctr = result
+      return ctr.approve(accounts[1], '2666', {from: accounts[0]})
+    }).then(function (result) {
+      var approvalLog = result.logs.find((element) => {
+        if (element.event.match('Approval')) { return true } else { return false }
+      })
+      assert.strictEqual(approvalLog.args._owner, accounts[0])
+      assert.strictEqual(approvalLog.args._spender, accounts[1])
+      assert.strictEqual(approvalLog.args._value.toString(), '2666')
     }).catch((err) => { throw new Error(err) })
   })
 })
