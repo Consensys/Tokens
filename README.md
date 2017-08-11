@@ -15,9 +15,6 @@ There is a set of tests written for the HumanStandardToken.sol using the Truffle
 
 Standards allows other contract developers to easily incorporate your token into their application (governance, exchanges, games, etc). It will be updated as often as possible.  
 
-> "You get a token, you get a token, everyone gets a token!" - Token the 3rd: the fun gerbil.  
-
-
 ## Testing
 
 ```npm install```
