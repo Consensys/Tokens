@@ -3,9 +3,9 @@
 
 This repo contains Solidity smart contract code to issue simple, standards-compliant tokens on Ethereum. It can be used to create any form of asset, currency, coin, hours, usage tokens, vunk, etc.  
 
-The default is StandardToken.sol which ONLY implements the core ERC20 standard functionality [#20](https://github.com/ethereum/EIPs/issues/20).  
+The default is [StandardToken.sol](https://github.com/ConsenSys/Tokens/blob/master/contracts/StandardToken.sol) which ONLY implements the core ERC20 standard functionality [#20](https://github.com/ethereum/EIPs/issues/20).  
 
-HumanStandardToken.sol is an example of a token that has optional extras fit for your issuing your own tokens, to be mainly used by other humans. It includes:  
+[HumanStandardToken.sol](https://github.com/ConsenSys/Tokens/blob/master/contracts/HumanStandardToken.sol) is an example of a token that has optional extras fit for your issuing your own tokens, to be mainly used by other humans. It includes:  
 
 1. Initial Finite Supply (upon creation one specifies how much is minted).  
 2. In the absence of a token registry: Optional Decimal, Symbol & Name.  
@@ -14,6 +14,9 @@ HumanStandardToken.sol is an example of a token that has optional extras fit for
 There is a set of tests written for the HumanStandardToken.sol using the Truffle framework to do so.
 
 Standards allows other contract developers to easily incorporate your token into their application (governance, exchanges, games, etc). It will be updated as often as possible.  
+
+> "You get a token, you get a token, everyone gets a token!" - Token the 3rd: the fun gerbil.  
+
 
 ## Testing
 
@@ -27,9 +30,11 @@ Uses Truffle 3.x.
 
 This is published under tokens at ethpm.
 
-### Pull requests are welcome! Please keep standards discussions to the EIP repos.
+## Contributing
 
-> "You get a token, you get a token, everyone gets a token!" - Token the 3rd: the fun gerbil.  
+**Pull requests are welcome! Please keep standards discussions to the EIP repos.**
+
+When submitting a pull request, please do so to the `staging` branch. 
 
 ### Licensed under MIT.  
 
