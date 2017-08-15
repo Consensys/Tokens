@@ -1,345 +1,186 @@
-var HumanStandardToken = artifacts.require('./HumanStandardToken.sol')
-var SampleRecipientSuccess = artifacts.require('./SampleRecipientSuccess.sol')
-var SampleRecipientThrow = artifacts.require('./SampleRecipientThrow.sol')
+const expectThrow = require('../helpers/index').expectThrow
+const HumanStandardTokenAbstraction = artifacts.require('HumanStandardToken')
+const SampleRecipientSuccess = artifacts.require('SampleRecipientSuccess')
+const SampleRecipientThrow = artifacts.require('SampleRecipientThrow')
+let HST
 
 contract('HumanStandardToken', function (accounts) {
-  const evmThrewError = (err) => {
-    if (err.toString().includes('VM Exception while executing eth_call: invalid opcode')) {
-      return true
+  beforeEach(async () => {
+    HST = await HumanStandardTokenAbstraction.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+  })
+
+  it('creation: should create an initial balance of 10000 for the creator', async () => {
+    const balance = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance.toNumber(), 10000)
+  })
+
+  it('creation: test correct setting of vanity information', async () => {
+    const name = await HST.name.call()
+    assert.strictEqual(name, 'Simon Bucks')
+    const decimals = await HST.decimals.call()
+    assert.strictEqual(decimals.toNumber(), 1)
+    const symbol = await HST.symbol.call()
+    assert.strictEqual(symbol, 'SBX')
+  })
+
+  it('creation: should succeed in creating over 2^256 - 1 (max) tokens', async () => {
+    // 2^256 - 1
+    let HST2 = await HumanStandardTokenAbstraction.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    const totalSupply = await HST2.totalSupply()
+    const match = totalSupply.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
+    assert(match, 'result is not correct')
+  })
+
+  // TRANSERS
+  // normal transfers without approvals.
+
+  // this is not *good* enough as the contract could still throw an error otherwise.
+  // ideally one should check balances before and after, but estimateGas currently always throws an error.
+  // it's not giving estimate on gas used in the event of an error.
+  it('transfers: ether transfer should be reversed.', async () => {
+    try {
+      web3.eth.sendTransaction({from: accounts[0], to: HST.address, value: web3.toWei('10', 'Ether')})
+    } catch (e) {
+      assert(true)
     }
-    return false
-  }
-
-// CREATION
-
-  it('creation: should create an initial balance of 10000 for the creator', function () {
-    HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (ctr) {
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 10000)
-    }).catch((err) => { throw new Error(err) })
   })
 
-  it('creation: test correct setting of vanity information', function () {
-    var ctr
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.name.call()
-    }).then(function (result) {
-      assert.strictEqual(result, 'Simon Bucks')
-      return ctr.decimals.call()
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 1)
-      return ctr.symbol.call()
-    }).then(function (result) {
-      assert.strictEqual(result, 'SBX')
-    }).catch((err) => { throw new Error(err) })
+  it('transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000', async () => {
+    await HST.transfer(accounts[1], 10000, {from: accounts[0]})
+    const balance = await HST.balanceOf.call(accounts[1])
+    assert.strictEqual(balance.toNumber(), 10000)
   })
 
-  it('creation: should succeed in creating over 2^256 - 1 (max) tokens', function () {
-        // 2^256 - 1
-    return HumanStandardToken.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (ctr) {
-      return ctr.totalSupply()
-    }).then(function (result) {
-      var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
-      assert.isTrue(match)
-    }).catch((err) => { throw new Error(err) })
+  it('transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000', () => {
+    return expectThrow(HST.transfer.call(accounts[1], 10001, {from: accounts[0]}))
   })
 
-// TRANSERS
-// normal transfers without approvals.
-
-    // this is not *good* enough as the contract could still throw an error otherwise.
-    // ideally one should check balances before and after, but estimateGas currently always throws an error.
-    // it's not giving estimate on gas used in the event of an error.
-  it('transfers: ether transfer should be reversed.', function () {
-    var ctr
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei('10', 'Ether')})
-    }).catch(function (result) {
-      assert(true)
-    }).catch((err) => { throw new Error(err) })
+  it('transfers: should handle zero-transfers normally', async () => {
+    assert(await HST.transfer.call(accounts[1], 0, {from: accounts[0]}), 'zero-transfer has failed')
   })
 
-  it('transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000', function () {
-    var ctr
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.transfer(accounts[1], 10000, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.balanceOf.call(accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 10000)
-    }).catch((err) => { throw new Error(err) })
+  // NOTE: testing uint256 wrapping is impossible in this standard token since you can't supply > 2^256 -1
+  // todo: transfer max amounts
+
+  // APPROVALS
+  it('approvals: msg.sender should approve 100 to accounts[1]', async () => {
+    await HST.approve(accounts[1], 100, {from: accounts[0]})
+    const allowance = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance.toNumber(), 100)
   })
 
-  it('transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000', function () {
-    var ctr
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.transfer.call(accounts[1], 10001, {from: accounts[0]})
-    }).then(function (result) {
-      assert(false, 'The preceding call should have thrown an error.')
-    }).catch((err) => {
-      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
-                                 'throw the expected error')
-    })
+  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.', async () => {
+    let SRS = await SampleRecipientSuccess.new({from: accounts[0]})
+    await HST.approveAndCall(SRS.address, 100, '0x42', {from: accounts[0]})
+    const allowance = await HST.allowance.call(accounts[0], SRS.address)
+    assert.strictEqual(allowance.toNumber(), 100)
+    const value = await SRS.value.call()
+    assert.strictEqual(value.toNumber(), 100)
   })
 
-  it('transfers: should handle zero-transfers normally', function () {
-    var ctr
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.transfer.call(accounts[1], 0, {from: accounts[0]})
-    }).then(function (result) {
-      assert.isTrue(result)
-    }).catch((err) => { throw new Error(err) })
+  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.', async () => {
+    let SRS = await SampleRecipientThrow.new({from: accounts[0]})
+    return expectThrow(HST.approveAndCall.call(SRS.address, 100, '0x42', {from: accounts[0]}))
   })
 
-    // NOTE: testing uint256 wrapping is impossible in this standard token since you can't supply > 2^256 -1.
-
-    // todo: transfer max amounts.
-
-// APPROVALS
-
-  it('approvals: msg.sender should approve 100 to accounts[1]', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], 100, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-    }).catch((err) => { throw new Error(err) })
+  // bit overkill. But is for testing a bug
+  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.', async () => {
+    const balance0 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance0.toNumber(), 10000)
+    await HST.approve(accounts[1], 100, {from: accounts[0]}) // 100
+    const balance2 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance2.toNumber(), 0, 'balance2 not correct')
+    // transferFrom(address _from, address _to, uint256 _value)
+    HST.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]})
+    // allowance(address _owner, address _spender)
+    await HST.allowance.call(accounts[0], accounts[1])
+    await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]}) // -20
+    const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance01.toNumber(), 80) // =80
+    const balance22 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance22.toNumber(), 20)
+    const balance02 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance02.toNumber(), 9980)
   })
 
-  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.', function () {
-    var ctr = null
-    var sampleCtr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return SampleRecipientSuccess.new({from: accounts[0]})
-    }).then(function (result) {
-      sampleCtr = result
-      return ctr.approveAndCall(sampleCtr.address, 100, '0x42', {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], sampleCtr.address)
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-      return sampleCtr.value.call()
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-    }).catch((err) => { throw new Error(err) })
+  // should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
+  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 20 twice.', async () => {
+    await HST.approve(accounts[1], 100, {from: accounts[0]})
+    const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance01.toNumber(), 100)
+    await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
+    const allowance012 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance012.toNumber(), 80)
+    const balance2 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance2.toNumber(), 20)
+    const balance0 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance0.toNumber(), 9980)
+    // FIRST tx done.
+    // onto next.
+    await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
+    const allowance013 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance013.toNumber(), 60)
+    const balance22 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance22.toNumber(), 40)
+    const balance02 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance02.toNumber(), 9960)
   })
 
-  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.', function () {
-    var ctr = null
-    var sampleCtr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return SampleRecipientThrow.new({from: accounts[0]})
-    }).then(function (result) {
-      sampleCtr = result
-      return ctr.approveAndCall.call(sampleCtr.address, 100, '0x42', {from: accounts[0]})
-    }).catch(function (result) {
-            // It will catch OOG.
-      assert(true)
-    })
+  // should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
+  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 50 & 60 (2nd tx should fail)', async () => {
+    await HST.approve(accounts[1], 100, {from: accounts[0]})
+    const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance01.toNumber(), 100)
+    await HST.transferFrom(accounts[0], accounts[2], 50, {from: accounts[1]})
+    const allowance012 = await HST.allowance.call(accounts[0], accounts[1])
+    assert.strictEqual(allowance012.toNumber(), 50)
+    const balance2 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance2.toNumber(), 50)
+    const balance0 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance0.toNumber(), 9950)
+    // FIRST tx done.
+    // onto next.
+    await expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
   })
 
-    // bit overkill. But is for testing a bug
-  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 10000)
-      return ctr.approve(accounts[1], 100, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.balanceOf.call(accounts[2])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 0)
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-      return ctr.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 80)
-      return ctr.balanceOf.call(accounts[2])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 20)
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 9980)
-    }).catch((err) => { throw new Error(err) })
+  it('approvals: attempt withdrawal from account with no allowance (should fail)', function () {
+    return expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
   })
 
-    // should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
-  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 20 twice.', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], 100, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-      return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 80)
-      return ctr.balanceOf.call(accounts[2])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 20)
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 9980)
-            // FIRST tx done.
-            // onto next.
-      return ctr.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 60)
-      return ctr.balanceOf.call(accounts[2])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 40)
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 9960)
-    }).catch((err) => { throw new Error(err) })
+  it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', async () => {
+    HST.approve(accounts[1], 100, {from: accounts[0]})
+    HST.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]})
+    HST.approve(accounts[1], 0, {from: accounts[0]})
+    await expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]}))
   })
 
-    // should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
-  it('approvals: msg.sender approves accounts[1] of 100 & withdraws 50 & 60 (2nd tx should fail)', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], 100, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 100)
-      return ctr.transferFrom(accounts[0], accounts[2], 50, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.allowance.call(accounts[0], accounts[1])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 50)
-      return ctr.balanceOf.call(accounts[2])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 50)
-      return ctr.balanceOf.call(accounts[0])
-    }).then(function (result) {
-      assert.strictEqual(result.toNumber(), 9950)
-            // FIRST tx done.
-            // onto next.
-      return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
-    }).then(function (result) {
-      assert(false, 'The preceding call should have thrown an error.')
-    }).catch((err) => {
-      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
-                                 'throw the expected error')
-    })
+  it('approvals: approve max (2^256 - 1)', async () => {
+    await HST.approve(accounts[1], '115792089237316195423570985008687907853269984665640564039457584007913129639935', {from: accounts[0]})
+    const allowance = await HST.allowance(accounts[0], accounts[1])
+    assert(allowance.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77'))
   })
 
-  it('approvals: attempt withdrawal from acconut with no allowance (should fail)', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]})
-    }).then(function (result) {
-      assert(false, 'The preceding call should have thrown an error.')
-    }).catch((err) => {
-      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
-                                 'throw the expected error')
-    })
+  it('events: should fire Transfer event properly', async () => {
+    const res = await HST.transfer(accounts[1], '2666', {from: accounts[0]})
+    const transferLog = res.logs.find(element => element.event.match('Transfer'))
+    assert.strictEqual(transferLog.args._from, accounts[0])
+    assert.strictEqual(transferLog.args._to, accounts[1])
+    assert.strictEqual(transferLog.args._value.toString(), '2666')
   })
 
-  it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], 100, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]})
-    }).then(function (result) {
-      return ctr.approve(accounts[1], 0, {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]})
-    }).then(function (result) {
-      assert(false, 'The preceding call should have thrown an error.')
-    }).catch((err) => {
-      assert(evmThrewError(err), 'the EVM did not throw an error or did not ' +
-                                 'throw the expected error')
-    })
+  it('events: should fire Transfer event normally on a zero transfer', async () => {
+    const res = await HST.transfer(accounts[1], '0', {from: accounts[0]})
+    const transferLog = res.logs.find(element => element.event.match('Transfer'))
+    assert.strictEqual(transferLog.args._from, accounts[0])
+    assert.strictEqual(transferLog.args._to, accounts[1])
+    assert.strictEqual(transferLog.args._value.toString(), '0')
   })
 
-  it('approvals: approve max (2^256 - 1)', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]}).then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], '115792089237316195423570985008687907853269984665640564039457584007913129639935', {from: accounts[0]})
-    }).then(function (result) {
-      return ctr.allowance(accounts[0], accounts[1])
-    }).then(function (result) {
-      var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
-      assert.isTrue(match)
-    }).catch((err) => { throw new Error(err) })
-  })
-
-  it('events: should fire Transfer event properly', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
-    .then(function (result) {
-      ctr = result
-      return ctr.transfer(accounts[1], '2666', {from: accounts[0]})
-    }).then(function (result) {
-      var transferLog = result.logs.find((element) => {
-        if (element.event.match('Transfer')) { return true } else { return false }
-      })
-      assert.strictEqual(transferLog.args._from, accounts[0])
-      assert.strictEqual(transferLog.args._to, accounts[1])
-      assert.strictEqual(transferLog.args._value.toString(), '2666')
-    }).catch((err) => { throw new Error(err) })
-  })
-
-  it('events: should fire Transfer event normally on a zero transfer', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
-    .then(function (result) {
-      ctr = result
-      return ctr.transfer(accounts[1], '0', {from: accounts[0]})
-    }).then(function (result) {
-      var transferLog = result.logs.find((element) => {
-        if (element.event.match('Transfer')) { return true } else { return false }
-      })
-      assert.strictEqual(transferLog.args._from, accounts[0])
-      assert.strictEqual(transferLog.args._to, accounts[1])
-      assert.strictEqual(transferLog.args._value.toString(), '0')
-    }).catch((err) => { throw new Error(err) })
-  })
-
-  it('events: should fire Approval event properly', function () {
-    var ctr = null
-    return HumanStandardToken.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
-    .then(function (result) {
-      ctr = result
-      return ctr.approve(accounts[1], '2666', {from: accounts[0]})
-    }).then(function (result) {
-      var approvalLog = result.logs.find((element) => {
-        if (element.event.match('Approval')) { return true } else { return false }
-      })
-      assert.strictEqual(approvalLog.args._owner, accounts[0])
-      assert.strictEqual(approvalLog.args._spender, accounts[1])
-      assert.strictEqual(approvalLog.args._value.toString(), '2666')
-    }).catch((err) => { throw new Error(err) })
+  it('events: should fire Approval event properly', async () => {
+    const res = await HST.approve(accounts[1], '2666', {from: accounts[0]})
+    const approvalLog = res.logs.find(element => element.event.match('Approval'))
+    assert.strictEqual(approvalLog.args._owner, accounts[0])
+    assert.strictEqual(approvalLog.args._spender, accounts[1])
+    assert.strictEqual(approvalLog.args._value.toString(), '2666')
   })
 })

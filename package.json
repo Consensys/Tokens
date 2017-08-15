@@ -40,6 +40,8 @@
     "globals": [
       "assert",
       "it",
+      "before",
+      "beforeEach",
       "artifacts",
       "contract",
       "web3"
