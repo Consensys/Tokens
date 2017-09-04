@@ -17,8 +17,10 @@ contract('HumanStandardToken', function (accounts) {
   it('creation: test correct setting of vanity information', async () => {
     const name = await HST.name.call()
     assert.strictEqual(name, 'Simon Bucks')
+
     const decimals = await HST.decimals.call()
     assert.strictEqual(decimals.toNumber(), 1)
+
     const symbol = await HST.symbol.call()
     assert.strictEqual(symbol, 'SBX')
   })
@@ -32,17 +34,20 @@ contract('HumanStandardToken', function (accounts) {
   })
 
   // TRANSERS
-  // normal transfers without approvals.
-
-  // this is not *good* enough as the contract could still throw an error otherwise.
-  // ideally one should check balances before and after, but estimateGas currently always throws an error.
-  // it's not giving estimate on gas used in the event of an error.
+  // normal transfers without approvals
   it('transfers: ether transfer should be reversed.', async () => {
-    try {
-      web3.eth.sendTransaction({from: accounts[0], to: HST.address, value: web3.toWei('10', 'Ether')})
-    } catch (e) {
-      assert(true)
-    }
+    const balanceBefore = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balanceBefore.toNumber(), 10000)
+
+    web3.eth.sendTransaction({from: accounts[0], to: HST.address, value: web3.toWei('10', 'Ether')}, async (err, res) => {
+      expectThrow(new Promise((resolve, reject) => {
+        if (err) reject(err)
+        resolve(res)
+      }))
+
+      const balanceAfter = await HST.balanceOf.call(accounts[0])
+      assert.strictEqual(balanceAfter.toNumber(), 10000)
+    })
   })
 
   it('transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000', async () => {
@@ -74,6 +79,7 @@ contract('HumanStandardToken', function (accounts) {
     await HST.approveAndCall(SRS.address, 100, '0x42', {from: accounts[0]})
     const allowance = await HST.allowance.call(accounts[0], SRS.address)
     assert.strictEqual(allowance.toNumber(), 100)
+
     const value = await SRS.value.call()
     assert.strictEqual(value.toNumber(), 100)
   })
@@ -87,18 +93,20 @@ contract('HumanStandardToken', function (accounts) {
   it('approvals: msg.sender approves accounts[1] of 100 & withdraws 20 once.', async () => {
     const balance0 = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance0.toNumber(), 10000)
+
     await HST.approve(accounts[1], 100, {from: accounts[0]}) // 100
     const balance2 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance2.toNumber(), 0, 'balance2 not correct')
-    // transferFrom(address _from, address _to, uint256 _value)
+
     HST.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]})
-    // allowance(address _owner, address _spender)
     await HST.allowance.call(accounts[0], accounts[1])
     await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]}) // -20
     const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance01.toNumber(), 80) // =80
+
     const balance22 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance22.toNumber(), 20)
+
     const balance02 = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance02.toNumber(), 9980)
   })
@@ -108,20 +116,26 @@ contract('HumanStandardToken', function (accounts) {
     await HST.approve(accounts[1], 100, {from: accounts[0]})
     const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance01.toNumber(), 100)
+
     await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
     const allowance012 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance012.toNumber(), 80)
+
     const balance2 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance2.toNumber(), 20)
+
     const balance0 = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance0.toNumber(), 9980)
+
     // FIRST tx done.
     // onto next.
     await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
     const allowance013 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance013.toNumber(), 60)
+
     const balance22 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance22.toNumber(), 40)
+
     const balance02 = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance02.toNumber(), 9960)
   })
@@ -131,13 +145,17 @@ contract('HumanStandardToken', function (accounts) {
     await HST.approve(accounts[1], 100, {from: accounts[0]})
     const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance01.toNumber(), 100)
+
     await HST.transferFrom(accounts[0], accounts[2], 50, {from: accounts[1]})
     const allowance012 = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance012.toNumber(), 50)
+
     const balance2 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance2.toNumber(), 50)
+
     const balance0 = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance0.toNumber(), 9950)
+
     // FIRST tx done.
     // onto next.
     await expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
