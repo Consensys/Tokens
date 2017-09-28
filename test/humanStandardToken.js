@@ -5,10 +5,49 @@ const SampleRecipientThrow = artifacts.require('SampleRecipientThrow')
 let HST
 
 contract('HumanStandardToken', function (accounts) {
-  beforeEach(async () => {
-    HST = await HumanStandardTokenAbstraction.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
-  })
 
+
+  // -- Start gas metering code -- //
+  let lastBlockBefore;
+  let lastBlockAfter;
+
+  function promiseBlock(blockNumber){
+    return new Promise(function (resolve, reject){
+      web3.eth.getBlock(blockNumber, function (err, res){
+        if (err) reject(err);
+        else resolve(res);
+      });
+    });
+  }
+
+  beforeEach(async function(){
+    HST = await HumanStandardTokenAbstraction.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    lastBlockBefore = await promiseBlock('latest');
+  });
+
+  afterEach(async function(){
+    lastBlockAfter = await promiseBlock('latest');
+    let numberOfBlocksMined = lastBlockAfter.number - lastBlockBefore.number;
+    if (numberOfBlocksMined === 0){
+      console.log('no tx confirmed during this test');
+    } else if (numberOfBlocksMined === 1) {
+      console.log(`1 block used ${lastBlockAfter.gasUsed} gas`);
+    } else if (numberOfBlocksMined > 1){
+      // create an Array listing the number of each block mined during the unit
+      let blockList = Array.from(Array(numberOfBlocksMined))
+        .map((undefined,i) => lastBlockBefore.number + i);  
+      let gasUsed = 0;
+      let block;
+      for(blockNumber in blockList){
+        debugger;
+        let block = await promiseBlock(blockNumber);
+        gasUsed += block.gasUsed;
+      }
+      console.log(`${blockList.length} blocks used ${lastBlockAfter.gasUsed} gas`);
+    }
+  });
+
+  // -- End gas metering code -- //
   it('creation: should create an initial balance of 10000 for the creator', async () => {
     const balance = await HST.balanceOf.call(accounts[0])
     assert.strictEqual(balance.toNumber(), 10000)
