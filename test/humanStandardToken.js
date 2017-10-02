@@ -178,6 +178,27 @@ contract('HumanStandardToken', function (accounts) {
     assert(allowance.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77'))
   })
 
+  // should approve max of msg.sender & withdraw 20 without changing allowance (should succeed).
+  it('approvals: msg.sender approves accounts[1] of max (2^256 - 1) & withdraws 20', async () => {
+    const balance0 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance0.toNumber(), 10000)
+
+    const max = '1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77'
+    await HST.approve(accounts[1], max, {from: accounts[0]})
+    const balance2 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance2.toNumber(), 0, 'balance2 not correct')
+
+    await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]})
+    const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
+    assert(allowance01.equals(max))
+
+    const balance22 = await HST.balanceOf.call(accounts[2])
+    assert.strictEqual(balance22.toNumber(), 20)
+
+    const balance02 = await HST.balanceOf.call(accounts[0])
+    assert.strictEqual(balance02.toNumber(), 9980)
+  })
+
   it('events: should fire Transfer event properly', async () => {
     const res = await HST.transfer(accounts[1], '2666', {from: accounts[0]})
     const transferLog = res.logs.find(element => element.event.match('Transfer'))
