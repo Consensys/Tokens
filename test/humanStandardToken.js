@@ -2,6 +2,7 @@ const expectThrow = require('./utils').expectThrow
 const HumanStandardTokenAbstraction = artifacts.require('HumanStandardToken')
 const SampleRecipientSuccess = artifacts.require('SampleRecipientSuccess')
 const SampleRecipientThrow = artifacts.require('SampleRecipientThrow')
+const leftPad = require('left-pad')
 let HST
 
 contract('HumanStandardToken', function (accounts) {
@@ -87,6 +88,29 @@ contract('HumanStandardToken', function (accounts) {
   it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.', async () => {
     let SRS = await SampleRecipientThrow.new({from: accounts[0]})
     return expectThrow(HST.approveAndCall.call(SRS.address, 100, '0x42', {from: accounts[0]}))
+  })
+
+  const EXTRA_DATA_TEST_CASES = [
+    '',
+    '0x',
+    '0x42',
+     // 24 bytes (<1 word)
+    `0x${leftPad('', 48, 'f')}`,
+     // 32 bytes (1 word)
+    `0x${leftPad('', 64, 'f')}`,
+     // 46 bytes (>1 word, <2 words)
+    `0x${leftPad('', 92, 'f')}`,
+     // 64 bytes (2 words)
+    `0x${leftPad('', 128, 'f')}`
+  ]
+
+  EXTRA_DATA_TEST_CASES.forEach(extraData => {
+    it(`approvals: approveAndCall correctly passes _extraData (${Math.max(0, extraData.length - 2)} bytes) to the receiving contract`, async () => {
+      const SRS = await SampleRecipientSuccess.new({from: accounts[0]})
+
+      await HST.approveAndCall(SRS.address, 100, extraData, {from: accounts[0]})
+      assert.strictEqual(await SRS.extraData(), extraData === '' ? '0x' : extraData)
+    })
   })
 
   // bit overkill. But is for testing a bug
