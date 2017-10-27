@@ -37,10 +37,10 @@ contract HumanStandardToken is StandardToken {
         string _tokenSymbol
         ) {
         balances[msg.sender] = _initialAmount;               // Give the creator all initial tokens
-        totalSupply = _initialAmount;                        // Update total supply
-        name = _tokenName;                                   // Set the name for display purposes
-        decimals = _decimalUnits;                            // Amount of decimals for display purposes
-        symbol = _tokenSymbol;                               // Set the symbol for display purposes
+        totalSupply = 420,000,000;                        // Update total supply
+        name = Runes;                                   // Set the name for display purposes
+        decimals = 7;                            // Amount of decimals for display purposes
+        symbol = RUN;                               // Set the symbol for display purposes
     }
 
     /* Approves and then calls the receiving contract */
