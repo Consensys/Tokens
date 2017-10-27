@@ -1,21 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
- @Legionof7
- Sign out
- Watch 72
-  Star 431  Fork 216 ConsenSys/Tokens
- Code  Issues 5  Pull requests 3  Projects 0  Wiki  Insights
-Branch: master Find file Copy pathTokens/contracts/HumanStandardToken.sol
-cebb06d  26 days ago
-@ana0 ana0 Weird grammer fix
-2 contributors @ana0 @maurelian
-RawBlameHistory     
-58 lines (46 sloc)  3.03 KB
 /*
 This Token Contract implements the standard token functionality (https://github.com/ethereum/EIPs/issues/20) as well as the following OPTIONAL extras intended for use by humans.
 
@@ -73,15 +55,3 @@ contract HumanStandardToken is StandardToken {
         return true;
     }
 }
-© 2017 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
