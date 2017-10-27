@@ -1,3 +1,21 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Explore
+ @Legionof7
+ Sign out
+ Watch 72
+  Star 431  Fork 216 ConsenSys/Tokens
+ Code  Issues 5  Pull requests 3  Projects 0  Wiki  Insights
+Branch: master Find file Copy pathTokens/contracts/HumanStandardToken.sol
+cebb06d  26 days ago
+@ana0 ana0 Weird grammer fix
+2 contributors @ana0 @maurelian
+RawBlameHistory     
+58 lines (46 sloc)  3.03 KB
 /*
 This Token Contract implements the standard token functionality (https://github.com/ethereum/EIPs/issues/20) as well as the following OPTIONAL extras intended for use by humans.
 
@@ -25,9 +43,9 @@ contract HumanStandardToken is StandardToken {
     They allow one to customise the token contract & in no way influences the core functionality.
     Some wallets/interfaces might not even bother to look at this information.
     */
-    string public name;                   //fancy name: eg Simon Bucks
-    uint8 public decimals;                //How many decimals to show. ie. There could 1000 base units with 3 decimals. Meaning 0.980 SBX = 980 base units. It's like comparing 1 wei to 1 ether.
-    string public symbol;                 //An identifier: eg SBX
+    string public name = Runes;                   //fancy name: eg Simon Bucks
+    uint8 public decimals = 7;                //How many decimals to show. ie. There could 1000 base units with 3 decimals. Meaning 0.980 SBX = 980 base units. It's like comparing 1 wei to 1 ether.
+    string public symbol = Run;                 //An identifier: eg SBX
     string public version = 'H0.1';       //human 0.1 standard. Just an arbitrary versioning scheme.
 
     function HumanStandardToken(
@@ -37,10 +55,10 @@ contract HumanStandardToken is StandardToken {
         string _tokenSymbol
         ) {
         balances[msg.sender] = _initialAmount;               // Give the creator all initial tokens
-        totalSupply = 420,000,000;                        // Update total supply
-        name = Runes;                                   // Set the name for display purposes
-        decimals = 7;                            // Amount of decimals for display purposes
-        symbol = RUN;                               // Set the symbol for display purposes
+        totalSupply = _initialAmount;                        // Update total supply
+        name = _tokenName;                                   // Set the name for display purposes
+        decimals = _decimalUnits;                            // Amount of decimals for display purposes
+        symbol = _tokenSymbol;                               // Set the symbol for display purposes
     }
 
     /* Approves and then calls the receiving contract */
@@ -55,3 +73,15 @@ contract HumanStandardToken is StandardToken {
         return true;
     }
 }
+© 2017 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
+About
