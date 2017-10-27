@@ -1,7 +1,9 @@
 # Tokens
 [ ![Codeship Status for ConsenSys/Tokens](https://app.codeship.com/projects/ccf33380-4dfa-0135-cfa1-72c4965f7f14/status?branch=master)](https://app.codeship.com/projects/233433)
 
-This repo contains Solidity smart contract code to issue simple, standards-compliant tokens on Ethereum. It can be used to create any form of asset, currency, coin, hours, usage tokens, vunk, etc.  
+This repo contains Solidity smart contract code to issue simple, standards-compliant tokens on Ethereum. It can be used to create any form of asset, currency, coin, hours, usage tokens, vunk, etc.  But we're actally going to use this for Aether United Runes, which is the best token. Believe me. It is a very, very, very good token. People tell me it's the best. You know, I'm friends with a lot of Bitcoins, a lot of Ethereums, a lot of Doge. They all tell me, Runes will be the best. It's very, very, extremely good guys. We're going to make blockchain great again. I'm telling you. Blockchain will be great again. All these Bitcoins, all these Ethereums, they know they're done. It's time for Runes. They're just giving up now. Bitcoins are not amazing. Ethereum is not amazing. Doge is not amazing. You know what is amazing? Runes. 
+
+Look, look. I love cryptocurrency ok. And together, with Runes, we're going to make cryptocurrency great again. God Bless Blockchain. 
 
 The default is [StandardToken.sol](https://github.com/ConsenSys/Tokens/blob/master/contracts/StandardToken.sol) which ONLY implements the core ERC20 standard functionality [#20](https://github.com/ethereum/EIPs/issues/20).  
 
