@@ -13,7 +13,7 @@ contract SampleRecipientSuccess {
 
   event ReceivedApproval(uint256 _value);
 
-  function receiveApproval(address _from, uint256 _value, address _tokenContract, bytes _extraData) {
+  function receiveApproval(address _from, uint256 _value, address _tokenContract, bytes _extraData) public {
     from = _from;
     value = _value;
     tokenContract = _tokenContract;
