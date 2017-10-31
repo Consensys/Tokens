@@ -8,7 +8,7 @@ contract HumanStandardTokenFactory {
     mapping(address => bool) public isHumanToken; //verify without having to do a bytecode check.
     bytes public humanStandardByteCode;
 
-    function HumanStandardTokenFactory() {
+    function HumanStandardTokenFactory() public {
       //upon creation of the factory, deploy a HumanStandardToken (parameters are meaningless) and store the bytecode provably.
       address verifiedToken = createHumanStandardToken(10000, "Verify Token", 3, "VTX");
       humanStandardByteCode = codeAt(verifiedToken);
@@ -16,7 +16,7 @@ contract HumanStandardTokenFactory {
 
     //verifies if a contract that has been deployed is a Human Standard Token.
     //NOTE: This is a very expensive function, and should only be used in an eth_call. ~800k gas
-    function verifyHumanStandardToken(address _tokenContract) constant returns (bool) {
+    function verifyHumanStandardToken(address _tokenContract) public constant returns (bool) {
       bytes memory fetchedTokenByteCode = codeAt(_tokenContract);
 
       if (fetchedTokenByteCode.length != humanStandardByteCode.length) {
@@ -51,7 +51,7 @@ contract HumanStandardTokenFactory {
       }
     }
 
-    function createHumanStandardToken(uint256 _initialAmount, string _name, uint8 _decimals, string _symbol) returns (address) {
+    function createHumanStandardToken(uint256 _initialAmount, string _name, uint8 _decimals, string _symbol) public returns (address) {
 
         HumanStandardToken newToken = (new HumanStandardToken(_initialAmount, _name, _decimals, _symbol));
         created[msg.sender].push(address(newToken));
