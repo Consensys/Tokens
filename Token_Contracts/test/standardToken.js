@@ -1,1 +1,0 @@
-/* This has moved to humandStandardToken.js */
