@@ -40,7 +40,7 @@ contract StandardToken is Token {
         return true;
     }
 
-    function balanceOf(address _owner) constant public returns (uint256 balance) {
+    function balanceOf(address _owner) view public returns (uint256 balance) {
         return balances[_owner];
     }
 
@@ -50,7 +50,8 @@ contract StandardToken is Token {
         return true;
     }
 
-    function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender)
+    view public returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
 
