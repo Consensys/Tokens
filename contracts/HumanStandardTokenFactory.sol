@@ -16,7 +16,7 @@ contract HumanStandardTokenFactory {
 
     //verifies if a contract that has been deployed is a Human Standard Token.
     //NOTE: This is a very expensive function, and should only be used in an eth_call. ~800k gas
-    function verifyHumanStandardToken(address _tokenContract) public constant returns (bool) {
+    function verifyHumanStandardToken(address _tokenContract) public view returns (bool) {
       bytes memory fetchedTokenByteCode = codeAt(_tokenContract);
 
       if (fetchedTokenByteCode.length != humanStandardByteCode.length) {
@@ -35,7 +35,7 @@ contract HumanStandardTokenFactory {
 
     //for now, keeping this internal. Ideally there should also be a live version of this that any contract can use, lib-style.
     //retrieves the bytecode at a specific address.
-    function codeAt(address _addr) internal constant returns (bytes o_code) {
+    function codeAt(address _addr) internal view returns (bytes o_code) {
       assembly {
           // retrieve the size of the code, this needs assembly
           let size := extcodesize(_addr)
