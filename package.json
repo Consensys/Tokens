@@ -30,11 +30,11 @@
     "truffle-hdwallet-provider": "0.0.3"
   },
   "devDependencies": {
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.0",
-    "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "standard": "^10.0.2"
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-node": "5.1.0",
+    "eslint-plugin-react": "7.1.0",
+    "eslint-plugin-standard": "3.0.1",
+    "standard": "10.0.2"
   },
   "standard": {
     "globals": [
