@@ -30,11 +30,6 @@ module.exports = {
     },
     testrpc: {
       network_id: 'default'
-    },
-    development: { // truffle test hardcodes the "test" network.
-      host: 'localhost',
-      port: '8545',
-      network_id: 'default'
     }
   }
 }
