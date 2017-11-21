@@ -1,7 +1,5 @@
 const expectThrow = require('./utils').expectThrow
 const HumanStandardTokenAbstraction = artifacts.require('HumanStandardToken')
-const SampleRecipientSuccess = artifacts.require('SampleRecipientSuccess')
-const SampleRecipientThrow = artifacts.require('SampleRecipientThrow')
 let HST
 
 contract('HumanStandardToken', function (accounts) {
@@ -72,21 +70,6 @@ contract('HumanStandardToken', function (accounts) {
     await HST.approve(accounts[1], 100, {from: accounts[0]})
     const allowance = await HST.allowance.call(accounts[0], accounts[1])
     assert.strictEqual(allowance.toNumber(), 100)
-  })
-
-  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient. It should succeed.', async () => {
-    let SRS = await SampleRecipientSuccess.new({from: accounts[0]})
-    await HST.approveAndCall(SRS.address, 100, '0x42', {from: accounts[0]})
-    const allowance = await HST.allowance.call(accounts[0], SRS.address)
-    assert.strictEqual(allowance.toNumber(), 100)
-
-    const value = await SRS.value.call()
-    assert.strictEqual(value.toNumber(), 100)
-  })
-
-  it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.', async () => {
-    let SRS = await SampleRecipientThrow.new({from: accounts[0]})
-    expectThrow(HST.approveAndCall.call(SRS.address, 100, '0x42', {from: accounts[0]}))
   })
 
   // bit overkill. But is for testing a bug
