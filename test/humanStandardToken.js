@@ -86,7 +86,7 @@ contract('HumanStandardToken', function (accounts) {
 
   it('approvals: msg.sender should approve 100 to SampleRecipient and then NOTIFY SampleRecipient and throw.', async () => {
     let SRS = await SampleRecipientThrow.new({from: accounts[0]})
-    return expectThrow(HST.approveAndCall.call(SRS.address, 100, '0x42', {from: accounts[0]}))
+    expectThrow(HST.approveAndCall.call(SRS.address, 100, '0x42', {from: accounts[0]}))
   })
 
   // bit overkill. But is for testing a bug
@@ -98,7 +98,7 @@ contract('HumanStandardToken', function (accounts) {
     const balance2 = await HST.balanceOf.call(accounts[2])
     assert.strictEqual(balance2.toNumber(), 0, 'balance2 not correct')
 
-    HST.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]})
+    await HST.transferFrom.call(accounts[0], accounts[2], 20, {from: accounts[1]})
     await HST.allowance.call(accounts[0], accounts[1])
     await HST.transferFrom(accounts[0], accounts[2], 20, {from: accounts[1]}) // -20
     const allowance01 = await HST.allowance.call(accounts[0], accounts[1])
@@ -158,18 +158,18 @@ contract('HumanStandardToken', function (accounts) {
 
     // FIRST tx done.
     // onto next.
-    await expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
+    expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
   })
 
-  it('approvals: attempt withdrawal from account with no allowance (should fail)', function () {
+  it('approvals: attempt withdrawal from account with no allowance (should fail)', () => {
     return expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, {from: accounts[1]}))
   })
 
   it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', async () => {
-    HST.approve(accounts[1], 100, {from: accounts[0]})
-    HST.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]})
-    HST.approve(accounts[1], 0, {from: accounts[0]})
-    await expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]}))
+    await HST.approve(accounts[1], 100, {from: accounts[0]})
+    await HST.transferFrom(accounts[0], accounts[2], 60, {from: accounts[1]})
+    await HST.approve(accounts[1], 0, {from: accounts[0]})
+    expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 10, {from: accounts[1]}))
   })
 
   it('approvals: approve max (2^256 - 1)', async () => {
