@@ -1,6 +1,6 @@
 {
   "package_name": "tokens",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Ethereum Token Contracts",
   "authors": [
     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
