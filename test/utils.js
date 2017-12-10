@@ -1,14 +1,12 @@
 module.exports = {
   expectThrow: async promise => {
+    const errMsg = 'Expected throw not received'
     try {
       await promise
-    } catch (error) {
-      const invalidJump = error.message.search('invalid JUMP') >= 0
-      const invalidOpcode = error.message.search('invalid opcode') >= 0
-      const outOfGas = error.message.search('out of gas') >= 0
-      assert(invalidJump || invalidOpcode || outOfGas, "Expected throw, got '" + error + "' instead")
+    } catch (err) {
+      assert(err.toString().includes('invalid opcode'), errMsg)
       return
     }
-    assert.fail('Expected throw not received')
+    assert.fail(errMsg)
   }
 }
