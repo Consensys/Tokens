@@ -5,7 +5,7 @@ let ERC721;
 contract('TestERC721Implementation', function (accounts) {
   beforeEach(async () => {
     //todo: deployment is OOG-ing.
-    ERC721 = await TestERC721ImplementationAbstraction.new({gas: 4700000, from: accounts[0]});
+    ERC721 = await TestERC721ImplementationAbstraction.new({gas: 6700000, from: accounts[0]});
   })
 
   it('creation: admin should be set', async () => {
