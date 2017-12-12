@@ -35,12 +35,12 @@ contract ERC721 is ERC721Interface {
     }
 
     //how many badges of a specific release someone owns
-    function balanceOf(address _owner) public view returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256) {
         return balances[_owner];
     }
 
     //who owns a specific badge
-    function ownerOf(uint256 _tokenId) public view tokenExists(_tokenId) returns (address owner) {
+    function ownerOf(uint256 _tokenId) public view tokenExists(_tokenId) returns (address) {
         return tokenOwner[_tokenId];
     }
 
@@ -124,7 +124,7 @@ contract ERC721 is ERC721Interface {
     }
 
     //helper function to get a specific token (eg by iterating and fetching all of it)
-    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256 tokenId) {
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256) {
         require(_index >= 0 && _index < balanceOf(_owner));
         return ownedTokens[_owner][_index];
     }
