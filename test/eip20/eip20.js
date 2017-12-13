@@ -1,10 +1,10 @@
-const expectThrow = require('./utils').expectThrow
-const HumanStandardTokenAbstraction = artifacts.require('HumanStandardToken')
+const expectThrow = require('../utils').expectThrow
+const EIP20Abstraction = artifacts.require('EIP20')
 let HST
 
-contract('HumanStandardToken', function (accounts) {
+contract('EIP20', function (accounts) {
   beforeEach(async () => {
-    HST = await HumanStandardTokenAbstraction.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    HST = await EIP20Abstraction.new(10000, 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
   })
 
   it('creation: should create an initial balance of 10000 for the creator', async () => {
@@ -25,7 +25,7 @@ contract('HumanStandardToken', function (accounts) {
 
   it('creation: should succeed in creating over 2^256 - 1 (max) tokens', async () => {
     // 2^256 - 1
-    let HST2 = await HumanStandardTokenAbstraction.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
+    let HST2 = await EIP20Abstraction.new('115792089237316195423570985008687907853269984665640564039457584007913129639935', 'Simon Bucks', 1, 'SBX', {from: accounts[0]})
     const totalSupply = await HST2.totalSupply()
     const match = totalSupply.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
     assert(match, 'result is not correct')

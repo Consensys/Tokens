@@ -1,6 +1,6 @@
-const HumanStandardTokenFactory =
-  artifacts.require(`./HumanStandardTokenFactory.sol`)
+const EIP20Factory =
+  artifacts.require(`./EIP20Factory.sol`)
 
 module.exports = (deployer) => {
-  deployer.deploy(HumanStandardTokenFactory)
+  deployer.deploy(EIP20Factory)
 }

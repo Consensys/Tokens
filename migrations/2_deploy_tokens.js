@@ -1,5 +1,5 @@
-const HumanStandardToken = artifacts.require(`./HumanStandardToken.sol`)
+const EIP20 = artifacts.require(`./EIP20.sol`)
 
 module.exports = (deployer) => {
-  deployer.deploy(HumanStandardToken)
+  deployer.deploy(EIP20)
 }
