@@ -2,7 +2,7 @@
 // https://github.com/ethereum/EIPs/issues/20
 pragma solidity ^0.4.8;
 
-contract Token {
+contract EIP20Interface {
     /* This is a slight change to the ERC20 base standard.
     function totalSupply() constant returns (uint256 supply);
     is replaced with:
