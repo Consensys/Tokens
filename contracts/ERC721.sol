@@ -54,7 +54,8 @@ contract ERC721 is ERC721Interface {
     //todo: returns success ala ERC20?
     function transferFrom(address _from, address _to, uint256 _tokenId) tokenExists(_tokenId) public {
         require(allowed[_tokenId] == msg.sender); //allowed to transfer
-        require(tokenOwner[_tokenId] == _from); //
+        require(tokenOwner[_tokenId] == _from); //token should still be in control owner
+        require(_to != 0); //not allowed to burn in transfer method
 
         internalTransfer(_from, _to, _tokenId);
     }
