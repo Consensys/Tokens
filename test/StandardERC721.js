@@ -1,4 +1,4 @@
-// const expectThrow = require('./utils').expectThrow
+const expectThrow = require('./utils').expectThrow
 const TestERC721ImplementationAbstraction = artifacts.require('TestERC721Implementation')
 let ERC721
 
@@ -14,8 +14,45 @@ contract('TestERC721Implementation', function (accounts) {
   })
 
   // create tokens:
-  // create one token to admin (verify events too: from == 0)
+  // create one token to admin
+  it('creation: create one token', async () => {
+    const admin = await ERC721.admin.call()
+    const result = await ERC721.createToken(admin, { from: accounts[0] })
+
+    // verify Transfer event (from == 0 if creating token)
+    assert.strictEqual(result.logs[0].event, 'Transfer')
+    assert.strictEqual(result.logs[0].args.from, '0x0000000000000000000000000000000000000000')
+    assert.strictEqual(result.logs[0].args.to, admin)
+    assert.strictEqual(result.logs[0].args.tokenId.toString(), '0')
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const adminBalance = await ERC721.balanceOf.call(admin)
+    const ownedTokens = await ERC721.getAllTokens.call(admin)
+    const owner = await ERC721.ownerOf.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+    assert.strictEqual(adminBalance.toString(), '1')
+    assert.strictEqual(ownedTokens[0].toString(), '0')
+    assert.strictEqual(admin, owner)
+  })
+
+  // retrieve token that doesn't exist (fail)
+  it('creation: create one token then retrieve one that does not exist (should fail)', async () => {
+    const admin = await ERC721.admin.call()
+    await ERC721.createToken(admin, { from: accounts[0] })
+
+    const owner = await ERC721.ownerOf.call(0)
+    assert.strictEqual(admin, owner)
+    await expectThrow(ERC721.ownerOf.call(1))
+  })
+
   // create one token to other user
+  it('creation: create one token to another user', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    const owner = await ERC721.ownerOf.call(0)
+    assert.strictEqual(owner, accounts[1])
+  })
   // create multiple tokens to one user
   // create multiple tokens to multiple users
 
@@ -33,7 +70,6 @@ contract('TestERC721Implementation', function (accounts) {
   // transfer token fail by token not exisitng
   // transfer token fail by sending to zero ("burning")
   // transfer token fail by not being owner
-
 
   // approve token:
   // approve token successfully (check all expected states)
