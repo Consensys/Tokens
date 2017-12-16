@@ -1,6 +1,8 @@
 /*
 Implements EIP20 token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
+
+
 pragma solidity ^0.4.8;
 
 import "./EIP20Interface.sol";
@@ -70,7 +72,7 @@ contract EIP20 is EIP20Interface {
 
     function allowance(address _owner, address _spender)
     view public returns (uint256 remaining) {
-      return allowed[_owner][_spender];
+        return allowed[_owner][_spender];
     }
 
     mapping (address => uint256) balances;
