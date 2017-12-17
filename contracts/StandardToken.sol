@@ -13,6 +13,7 @@ pragma solidity ^0.4.8;
 
 import "./Token.sol";
 
+
 contract StandardToken is Token {
 
     uint256 constant MAX_UINT256 = 2**256 - 1;
