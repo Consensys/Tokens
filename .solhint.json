@@ -1,0 +1,12 @@
+ {
+    "extends": "default",
+    "rules": {
+      "avoid-throw": false,
+      "avoid-suicide": "error",
+      "avoid-sha3": "warn",
+      "indent": ["warn", 4],
+      "max-line-length": 150,
+      "var-name-mixedcase": false,
+      "func-param-name-mixedcase": false
+    }
+  }
