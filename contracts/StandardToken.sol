@@ -6,9 +6,13 @@ If you deploy this, you won't have anything useful.)
 
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 .*/
+
+
 pragma solidity ^0.4.8;
 
+
 import "./Token.sol";
+
 
 contract StandardToken is Token {
 
@@ -52,7 +56,7 @@ contract StandardToken is Token {
 
     function allowance(address _owner, address _spender)
     view public returns (uint256 remaining) {
-      return allowed[_owner][_spender];
+        return allowed[_owner][_spender];
     }
 
     mapping (address => uint256) balances;

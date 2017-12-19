@@ -9,7 +9,7 @@
   "scripts": {
     "compile": "truffle compile",
     "test": "standard && truffle test",
-    "lint": "standard --fix"
+    "lint": "standard --fix && solhint *.sol **/*.sol"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "eslint-plugin-node": "5.1.0",
     "eslint-plugin-react": "7.1.0",
     "eslint-plugin-standard": "3.0.1",
+    "solhint": "^1.1.9",
     "standard": "10.0.2"
   },
   "standard": {
