@@ -95,6 +95,9 @@ contract ERC721 is ERC721Interface {
         //clear pending approvals
         internalApprove(_from, 0, _tokenId);
 
+        delete tokenOwner[_tokenId]; //remove token from circulation (effectively remove ownership access)
+
+        //next: remove token from owner's helper data structures.
         uint256 index = tokenIndexInOwnerArray[_tokenId];
 
         //1) Put last item into index of token to be removed.

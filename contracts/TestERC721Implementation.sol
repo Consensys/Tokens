@@ -1,7 +1,11 @@
 pragma solidity ^0.4.18;
 import './ERC721.sol';
 
-
+/*
+The API names here should not be regarded as conforming to a specific API.
+Perhaps EIP 612 should be used here: https://github.com/ethereum/EIPs/pull/621
+This is just to test creation/burning of an ERC721 token.
+*/
 contract TestERC721Implementation is ERC721 {
 
     address public admin;
@@ -20,7 +24,7 @@ contract TestERC721Implementation is ERC721 {
     }
 
     function burnToken(address _from, uint256 _tokenId) public {
-        require(msg.sender == admin);
+        require(tokenOwner[_tokenId] == msg.sender); //token should be in control of owner
         removeToken(_from, _tokenId);
         Transfer(_from, 0, _tokenId);
         totalSupply -= 1;
