@@ -9,7 +9,7 @@
   "scripts": {
     "compile": "truffle compile",
     "test": "standard && truffle test",
-    "lint": "standard --fix && solhint *.sol **/*.sol"
+    "lint": "standard --fix && solhint contracts/*.sol contracts/*/*.sol"
   },
   "repository": {
     "type": "git",
