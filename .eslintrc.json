@@ -1,0 +1,21 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "globals": {
+    "assert": true,
+    "it": true,
+    "bef: true,ore": true,
+    "beforeE: true,ach": true,
+    "artifacts": true,
+    "contract": true,
+    "web3": true
+  }
+}

@@ -8,9 +8,12 @@
   },
   "scripts": {
     "compile": "truffle compile",
-    "test": "standard && truffle test",
-    "lint": "standard --fix && solhint contracts/*.sol contracts/*/*.sol",
-    "publish": "truffle publish"
+    "lint:js": "eslint --fix test/**/*.js migrations/**/*.js",
+    "lint:sol": "solhint contracts/*.sol contracts/*/*.sol test/*.sol test/*/*.sol",
+    "lint": "npm run lint:js && npm run lint:sol",
+    "publish": "truffle publish",
+    "test": "truffle test",
+    "posttest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -33,22 +36,13 @@
     "truffle-hdwallet-provider": "0.0.3"
   },
   "devDependencies": {
-    "eslint-plugin-import": "2.7.0",
+    "eslint": "4.13.1",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "6.0.3",
+    "eslint-plugin-mocha": "4.11.0",
     "eslint-plugin-node": "5.1.0",
-    "eslint-plugin-react": "7.1.0",
-    "eslint-plugin-standard": "3.0.1",
-    "solhint": "^1.1.9",
-    "standard": "10.0.2"
-  },
-  "standard": {
-    "globals": [
-      "assert",
-      "it",
-      "before",
-      "beforeEach",
-      "artifacts",
-      "contract",
-      "web3"
-    ]
+    "eslint-plugin-react": "7.5.1",
+    "solhint": "1.1.9"
   }
 }
