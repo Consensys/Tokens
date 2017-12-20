@@ -84,10 +84,10 @@ contract('TestERC721Implementation', function (accounts) {
 
   // burn tokens:
   // create one token and burn/remove it.
-  it('creation: create one token the burn/remove it', async () => {
+  it('burn: create one token the burn/remove it', async () => {
     await ERC721.createToken(accounts[1], { from: accounts[0] })
 
-    const burn = await ERC721.burnToken(accounts[1], 0, { from: accounts[1] })
+    const burn = await ERC721.burnToken(0, { from: accounts[1] })
     // verify Transfer event (to == 0 if burning token)
     assert.strictEqual(burn.logs[0].event, 'Transfer')
     assert.strictEqual(burn.logs[0].args.from, accounts[1])
@@ -105,7 +105,38 @@ contract('TestERC721Implementation', function (accounts) {
   })
 
   // create one token and burn/remove a different one (should fail).
+  it('burn: create one token and burn/remove a different ID (should fail)', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await expectThrow(ERC721.burnToken(1, { from: accounts[1] }))
+  })
+
+  // burn from other owner (should fail)
+  it('burn: create one token and burn/remove from a different owner (should fail)', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await expectThrow(ERC721.burnToken(0, { from: accounts[2] }))
+  })
+
   // create 2 tokens to one user and then burn/remove one.
+  it('creation: create 2 tokens to one user and then burn/remove one (second token).', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(1, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+    const owner = await ERC721.ownerOf.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+    assert.strictEqual(balance.toString(), '1')
+    assert.strictEqual(ownedTokens.length, 1)
+    assert.strictEqual(owner, accounts[1])
+    await expectThrow(ERC721.ownerOf.call(1))
+  })
+
   // create 2 token to one user then burn one and then create new one to same user.
   // create 2 token to one user and then burn/remove all.
 

@@ -23,10 +23,10 @@ contract TestERC721Implementation is ERC721 {
         counter += 1; // every new token gets a new ID
     }
 
-    function burnToken(address _from, uint256 _tokenId) public {
+    function burnToken(uint256 _tokenId) tokenExists(_tokenId) public {
         require(tokenOwner[_tokenId] == msg.sender); //token should be in control of owner
-        removeToken(_from, _tokenId);
-        Transfer(_from, 0, _tokenId);
+        removeToken(msg.sender, _tokenId);
+        Transfer(msg.sender, 0, _tokenId);
         totalSupply -= 1;
     }
 }
