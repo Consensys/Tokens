@@ -1,5 +1,5 @@
-const EIP20 = artifacts.require(`./EIP20.sol`)
+const EIP20 = artifacts.require('./EIP20.sol');
 
 module.exports = (deployer) => {
-  deployer.deploy(EIP20)
-}
+  deployer.deploy(EIP20);
+};
