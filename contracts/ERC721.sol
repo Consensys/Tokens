@@ -46,13 +46,13 @@ contract ERC721 is ERC721Interface {
 
     //approve a contract to transfer badge on your behalf
     //todo: returns success ala ERC20?
-    function approve(address _to, uint256 _tokenId) tokenExists(_tokenId) public {
+    function approve(address _to, uint256 _tokenId) public {
         internalApprove(msg.sender, _to, _tokenId);
     }
 
     //an approved contract transfers the badge for you (after approval)
     //todo: returns success ala ERC20?
-    function transferFrom(address _from, address _to, uint256 _tokenId) tokenExists(_tokenId) public {
+    function transferFrom(address _from, address _to, uint256 _tokenId) public {
         require(allowed[_tokenId] == msg.sender); //allowed to transfer
         require(tokenOwner[_tokenId] == _from); //token should still be in control owner
         require(_to != 0); //not allowed to burn in transfer method
@@ -62,7 +62,7 @@ contract ERC721 is ERC721Interface {
 
     //transfer badge to someone else.
     //returns bool success ala erc20?
-    function transfer(address _to, uint256 _tokenId) tokenExists(_tokenId) public {
+    function transfer(address _to, uint256 _tokenId) public {
         require(tokenOwner[_tokenId] == msg.sender); //sender must be owner
         require(_to != 0); //not allowed to burn in transfer method
 
@@ -70,7 +70,7 @@ contract ERC721 is ERC721Interface {
         internalTransfer(msg.sender, _to, _tokenId);
     }
 
-    function internalApprove(address _owner, address _to, uint256 _tokenId) internal {
+    function internalApprove(address _owner, address _to, uint256 _tokenId) tokenExists(_tokenId) internal {
         require(tokenOwner[_tokenId] == _owner); //must be owner of the token to set approval
         require(_to != _owner); //can't approve to same address
 
@@ -91,7 +91,7 @@ contract ERC721 is ERC721Interface {
         Transfer(_from, _to, _tokenId);
     }
 
-    function removeToken(address _from, uint256 _tokenId) internal {
+    function removeToken(address _from, uint256 _tokenId) tokenExists(_tokenId) internal {
         //clear pending approvals
         internalApprove(_from, 0, _tokenId);
 
@@ -102,9 +102,17 @@ contract ERC721 is ERC721Interface {
 
         //1) Put last item into index of token to be removed.
         ownedTokens[_from][index] = ownedTokens[_from][balances[_from]-1];
-        //2) delete last item (since it's now a duplicate)
+
+        //2) remove from index array
+        delete tokenIndexInOwnerArray[_tokenId];
+
+        //3 update index array of token that was moved into the token that was removed
+        tokenIndexInOwnerArray[ownedTokens[_from][index]] = index;
+
+        //4) delete last item (since it's now a duplicate)
         delete ownedTokens[_from][balances[_from]-1];
-        //3) reduce length of array
+
+        //5) reduce length of array
         ownedTokens[_from].length -= 1;
         balances[_from] -= 1;
     }
@@ -117,7 +125,7 @@ contract ERC721 is ERC721Interface {
     }
 
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 tokenId);
 
     // Optionals
 

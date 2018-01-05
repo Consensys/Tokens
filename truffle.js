@@ -1,5 +1,7 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const fs = require('fs')
+require('babel-register')
+require('babel-polyfill')
 
 // First read in the secrets.json to get our mnemonic
 let secrets
@@ -28,7 +30,9 @@ module.exports = {
       provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io'),
       network_id: '3'
     },
-    testrpc: {
+    ganachecli: {
+      host: 'localhost',
+      port: '8545',
       network_id: 'default'
     },
     ganache: {

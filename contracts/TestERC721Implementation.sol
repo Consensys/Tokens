@@ -11,6 +11,8 @@ contract TestERC721Implementation is ERC721 {
     address public admin;
     uint256 public counter = 0;
 
+    event LogInt(uint256 i);
+
     function TestERC721Implementation() public {
         admin = msg.sender;
     }

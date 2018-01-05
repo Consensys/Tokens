@@ -1,11 +1,10 @@
-const expectThrow = require('./utils').expectThrow
+import assertRevert from './assertRevert'
 const TestERC721ImplementationAbstraction = artifacts.require('TestERC721Implementation')
 let ERC721
 
 contract('TestERC721Implementation', function (accounts) {
   beforeEach(async () => {
-    // todo: deployment is OOG-ing.
-    ERC721 = await TestERC721ImplementationAbstraction.new({gas: 6700000, from: accounts[0]})
+    ERC721 = await TestERC721ImplementationAbstraction.new({gas: 6720000, from: accounts[0]})
   })
 
   it('creation: admin should be set', async () => {
@@ -43,7 +42,7 @@ contract('TestERC721Implementation', function (accounts) {
 
     const owner = await ERC721.ownerOf.call(0)
     assert.strictEqual(admin, owner)
-    await expectThrow(ERC721.ownerOf.call(1))
+    await assertRevert(ERC721.ownerOf.call(1))
   })
 
   // create one token to other user
@@ -101,21 +100,21 @@ contract('TestERC721Implementation', function (accounts) {
     assert.strictEqual(totalSupply.toString(), '0')
     assert.strictEqual(balance.toString(), '0')
     assert.strictEqual(ownedTokens.length, 0)
-    await expectThrow(ERC721.ownerOf.call(0))
+    await assertRevert(ERC721.ownerOf.call(0))
   })
 
   // create one token and burn/remove a different one (should fail).
   it('burn: create one token and burn/remove a different ID (should fail)', async () => {
     await ERC721.createToken(accounts[1], { from: accounts[0] })
 
-    await expectThrow(ERC721.burnToken(1, { from: accounts[1] }))
+    await assertRevert(ERC721.burnToken(1, { from: accounts[1] }))
   })
 
   // burn from other owner (should fail)
   it('burn: create one token and burn/remove from a different owner (should fail)', async () => {
     await ERC721.createToken(accounts[1], { from: accounts[0] })
 
-    await expectThrow(ERC721.burnToken(0, { from: accounts[2] }))
+    await assertRevert(ERC721.burnToken(0, { from: accounts[2] }))
   })
 
   // create 2 tokens to one user and then burn/remove one.
@@ -134,11 +133,116 @@ contract('TestERC721Implementation', function (accounts) {
     assert.strictEqual(balance.toString(), '1')
     assert.strictEqual(ownedTokens.length, 1)
     assert.strictEqual(owner, accounts[1])
-    await expectThrow(ERC721.ownerOf.call(1))
+    await assertRevert(ERC721.ownerOf.call(1))
   })
 
   // create 2 token to one user then burn one and then create new one to same user.
-  // create 2 token to one user and then burn/remove all.
+  it('creation: create 2 token to one user then burn one and then create new one to same user.', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(1, { from: accounts[1] })
+
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+    const owner = await ERC721.ownerOf.call(0)
+    const owner2 = await ERC721.ownerOf.call(2)
+
+    assert.strictEqual(totalSupply.toString(), '2')
+    assert.strictEqual(balance.toString(), '2')
+    assert.strictEqual(ownedTokens.length, 2)
+    assert.strictEqual(owner, accounts[1])
+    assert.strictEqual(owner2, accounts[1])
+    await assertRevert(ERC721.ownerOf.call(1))
+  })
+
+  it('creation: create 3 tokens to one user and then remove middle token.', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(1, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+    const owner = await ERC721.ownerOf.call(0)
+    const owner2 = await ERC721.ownerOf.call(2)
+
+    assert.strictEqual(totalSupply.toString(), '2')
+    assert.strictEqual(balance.toString(), '2')
+    assert.strictEqual(ownedTokens.length, 2)
+    assert.strictEqual(owner, accounts[1])
+    assert.strictEqual(owner2, accounts[1])
+    await assertRevert(ERC721.ownerOf.call(1))
+  })
+
+  it('creation: create 3 tokens to one user and then remove first token.', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(0, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+    const owner = await ERC721.ownerOf.call(1)
+    const owner2 = await ERC721.ownerOf.call(2)
+
+    assert.strictEqual(totalSupply.toString(), '2')
+    assert.strictEqual(balance.toString(), '2')
+    assert.strictEqual(ownedTokens.length, 2)
+    assert.strictEqual(owner, accounts[1])
+    assert.strictEqual(owner2, accounts[1])
+    await assertRevert(ERC721.ownerOf.call(0))
+  })
+
+  it('creation: create 3 tokens to one user and then remove last token.', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(2, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+    const owner = await ERC721.ownerOf.call(0)
+    const owner2 = await ERC721.ownerOf.call(1)
+
+    assert.strictEqual(totalSupply.toString(), '2')
+    assert.strictEqual(balance.toString(), '2')
+    assert.strictEqual(ownedTokens.length, 2)
+    assert.strictEqual(owner, accounts[1])
+    assert.strictEqual(owner2, accounts[1])
+    await assertRevert(ERC721.ownerOf.call(2))
+  })
+
+  // create 3 token to one user and then burn/remove all.
+  it('creation: create 3 tokens to one user and then burn/remove all.', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.burnToken(0, { from: accounts[1] })
+    await ERC721.burnToken(1, { from: accounts[1] })
+    await ERC721.burnToken(2, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+
+    assert.strictEqual(totalSupply.toString(), '0')
+    assert.strictEqual(balance.toString(), '0')
+    assert.strictEqual(ownedTokens.length, 0)
+    await assertRevert(ERC721.ownerOf.call(0))
+    await assertRevert(ERC721.ownerOf.call(1))
+    await assertRevert(ERC721.ownerOf.call(2))
+  })
 
   // todo: possible to get balance of < 0? Should remove check this?
 
