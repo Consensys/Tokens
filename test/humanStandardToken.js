@@ -1,4 +1,4 @@
-const expectThrow = require('./utils').expectThrow
+import expectThrow from './expectThrow'
 const HumanStandardTokenAbstraction = artifacts.require('HumanStandardToken')
 const SampleRecipientSuccess = artifacts.require('SampleRecipientSuccess')
 const SampleRecipientThrow = artifacts.require('SampleRecipientThrow')

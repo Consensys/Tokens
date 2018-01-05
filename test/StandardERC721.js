@@ -248,10 +248,78 @@ contract('TestERC721Implementation', function (accounts) {
 
   // transfer token:
   // transfer token successfully (check all expected states)
-  // transfer token to oneself
+  it('transer: transfer token successfully', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    const result = await ERC721.transfer(accounts[2], 0, { from: accounts[1] })
+
+    // verify Transfer event
+    assert.strictEqual(result.logs[0].event, 'Transfer')
+    assert.strictEqual(result.logs[0].args.from, accounts[1])
+    assert.strictEqual(result.logs[0].args.to, accounts[2])
+    assert.strictEqual(result.logs[0].args.tokenId.toString(), '0')
+
+    const totalSupply = await ERC721.totalSupply.call()
+
+    const balance1 = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens1 = await ERC721.getAllTokens.call(accounts[1])
+
+    const balance2 = await ERC721.balanceOf.call(accounts[2])
+    const ownedTokens2 = await ERC721.getAllTokens.call(accounts[2])
+
+    const owner = await ERC721.ownerOf.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+
+    assert.strictEqual(balance1.toString(), '0')
+    assert.strictEqual(ownedTokens1.length, 0)
+
+    assert.strictEqual(balance2.toString(), '1')
+    assert.strictEqual(ownedTokens2.length, 1)
+
+    assert.strictEqual(owner, accounts[2])
+  })
+
+  // transfer token to oneself (should be allowed)
+  it('transer: transfer token to oneself (should be allowed)', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.transfer(accounts[1], 0, { from: accounts[1] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens = await ERC721.getAllTokens.call(accounts[1])
+
+    const owner = await ERC721.ownerOf.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+
+    assert.strictEqual(balance.toString(), '1')
+    assert.strictEqual(ownedTokens.length, 1)
+
+    assert.strictEqual(owner, accounts[1])
+  })
+
   // transfer token fail by token not exisitng
+  it('transer: transfer token fail by token not exisitng', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.transfer(accounts[1], 1, { from: accounts[1] }))
+  })
+
   // transfer token fail by sending to zero ("burning")
+  it('transer: transfer token fail by token sending to zero', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.transfer(0, 0, { from: accounts[1] }))
+  })
+
   // transfer token fail by not being owner
+  it('transer: transfer token fail by not being owner', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.transfer(accounts[2], 0, { from: accounts[3] }))
+  })
 
   // approve token:
   // approve token successfully (check all expected states)
