@@ -18,6 +18,10 @@ contract EIP20 is EIP20Interface {
     string public name;                   //fancy name: eg Simon Bucks
     uint8 public decimals;                //How many decimals to show.
     string public symbol;                 //An identifier: eg SBX
+    uint256 public totalSupply;
+    
+    mapping (address => uint256) balances;
+    mapping (address => mapping (address => uint256)) allowed;
 
      function EIP20(
         uint256 _initialAmount,
@@ -72,7 +76,4 @@ contract EIP20 is EIP20Interface {
     view public returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
-
-    mapping (address => uint256) balances;
-    mapping (address => mapping (address => uint256)) allowed;
 }
