@@ -45,13 +45,11 @@ contract ERC721 is ERC721Interface {
     }
 
     //approve a contract to transfer badge on your behalf
-    //todo: returns success ala ERC20?
     function approve(address _to, uint256 _tokenId) public {
         internalApprove(msg.sender, _to, _tokenId);
     }
 
     //an approved contract transfers the badge for you (after approval)
-    //todo: returns success ala ERC20?
     function transferFrom(address _from, address _to, uint256 _tokenId) public {
         require(allowed[_tokenId] == msg.sender); //allowed to transfer
         require(tokenOwner[_tokenId] == _from); //token should still be in control of owner
@@ -60,7 +58,6 @@ contract ERC721 is ERC721Interface {
     }
 
     //transfer badge to someone else.
-    //returns bool success ala erc20?
     function transfer(address _to, uint256 _tokenId) public {
         require(tokenOwner[_tokenId] == msg.sender); //sender must be owner
 
