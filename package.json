@@ -9,7 +9,8 @@
   "scripts": {
     "compile": "truffle compile",
     "test": "standard && truffle test",
-    "lint": "standard --fix"
+    "lint": "standard --fix",
+    "publish": "truffle publish"
   },
   "repository": {
     "type": "git",
