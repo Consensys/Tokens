@@ -323,14 +323,200 @@ contract('TestERC721Implementation', function (accounts) {
 
   // approve token:
   // approve token successfully (check all expected states)
+  it('approve: approve token successfully', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    const approve = await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+
+    // verify Approval event
+    assert.strictEqual(approve.logs[0].event, 'Approval')
+    assert.strictEqual(approve.logs[0].args.owner, accounts[1])
+    assert.strictEqual(approve.logs[0].args.approved, accounts[2])
+    assert.strictEqual(approve.logs[0].args.tokenId.toString(), '0')
+
+    const allowed = await ERC721.allowed.call(0)
+    assert.strictEqual(allowed, accounts[2])
+  })
+
+  // approve token and then clear TODO
+
   // approve token fail by token not exisitng
+  it('approve: approve token failure by tokens not existing', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.approve(accounts[2], 1, { from: accounts[1] }))
+    await assertRevert(ERC721.approve(accounts[2], 2, { from: accounts[1] }))
+  })
+
   // approve token fail by not being owner
+  it('approve: approve token fail by not being owner', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.approve(accounts[2], 0, { from: accounts[3] }))
+  })
+
   // approve token fail by approving owner
+  it('approve: approve token fail by approving same owner', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await assertRevert(ERC721.approve(accounts[1], 0, { from: accounts[1] }))
+  })
 
   // approve token successfully then transferFrom
-  // approve token successfully then takeOwnership
-  // approve token successfully then fail transferFrom by token not existing
-  // approve token successfully then fail transferFrom by transferring to zero
+  it('approve: create token to 1, approve token to 2, then successfully then transferFrom to other account 3', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
 
-  // todo: more tests
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    const transferFrom = await ERC721.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] })
+
+    // verify Approval events (clears approval)
+    assert.strictEqual(transferFrom.logs[0].event, 'Approval')
+    assert.strictEqual(transferFrom.logs[0].args.owner, accounts[1])
+    assert.strictEqual(transferFrom.logs[0].args.approved, '0x0000000000000000000000000000000000000000')
+    assert.strictEqual(transferFrom.logs[0].args.tokenId.toString(), '0')
+
+    // verify Transfer events
+    assert.strictEqual(transferFrom.logs[1].event, 'Transfer')
+    assert.strictEqual(transferFrom.logs[1].args.from, accounts[1])
+    assert.strictEqual(transferFrom.logs[1].args.to, accounts[3])
+    assert.strictEqual(transferFrom.logs[1].args.tokenId.toString(), '0')
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance1 = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens1 = await ERC721.getAllTokens.call(accounts[1])
+
+    const balance2 = await ERC721.balanceOf.call(accounts[3])
+    const ownedTokens2 = await ERC721.getAllTokens.call(accounts[3])
+
+    const owner = await ERC721.ownerOf.call(0)
+    const allowed = await ERC721.allowed.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+
+    assert.strictEqual(balance1.toString(), '0')
+    assert.strictEqual(ownedTokens1.length, 0)
+    assert.strictEqual(balance2.toString(), '1')
+    assert.strictEqual(ownedTokens2.length, 1)
+
+    assert.strictEqual(owner, accounts[3])
+
+    assert.strictEqual(allowed, '0x0000000000000000000000000000000000000000')
+  })
+
+  it('approve: create token to 1, approve token to 2, then successfully then transferFrom to approved account 2 (eg manual takeOwnership)', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await ERC721.transferFrom(accounts[1], accounts[2], 0, { from: accounts[2] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance1 = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens1 = await ERC721.getAllTokens.call(accounts[1])
+
+    const balance2 = await ERC721.balanceOf.call(accounts[2])
+    const ownedTokens2 = await ERC721.getAllTokens.call(accounts[2])
+
+    const owner = await ERC721.ownerOf.call(0)
+    const allowed = await ERC721.allowed.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+
+    assert.strictEqual(balance1.toString(), '0')
+    assert.strictEqual(ownedTokens1.length, 0)
+    assert.strictEqual(balance2.toString(), '1')
+    assert.strictEqual(ownedTokens2.length, 1)
+
+    assert.strictEqual(owner, accounts[2])
+
+    assert.strictEqual(allowed, '0x0000000000000000000000000000000000000000')
+  })
+
+  it('approve: create 2 tokens to 1, approve tokens to 2, then successfully then transferFrom 1 to account 3', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await ERC721.approve(accounts[2], 1, { from: accounts[1] })
+    await ERC721.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance1 = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens1 = await ERC721.getAllTokens.call(accounts[1])
+
+    const balance2 = await ERC721.balanceOf.call(accounts[3])
+    const ownedTokens2 = await ERC721.getAllTokens.call(accounts[3])
+
+    const owner1 = await ERC721.ownerOf.call(0)
+    const owner2 = await ERC721.ownerOf.call(1)
+    const allowed1 = await ERC721.allowed.call(0)
+    const allowed2 = await ERC721.allowed.call(1)
+
+    assert.strictEqual(totalSupply.toString(), '2')
+
+    assert.strictEqual(balance1.toString(), '1')
+    assert.strictEqual(ownedTokens1.length, 1)
+    assert.strictEqual(balance2.toString(), '1')
+    assert.strictEqual(ownedTokens2.length, 1)
+
+    assert.strictEqual(owner1, accounts[3])
+    assert.strictEqual(owner2, accounts[1])
+
+    assert.strictEqual(allowed1, '0x0000000000000000000000000000000000000000')
+    assert.strictEqual(allowed2, accounts[2])
+  })
+
+  // approve token successfully then takeOwnership
+  it('approve: approve token successfully then takeOwnership', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await ERC721.takeOwnership(0, { from: accounts[2] })
+
+    const totalSupply = await ERC721.totalSupply.call()
+    const balance1 = await ERC721.balanceOf.call(accounts[1])
+    const ownedTokens1 = await ERC721.getAllTokens.call(accounts[1])
+
+    const balance2 = await ERC721.balanceOf.call(accounts[2])
+    const ownedTokens2 = await ERC721.getAllTokens.call(accounts[2])
+
+    const owner = await ERC721.ownerOf.call(0)
+    const allowed = await ERC721.allowed.call(0)
+
+    assert.strictEqual(totalSupply.toString(), '1')
+
+    assert.strictEqual(balance1.toString(), '0')
+    assert.strictEqual(ownedTokens1.length, 0)
+    assert.strictEqual(balance2.toString(), '1')
+    assert.strictEqual(ownedTokens2.length, 1)
+
+    assert.strictEqual(owner, accounts[2])
+
+    assert.strictEqual(allowed, '0x0000000000000000000000000000000000000000')
+  })
+
+  // approve token successfully then fail transferFrom by token not existing
+  it('approve: approve token successfully then fail transferFrom by token not existing', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await assertRevert(ERC721.transferFrom(accounts[1], accounts[3], 1, { from: accounts[2] }))
+  })
+
+  // approve token successfully then fail transferFrom by different owner
+  it('approve: approve token successfully then fail transferFrom by different owner', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await assertRevert(ERC721.transferFrom(accounts[1], accounts[3], 0, { from: accounts[3] }))
+  })
+
+  // approve token successfully then fail transferFrom by transferring to zero
+  it('approve: approve token successfully then fail transferFrom by transferring to zero', async () => {
+    await ERC721.createToken(accounts[1], { from: accounts[0] })
+
+    await ERC721.approve(accounts[2], 0, { from: accounts[1] })
+    await assertRevert(ERC721.transferFrom(accounts[1], 0, 0, { from: accounts[2] }))
+  })
+
+  // todo: probably needs more tests around transfers + approvals.
 })
