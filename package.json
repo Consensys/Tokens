@@ -12,8 +12,8 @@
     "lint:sol": "solhint contracts/*.sol contracts/*/*.sol test/*.sol test/*/*.sol",
     "lint": "npm run lint:js && npm run lint:sol",
     "publish": "truffle publish",
-    "test": "truffle test",
-    "posttest": "npm run lint"
+    "pretest": "npm run lint",
+    "test": "truffle test"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "eslint": "4.13.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-jsx-a11y": "6.0.3",
     "eslint-plugin-mocha": "4.11.0",
     "eslint-plugin-node": "5.1.0",
     "eslint-plugin-react": "7.5.1",
