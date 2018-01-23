@@ -1,7 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const fs = require('fs')
-require('babel-register')
-require('babel-polyfill')
 
 // First read in the secrets.json to get our mnemonic
 let secrets
