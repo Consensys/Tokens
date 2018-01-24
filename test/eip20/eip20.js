@@ -1,4 +1,3 @@
-// import assertRevert from '../helpers/assertRevert';
 const { assertRevert } = require('../helpers/assertRevert');
 
 const EIP20Abstraction = artifacts.require('EIP20');
