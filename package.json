@@ -15,7 +15,8 @@
     "publish": "truffle publish",
     "pretest": "npm run lint",
     "test": "truffle test",
-    "coverage": "solidity-coverage"
+    "coverage": "solidity-coverage",
+    "coveralls": ""
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "truffle-hdwallet-provider": "0.0.3"
   },
   "devDependencies": {
+    "coveralls": "3.0.0",
     "eslint": "4.13.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.8.0",
