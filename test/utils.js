@@ -1,12 +1,11 @@
 module.exports = {
-  expectThrow: async (promise) => {
-    const errMsg = 'Expected throw not received';
-    try {
-      await promise;
-    } catch (err) {
-      assert(err.toString().includes('invalid opcode'), errMsg);
-      return;
-    }
-    assert.fail(errMsg);
-  },
+  assertRevert: async promise => {
+  try {
+    await promise
+    assert.fail('Expected revert not received')
+  } catch (error) {
+    const revertFound = error.message.search('revert') >= 0
+    assert(revertFound, `Expected "revert", got ${error} instead`)
+  }
+}
 };

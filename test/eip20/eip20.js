@@ -1,4 +1,4 @@
-const { expectThrow } = require('../utils');
+const { assertRevert } = require('../utils');
 
 const EIP20Abstraction = artifacts.require('EIP20');
 let HST;
@@ -39,7 +39,7 @@ contract('EIP20', (accounts) => {
     assert.strictEqual(balanceBefore.toNumber(), 10000);
 
     web3.eth.sendTransaction({ from: accounts[0], to: HST.address, value: web3.toWei('10', 'Ether') }, async (err, res) => {
-      expectThrow(new Promise((resolve, reject) => {
+      assertRevert(new Promise((resolve, reject) => {
         if (err) reject(err);
         resolve(res);
       }));
@@ -55,7 +55,7 @@ contract('EIP20', (accounts) => {
     assert.strictEqual(balance.toNumber(), 10000);
   });
 
-  it('transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000', () => expectThrow(HST.transfer.call(accounts[1], 10001, { from: accounts[0] })));
+  it('transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000', () => assertRevert(HST.transfer.call(accounts[1], 10001, { from: accounts[0] })));
 
   it('transfers: should handle zero-transfers normally', async () => {
     assert(await HST.transfer.call(accounts[1], 0, { from: accounts[0] }), 'zero-transfer has failed');
@@ -140,16 +140,16 @@ contract('EIP20', (accounts) => {
 
     // FIRST tx done.
     // onto next.
-    expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] }));
+    assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] }));
   });
 
-  it('approvals: attempt withdrawal from account with no allowance (should fail)', () => expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] })));
+  it('approvals: attempt withdrawal from account with no allowance (should fail)', () => assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] })));
 
   it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', async () => {
     await HST.approve(accounts[1], 100, { from: accounts[0] });
     await HST.transferFrom(accounts[0], accounts[2], 60, { from: accounts[1] });
     await HST.approve(accounts[1], 0, { from: accounts[0] });
-    expectThrow(HST.transferFrom.call(accounts[0], accounts[2], 10, { from: accounts[1] }));
+    assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 10, { from: accounts[1] }));
   });
 
   it('approvals: approve max (2^256 - 1)', async () => {
