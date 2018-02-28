@@ -8,8 +8,8 @@
   },
   "scripts": {
     "compile": "truffle compile",
-    "fix:js": "eslint --fix test/**/*.js migrations/**/*.js",
-    "lint:js": "eslint test/**/*.js migrations/**/*.js",
+    "fix:js": "eslint --fix test/**/*.js test/*.js migrations/*.js",
+    "lint:js": "eslint test/**/*.js test/*.js migrations/*.js",
     "lint:sol": "solhint contracts/*.sol contracts/*/*.sol test/*.sol test/*/*.sol",
     "lint": "npm run lint:js && npm run lint:sol",
     "publish": "truffle publish",
