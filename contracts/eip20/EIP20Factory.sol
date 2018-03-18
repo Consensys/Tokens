@@ -20,17 +20,15 @@ contract EIP20Factory {
     function verifyEIP20(address _tokenContract) public view returns (bool) {
         bytes memory fetchedTokenByteCode = codeAt(_tokenContract);
 
-        if (fetchedTokenByteCode.length != EIP20ByteCode.length) {
-            return false; //clear mismatch
-        }
-
+        require(fetchedTokenByteCode.length != EIP20ByteCode.length);
+        
       //starting iterating through it if lengths match
         for (uint i = 0; i < fetchedTokenByteCode.length; i++) {
             if (fetchedTokenByteCode[i] != EIP20ByteCode[i]) {
                 return false;
             }
-            return true;
         }
+        return true;
     }
     
     function createEIP20(uint256 _initialAmount, string _name, uint8 _decimals, string _symbol) 
