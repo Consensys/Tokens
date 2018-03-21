@@ -24,8 +24,8 @@ contract EIP20 is EIP20Interface {
     string public symbol;                 //An identifier: eg SBX
 
     modifier validDestination(address _to) {
-        require(_to != address(0x0));
-        require(_to != address(this) );
+        require(_to != address(0x0)); // If the user did not enter a value for _to, it will equal to "zero"
+        require(_to != address(this)); // address(this) is the Contract Address
         _;
     }
     
