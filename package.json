@@ -15,8 +15,7 @@
     "publish": "truffle publish",
     "pretest": "npm run lint",
     "test": "truffle test",
-    "coverage": "solidity-coverage",
-    "coveralls": ""
+    "coverage": "solidity-coverage"
   },
   "repository": {
     "type": "git",
