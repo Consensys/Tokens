@@ -29,8 +29,8 @@ contract EIP20Factory {
             if (fetchedTokenByteCode[i] != EIP20ByteCode[i]) {
                 return false;
             }
-            return true;
         }
+        return true;
     }
     
     function createEIP20(uint256 _initialAmount, string _name, uint8 _decimals, string _symbol) 
