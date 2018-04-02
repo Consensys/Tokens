@@ -1,6 +1,7 @@
 /*
 Implements EIP20 token that prevent transferring to the 0x0 address, and the contract address, according to Token Implementation Best Practices.
 Reference: https://consensys.github.io/smart-contract-best-practices/tokens/
+.*/
 
 
 pragma solidity ^0.4.18;
