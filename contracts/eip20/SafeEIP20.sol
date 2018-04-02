@@ -22,14 +22,17 @@ contract SafeEIP20 is EIP20 {
         string _tokenName,
         uint8 _decimalUnits,
         string _tokenSymbol
-    ) public EIP20(_initialAmount, _tokenName, _decimalUnits, _tokenSymbol) {
+    )
+        public 
+        EIP20(_initialAmount, _tokenName, _decimalUnits, _tokenSymbol) 
+    {
     }
 
-    function transfer(address _to, uint256 _value) validDestination(_to) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public validDestination(_to) returns (bool success) {
         return super.transfer(_to, _value);
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) validDestination(_to) public returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public validDestination(_to) returns (bool success) {
         return super.transferFrom(_from, _to, _value);
     }
 }
