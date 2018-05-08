@@ -1,0 +1,18 @@
+digraph G {
+  graph [ ratio = "auto", page = "40" ];
+  "TestReceiver";
+  "EIP721";
+  "EIP721Interface";
+  "EIP721MetadataInterface";
+  "EIP721EnumerableInterface";
+  "ERC165Interface";
+  "EIP721TokenReceiverInterface";
+  "TestNonStandardReceiver";
+  "TestEIP721Implementation";
+  "EIP721" -> "EIP721Interface";
+  "EIP721" -> "EIP721MetadataInterface";
+  "EIP721" -> "EIP721EnumerableInterface";
+  "EIP721" -> "ERC165Interface";
+  "TestEIP721Implementation" -> "EIP721";
+}
+

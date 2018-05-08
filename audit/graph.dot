@@ -1,0 +1,106 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound = true ];
+subgraph clusterTestReceiver {
+  graph [ label = "TestReceiver", color = "lightgray", style = "filled" ];
+  "TestReceiver.onERC721Received" [ label = "onERC721Received", color = "green" ];
+}
+
+subgraph clusterEIP721 {
+  graph [ label = "EIP721", color = "lightgray", style = "filled" ];
+  "EIP721.tokenExists" [ label = "tokenExists", color = "yellow" ];
+  "EIP721.allowedToOperate" [ label = "allowedToOperate", color = "yellow" ];
+  "EIP721.allowedToTransfer" [ label = "allowedToTransfer", color = "yellow" ];
+  "EIP721.transferFrom" [ label = "transferFrom", color = "blue" ];
+  "EIP721.safeTransferFrom" [ label = "safeTransferFrom", color = "blue" ];
+  "EIP721.approve" [ label = "approve", color = "blue" ];
+  "EIP721.setApprovalForAll" [ label = "setApprovalForAll", color = "blue" ];
+  "EIP721.totalSupply" [ label = "totalSupply", color = "blue" ];
+  "EIP721.ownerOf" [ label = "ownerOf", color = "blue" ];
+  "EIP721.tokenByIndex" [ label = "tokenByIndex", color = "blue" ];
+  "EIP721.tokenOfOwnerByIndex" [ label = "tokenOfOwnerByIndex", color = "blue" ];
+  "EIP721.balanceOf" [ label = "balanceOf", color = "blue" ];
+  "EIP721.getApproved" [ label = "getApproved", color = "blue" ];
+  "EIP721.isApprovedForAll" [ label = "isApprovedForAll", color = "blue" ];
+  "EIP721.tokenURI" [ label = "tokenURI", color = "blue" ];
+  "EIP721.supportsInterface" [ label = "supportsInterface", color = "blue" ];
+  "EIP721.checkIfAllowedToOperate" [ label = "checkIfAllowedToOperate" ];
+  "EIP721.internalApprove" [ label = "internalApprove" ];
+  "EIP721.settleTransfer" [ label = "settleTransfer" ];
+  "EIP721.addToken" [ label = "addToken" ];
+  "EIP721.removeToken" [ label = "removeToken" ];
+}
+
+subgraph clusterEIP721TokenReceiverInterface {
+  graph [ label = "EIP721TokenReceiverInterface", color = "lightgray", style = "filled" ];
+  "EIP721TokenReceiverInterface.onERC721Received" [ label = "onERC721Received", color = "blue" ];
+}
+
+subgraph clusterEIP721EnumerableInterface {
+  graph [ label = "EIP721EnumerableInterface", color = "lightgray", style = "filled" ];
+  "EIP721EnumerableInterface.totalSupply" [ label = "totalSupply", color = "blue" ];
+  "EIP721EnumerableInterface.tokenByIndex" [ label = "tokenByIndex", color = "blue" ];
+  "EIP721EnumerableInterface.tokenOfOwnerByIndex" [ label = "tokenOfOwnerByIndex", color = "blue" ];
+}
+
+subgraph clusterTestNonStandardReceiver {
+  graph [ label = "TestNonStandardReceiver", color = "lightgray", style = "filled" ];
+}
+
+subgraph clusterTestEIP721Implementation {
+  graph [ label = "TestEIP721Implementation", color = "lightgray", style = "filled" ];
+  "TestEIP721Implementation.TestEIP721Implementation" [ label = "TestEIP721Implementation", color = "green" ];
+  "TestEIP721Implementation.createToken" [ label = "createToken", color = "green" ];
+  "TestEIP721Implementation.burnToken" [ label = "burnToken", color = "green" ];
+  "TestEIP721Implementation.setTokenURI" [ label = "setTokenURI", color = "green" ];
+}
+
+subgraph clusterEIP721Interface {
+  graph [ label = "EIP721Interface", color = "lightgray", style = "filled" ];
+  "EIP721Interface.safeTransferFrom" [ label = "safeTransferFrom", color = "blue" ];
+  "EIP721Interface.transferFrom" [ label = "transferFrom", color = "blue" ];
+  "EIP721Interface.approve" [ label = "approve", color = "blue" ];
+  "EIP721Interface.setApprovalForAll" [ label = "setApprovalForAll", color = "blue" ];
+  "EIP721Interface.getApproved" [ label = "getApproved", color = "blue" ];
+  "EIP721Interface.isApprovedForAll" [ label = "isApprovedForAll", color = "blue" ];
+  "EIP721Interface.balanceOf" [ label = "balanceOf", color = "blue" ];
+  "EIP721Interface.ownerOf" [ label = "ownerOf", color = "blue" ];
+}
+
+subgraph clusterERC165Interface {
+  graph [ label = "ERC165Interface", color = "lightgray", style = "filled" ];
+  "ERC165Interface.supportsInterface" [ label = "supportsInterface", color = "blue" ];
+}
+
+subgraph clusterEIP721MetadataInterface {
+  graph [ label = "EIP721MetadataInterface", color = "lightgray", style = "filled" ];
+  "EIP721MetadataInterface.tokenURI" [ label = "tokenURI", color = "blue" ];
+}
+
+  "EIP721.allowedToOperate";
+  "EIP721.checkIfAllowedToOperate";
+  "EIP721.allowedToTransfer";
+  "EIP721.transferFrom";
+  "EIP721.settleTransfer";
+  "EIP721.safeTransferFrom";
+  "EIP721TokenReceiverInterface.onERC721Received";
+  "EIP721.approve";
+  "EIP721.internalApprove";
+  "EIP721.removeToken";
+  "EIP721.addToken";
+  "TestEIP721Implementation.createToken";
+  "TestEIP721Implementation.burnToken";
+  "EIP721.allowedToOperate" -> "EIP721.checkIfAllowedToOperate" [ color = "green" ];
+  "EIP721.allowedToTransfer" -> "EIP721.checkIfAllowedToOperate" [ color = "green" ];
+  "EIP721.transferFrom" -> "EIP721.settleTransfer" [ color = "green" ];
+  "EIP721.safeTransferFrom" -> "EIP721.settleTransfer" [ color = "green" ];
+  "EIP721.safeTransferFrom" -> "EIP721TokenReceiverInterface.onERC721Received" [ color = "orange" ];
+  "EIP721.safeTransferFrom" -> "EIP721.settleTransfer" [ color = "green" ];
+  "EIP721.safeTransferFrom" -> "EIP721TokenReceiverInterface.onERC721Received" [ color = "orange" ];
+  "EIP721.approve" -> "EIP721.internalApprove" [ color = "green" ];
+  "EIP721.settleTransfer" -> "EIP721.internalApprove" [ color = "green" ];
+  "EIP721.settleTransfer" -> "EIP721.removeToken" [ color = "green" ];
+  "EIP721.settleTransfer" -> "EIP721.addToken" [ color = "green" ];
+  "TestEIP721Implementation.createToken" -> "EIP721.addToken" [ color = "green" ];
+  "TestEIP721Implementation.burnToken" -> "EIP721.removeToken" [ color = "green" ];
+}
+
