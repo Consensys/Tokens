@@ -10,7 +10,7 @@ Perhaps EIP 612 should be used here: https://github.com/ethereum/EIPs/pull/621
 */
 contract TestEIP721Implementation is EIP721 {
     address public admin;
-    uint256 public counter = 0;
+    uint256 public counter = 10;
 
     function TestEIP721Implementation() public {
         admin = msg.sender;

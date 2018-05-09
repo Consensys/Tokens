@@ -22,11 +22,11 @@ contract('TestEIP72Implementation', (accounts) => {
     assert.strictEqual(result.logs[0].event, 'Transfer');
     assert.strictEqual(result.logs[0].args._from, '0x0000000000000000000000000000000000000000');
     assert.strictEqual(result.logs[0].args._to, admin);
-    assert.strictEqual(result.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(result.logs[0].args._tokenId.toString(), '10');
 
     const totalSupply = await nft.totalSupply.call();
     const adminBalance = await nft.balanceOf.call(admin);
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
     assert.strictEqual(adminBalance.toString(), '1');
@@ -36,17 +36,17 @@ contract('TestEIP72Implementation', (accounts) => {
   it('creation: create one token then retrieve one that does not exist (should fail)', async () => {
     await nft.createToken(admin, { from: accounts[0] });
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
     assert.strictEqual(admin, owner);
-    await assertRevert(nft.ownerOf.call(1));
+    await assertRevert(nft.ownerOf.call(11));
   });
 
   it('creation: create multiple tokens to one user', async () => {
     await nft.createToken(accounts[0], { from: accounts[0] });
     await nft.createToken(accounts[0], { from: accounts[0] });
 
-    const user1 = await nft.ownerOf.call(0);
-    const user2 = await nft.ownerOf.call(1);
+    const user1 = await nft.ownerOf.call(10);
+    const user2 = await nft.ownerOf.call(11);
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[0]);
 
@@ -63,10 +63,10 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
     const totalSupply = await nft.totalSupply.call();
-    const user1 = await nft.ownerOf.call(0);
-    const user2 = await nft.ownerOf.call(1);
-    const user3 = await nft.ownerOf.call(2);
-    const user4 = await nft.ownerOf.call(3);
+    const user1 = await nft.ownerOf.call(10);
+    const user2 = await nft.ownerOf.call(11);
+    const user3 = await nft.ownerOf.call(12);
+    const user4 = await nft.ownerOf.call(13);
     const balance1 = await nft.balanceOf.call(accounts[0]);
     const balance2 = await nft.balanceOf.call(accounts[1]);
 
@@ -82,67 +82,67 @@ contract('TestEIP72Implementation', (accounts) => {
   it('burn: create one token the burn/remove it', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    const burn = await nft.burnToken(0, { from: accounts[1] });
+    const burn = await nft.burnToken(10, { from: accounts[1] });
     // verify Transfer event (to == 0 if burning token)
     assert.strictEqual(burn.logs[0].event, 'Transfer');
     assert.strictEqual(burn.logs[0].args._from, accounts[1]);
     assert.strictEqual(burn.logs[0].args._to, '0x0000000000000000000000000000000000000000');
-    assert.strictEqual(burn.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(burn.logs[0].args._tokenId.toString(), '10');
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
 
     assert.strictEqual(totalSupply.toString(), '0');
     assert.strictEqual(balance.toString(), '0');
-    await assertRevert(nft.ownerOf.call(0));
+    await assertRevert(nft.ownerOf.call(10));
   });
 
   it('burn: create one token and burn/remove a different ID (should fail)', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.burnToken(1, { from: accounts[1] }));
+    await assertRevert(nft.burnToken(11, { from: accounts[1] }));
   });
 
   it('burn: create one token and burn/remove from a different owner (should fail)', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.burnToken(0, { from: accounts[2] }));
+    await assertRevert(nft.burnToken(10, { from: accounts[2] }));
   });
 
   it('creation: create 2 tokens to one user and then burn/remove one (second token).', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(1, { from: accounts[1] });
+    await nft.burnToken(11, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
     assert.strictEqual(balance.toString(), '1');
     assert.strictEqual(owner, accounts[1]);
-    await assertRevert(nft.ownerOf.call(1));
+    await assertRevert(nft.ownerOf.call(11));
   });
 
   it('creation: create 2 token to one user then burn one and then create new one to same user.', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(1, { from: accounts[1] });
+    await nft.burnToken(11, { from: accounts[1] });
 
     await nft.createToken(accounts[1], { from: accounts[0] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
-    const owner = await nft.ownerOf.call(0);
-    const owner2 = await nft.ownerOf.call(2);
+    const owner = await nft.ownerOf.call(10);
+    const owner2 = await nft.ownerOf.call(12);
 
     assert.strictEqual(totalSupply.toString(), '2');
     assert.strictEqual(balance.toString(), '2');
     assert.strictEqual(owner, accounts[1]);
     assert.strictEqual(owner2, accounts[1]);
-    await assertRevert(nft.ownerOf.call(1));
+    await assertRevert(nft.ownerOf.call(11));
   });
 
   it('creation: create 3 tokens to one user and then remove middle token.', async () => {
@@ -150,18 +150,18 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(1, { from: accounts[1] });
+    await nft.burnToken(11, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
-    const owner = await nft.ownerOf.call(0); // accounts 1
-    const owner2 = await nft.ownerOf.call(2); // accounts 1
+    const owner = await nft.ownerOf.call(10); // accounts 1
+    const owner2 = await nft.ownerOf.call(12); // accounts 1
 
     assert.strictEqual(totalSupply.toString(), '2');
     assert.strictEqual(balance.toString(), '2');
     assert.strictEqual(owner, accounts[1]);
     assert.strictEqual(owner2, accounts[1]);
-    await assertRevert(nft.ownerOf.call(1));
+    await assertRevert(nft.ownerOf.call(11));
   });
 
   it('creation: create 3 tokens to one user and then remove first token.', async () => {
@@ -169,18 +169,18 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(0, { from: accounts[1] });
+    await nft.burnToken(10, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
-    const owner = await nft.ownerOf.call(1);
-    const owner2 = await nft.ownerOf.call(2);
+    const owner = await nft.ownerOf.call(11);
+    const owner2 = await nft.ownerOf.call(12);
 
     assert.strictEqual(totalSupply.toString(), '2');
     assert.strictEqual(balance.toString(), '2');
     assert.strictEqual(owner, accounts[1]);
     assert.strictEqual(owner2, accounts[1]);
-    await assertRevert(nft.ownerOf.call(0));
+    await assertRevert(nft.ownerOf.call(10));
   });
 
   it('creation: create 3 tokens to one user and then remove last token.', async () => {
@@ -188,18 +188,18 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(2, { from: accounts[1] });
+    await nft.burnToken(12, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
-    const owner = await nft.ownerOf.call(0);
-    const owner2 = await nft.ownerOf.call(1);
+    const owner = await nft.ownerOf.call(10);
+    const owner2 = await nft.ownerOf.call(11);
 
     assert.strictEqual(totalSupply.toString(), '2');
     assert.strictEqual(balance.toString(), '2');
     assert.strictEqual(owner, accounts[1]);
     assert.strictEqual(owner2, accounts[1]);
-    await assertRevert(nft.ownerOf.call(2));
+    await assertRevert(nft.ownerOf.call(12));
   });
 
   // create 3 token to one user and then burn/remove all.
@@ -210,30 +210,30 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.burnToken(0, { from: accounts[1] });
-    await nft.burnToken(1, { from: accounts[1] });
-    await nft.burnToken(2, { from: accounts[1] });
-    await nft.burnToken(3, { from: accounts[1] });
-    await nft.burnToken(4, { from: accounts[1] });
+    await nft.burnToken(10, { from: accounts[1] });
+    await nft.burnToken(11, { from: accounts[1] });
+    await nft.burnToken(12, { from: accounts[1] });
+    await nft.burnToken(13, { from: accounts[1] });
+    await nft.burnToken(14, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
 
     assert.strictEqual(totalSupply.toString(), '0');
     assert.strictEqual(balance.toString(), '0');
-    await assertRevert(nft.ownerOf.call(0));
-    await assertRevert(nft.ownerOf.call(1));
-    await assertRevert(nft.ownerOf.call(2));
+    await assertRevert(nft.ownerOf.call(10));
+    await assertRevert(nft.ownerOf.call(11));
+    await assertRevert(nft.ownerOf.call(12));
   });
 
   it('transfer: transfer token successfully', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
-    const result = await nft.transferFrom(accounts[1], accounts[2], 0, { from: accounts[1] });
+    const result = await nft.transferFrom(accounts[1], accounts[2], 10, { from: accounts[1] });
     // verify Transfer event
     assert.strictEqual(result.logs[0].event, 'Transfer');
     assert.strictEqual(result.logs[0].args._from, accounts[1]);
     assert.strictEqual(result.logs[0].args._to, accounts[2]);
-    assert.strictEqual(result.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(result.logs[0].args._tokenId.toString(), '10');
 
     const totalSupply = await nft.totalSupply.call();
 
@@ -241,7 +241,7 @@ contract('TestEIP72Implementation', (accounts) => {
 
     const balance2 = await nft.balanceOf.call(accounts[2]);
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
     assert.strictEqual(balance1.toString(), '0');
@@ -253,12 +253,12 @@ contract('TestEIP72Implementation', (accounts) => {
   it('transfer: transfer token to oneself (should be allowed)', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.transferFrom(accounts[1], accounts[1], 0, { from: accounts[1] });
+    await nft.transferFrom(accounts[1], accounts[1], 10, { from: accounts[1] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance = await nft.balanceOf.call(accounts[1]);
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
     assert.strictEqual(balance.toString(), '1');
@@ -268,28 +268,28 @@ contract('TestEIP72Implementation', (accounts) => {
   it('transfer: transfer token fail by token not exisitng', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.transferFrom(accounts[1], accounts[1], 1, { from: accounts[1] }));
+    await assertRevert(nft.transferFrom(accounts[1], accounts[1], 11, { from: accounts[1] }));
   });
 
   it('transfer: transfer token fail by token sending to zero', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.transferFrom(accounts[1], 0, 0, { from: accounts[1] }));
+    await assertRevert(nft.transferFrom(accounts[1], 0, 10, { from: accounts[1] }));
   });
 
   it('transfer: transfer token fail by not being owner', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.transferFrom(accounts[3], accounts[2], 0, { from: accounts[3] }));
+    await assertRevert(nft.transferFrom(accounts[3], accounts[2], 10, { from: accounts[3] }));
   });
 
   it('safe transfer: test receiver success', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     const receiver = await testReceiver.new({ gas: 6720000, from: accounts[0] });
 
-    await nft.safeTransferFrom(accounts[1], receiver.address, 0, { from: accounts[1] });
+    await nft.safeTransferFrom(accounts[1], receiver.address, 10, { from: accounts[1] });
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, receiver.address);
   });
@@ -299,13 +299,13 @@ contract('TestEIP72Implementation', (accounts) => {
     const receiver = await TestNonStandardReceiver.new({ gas: 6720000, from: accounts[0] });
 
     // eslint-disable-next-line max-len
-    await assertRevert(nft.safeTransferFrom(accounts[1], receiver.address, 0, { from: accounts[1] }));
+    await assertRevert(nft.safeTransferFrom(accounts[1], receiver.address, 10, { from: accounts[1] }));
   });
 
   it('safe transfer: should succeed to transfer to non contract account', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
-    await nft.safeTransferFrom(accounts[1], accounts[2], 0, { from: accounts[1] });
-    const owner = await nft.ownerOf.call(0);
+    await nft.safeTransferFrom(accounts[1], accounts[2], 10, { from: accounts[1] });
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, accounts[2]);
   });
@@ -313,79 +313,79 @@ contract('TestEIP72Implementation', (accounts) => {
   it('approve: approve token successfully', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    const approve = await nft.approve(accounts[2], 0, { from: accounts[1] });
+    const approve = await nft.approve(accounts[2], 10, { from: accounts[1] });
 
     // verify Approval event
     assert.strictEqual(approve.logs[0].event, 'Approval');
     assert.strictEqual(approve.logs[0].args._owner, accounts[1]);
     assert.strictEqual(approve.logs[0].args._approved, accounts[2]);
-    assert.strictEqual(approve.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(approve.logs[0].args._tokenId.toString(), '10');
 
-    const allowed = await nft.getApproved.call(0);
+    const allowed = await nft.getApproved.call(10);
     assert.strictEqual(allowed, accounts[2]);
   });
 
   it('approve: approve token the clear approval', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
 
-    const approve = await nft.approve(0, 0, { from: accounts[1] });
+    const approve = await nft.approve(0, 10, { from: accounts[1] });
 
     // verify Approval event
     assert.strictEqual(approve.logs[0].event, 'Approval');
     assert.strictEqual(approve.logs[0].args._owner, accounts[1]);
     assert.strictEqual(approve.logs[0].args._approved, '0x0000000000000000000000000000000000000000');
-    assert.strictEqual(approve.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(approve.logs[0].args._tokenId.toString(), '10');
 
-    const allowed = await nft.getApproved.call(0);
+    const allowed = await nft.getApproved.call(10);
     assert.strictEqual(allowed, '0x0000000000000000000000000000000000000000');
   });
 
   it('approve: approve token failure by tokens not existing', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.approve(accounts[2], 1, { from: accounts[1] }));
-    await assertRevert(nft.approve(accounts[2], 2, { from: accounts[1] }));
+    await assertRevert(nft.approve(accounts[2], 11, { from: accounts[1] }));
+    await assertRevert(nft.approve(accounts[2], 12, { from: accounts[1] }));
   });
 
   it('approve: approve token fail by not being owner', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.approve(accounts[2], 0, { from: accounts[3] }));
+    await assertRevert(nft.approve(accounts[2], 10, { from: accounts[3] }));
   });
 
   it('approve: approve token fail by approving same owner', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await assertRevert(nft.approve(accounts[1], 0, { from: accounts[1] }));
+    await assertRevert(nft.approve(accounts[1], 10, { from: accounts[1] }));
   });
 
   it('approve: create token to 1, approve token to 2, then successfully then transferFrom to other account 3', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
-    const transferFrom = await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] }); // eslint-disable-line max-len
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
+    const transferFrom = await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[2] }); // eslint-disable-line max-len
 
     // verify Approval events (clears approval)
     assert.strictEqual(transferFrom.logs[0].event, 'Approval');
     assert.strictEqual(transferFrom.logs[0].args._owner, accounts[1]);
     assert.strictEqual(transferFrom.logs[0].args._approved, '0x0000000000000000000000000000000000000000');
-    assert.strictEqual(transferFrom.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(transferFrom.logs[0].args._tokenId.toString(), '10');
 
     // verify Transfer events
     assert.strictEqual(transferFrom.logs[1].event, 'Transfer');
     assert.strictEqual(transferFrom.logs[1].args._from, accounts[1]);
     assert.strictEqual(transferFrom.logs[1].args._to, accounts[3]);
-    assert.strictEqual(transferFrom.logs[1].args._tokenId.toString(), '0');
+    assert.strictEqual(transferFrom.logs[1].args._tokenId.toString(), '10');
 
     const totalSupply = await nft.totalSupply.call();
     const balance1 = await nft.balanceOf.call(accounts[1]);
 
     const balance2 = await nft.balanceOf.call(accounts[3]);
 
-    const owner = await nft.ownerOf.call(0);
-    const allowed = await nft.getApproved.call(0);
+    const owner = await nft.ownerOf.call(10);
+    const allowed = await nft.getApproved.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
 
@@ -400,16 +400,16 @@ contract('TestEIP72Implementation', (accounts) => {
   it('approve: create token to 1, approve token to 2, then successfully then transferFrom to approved account 2', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
-    await nft.transferFrom(accounts[1], accounts[2], 0, { from: accounts[2] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
+    await nft.transferFrom(accounts[1], accounts[2], 10, { from: accounts[2] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance1 = await nft.balanceOf.call(accounts[1]);
 
     const balance2 = await nft.balanceOf.call(accounts[2]);
 
-    const owner = await nft.ownerOf.call(0);
-    const allowed = await nft.getApproved.call(0);
+    const owner = await nft.ownerOf.call(10);
+    const allowed = await nft.getApproved.call(10);
 
     assert.strictEqual(totalSupply.toString(), '1');
 
@@ -425,19 +425,19 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
-    await nft.approve(accounts[2], 1, { from: accounts[1] });
-    await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
+    await nft.approve(accounts[2], 11, { from: accounts[1] });
+    await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[2] });
 
     const totalSupply = await nft.totalSupply.call();
     const balance1 = await nft.balanceOf.call(accounts[1]);
 
     const balance2 = await nft.balanceOf.call(accounts[3]);
 
-    const owner1 = await nft.ownerOf.call(0);
-    const owner2 = await nft.ownerOf.call(1);
-    const allowed1 = await nft.getApproved.call(0);
-    const allowed2 = await nft.getApproved.call(1);
+    const owner1 = await nft.ownerOf.call(10);
+    const owner2 = await nft.ownerOf.call(11);
+    const allowed1 = await nft.getApproved.call(10);
+    const allowed2 = await nft.getApproved.call(11);
 
     assert.strictEqual(totalSupply.toString(), '2');
 
@@ -454,31 +454,31 @@ contract('TestEIP72Implementation', (accounts) => {
   it('approve: approve token successfully then fail transferFrom by token not existing', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
 
-    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 1, { from: accounts[2] }));
+    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 11, { from: accounts[2] }));
   });
 
   it('approve: approve token successfully then fail transferFrom by different owner', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
 
-    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[3] }));
+    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[3] }));
   });
 
   it('approve: approve token successfully then fail transferFrom by transferring to zero', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
-    await assertRevert(nft.transferFrom(accounts[1], 0, 0, { from: accounts[2] }));
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
+    await assertRevert(nft.transferFrom(accounts[1], 0, 10, { from: accounts[2] }));
   });
 
   it('uri: set URI and retrieve it', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
-    await nft.setTokenURI(0, 'newURI', { from: accounts[0] });
+    await nft.setTokenURI(10, 'newURI', { from: accounts[0] });
 
-    const uri = await nft.tokenURI.call(0);
+    const uri = await nft.tokenURI.call(10);
     assert.strictEqual(uri, 'newURI');
   });
 
@@ -515,8 +515,8 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.setApprovalForAll(accounts[2], true, { from: accounts[1] });
 
-    await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] });
-    const owner = await nft.ownerOf.call(0);
+    await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[2] });
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, accounts[3]);
   });
@@ -525,16 +525,16 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.setApprovalForAll(accounts[2], true, { from: accounts[1] });
 
-    await nft.approve(accounts[2], 0, { from: accounts[1] });
-    const result = await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] });
+    await nft.approve(accounts[2], 10, { from: accounts[1] });
+    const result = await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[2] });
 
     // verify the clearing of the approval even WITH an operator
     assert.strictEqual(result.logs[0].event, 'Approval');
     assert.strictEqual(result.logs[0].args._owner, accounts[1]);
     assert.strictEqual(result.logs[0].args._approved, '0x0000000000000000000000000000000000000000');
-    assert.strictEqual(result.logs[0].args._tokenId.toString(), '0');
+    assert.strictEqual(result.logs[0].args._tokenId.toString(), '10');
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, accounts[3]);
   });
@@ -543,7 +543,7 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.setApprovalForAll(accounts[2], true, { from: accounts[1] });
 
-    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[4] }));
+    await assertRevert(nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[4] }));
   });
 
   it('operators: set operator & approve (other token) [1] & test transferFrom for first [0]', async () => {
@@ -552,10 +552,10 @@ contract('TestEIP72Implementation', (accounts) => {
 
     await nft.setApprovalForAll(accounts[2], true, { from: accounts[1] });
 
-    await nft.approve(accounts[4], 1, { from: accounts[1] });
-    await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[2] });
+    await nft.approve(accounts[4], 11, { from: accounts[1] });
+    await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[2] });
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, accounts[3]);
   });
@@ -569,10 +569,10 @@ contract('TestEIP72Implementation', (accounts) => {
 
     await nft.setApprovalForAll(accounts[2], true, { from: accounts[1] });
 
-    await nft.approve(accounts[4], 0, { from: accounts[2] }); // operator approving
-    await nft.transferFrom(accounts[1], accounts[3], 0, { from: accounts[4] });
+    await nft.approve(accounts[4], 10, { from: accounts[2] }); // operator approving
+    await nft.transferFrom(accounts[1], accounts[3], 10, { from: accounts[4] });
 
-    const owner = await nft.ownerOf.call(0);
+    const owner = await nft.ownerOf.call(10);
 
     assert.strictEqual(owner, accounts[3]);
   });

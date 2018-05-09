@@ -16,6 +16,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
 
     // all tokens
     uint256[] internal allTokens;
+    // mapping of token IDs to its index in all Tokens array.
     mapping(uint256 => uint256) internal allTokensIndex;
     // Array of tokens owned by a specific owner
     mapping(address => uint256[]) internal ownedTokens;
@@ -28,7 +29,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     mapping(uint256 => address) internal approvedOwnerOfToken;
 
     // An operator is allowed to manage all assets of another owner.
-    mapping(address => mapping (address => bool)) internal approvedOperators;
+    mapping(address => mapping (address => bool)) internal operators;
 
     mapping(uint256 => string) internal tokenURIs;
 
@@ -38,6 +39,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     bytes4 internal constant ERC721_BASE_INTERFACE_SIGNATURE = 0x80ac58cd;
     bytes4 internal constant ERC721_METADATA_INTERFACE_SIGNATURE = 0x5b5e139f;
     bytes4 internal constant ERC721_ENUMERABLE_INTERFACE_SIGNATURE = 0x780e9d63;
+    bytes4 internal constant ONERC721RECEIVED_FUNCTION_SIGNATURE = 0xf0b9e5ba;
 
     /* Modifiers */
     modifier tokenExists(uint256 _tokenId) {
@@ -87,8 +89,8 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     /// @param _from The current owner of the NFT
     /// @param _to The new owner
     /// @param _tokenId The NFT to transfer
-    /// @param data Additional data with no specified format, sent in call to `_to`
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable
+    /// @param _data Additional data with no specified format, sent in call to `_to`
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) external payable
     tokenExists(_tokenId)
     allowedToTransfer(_from, _to, _tokenId) {
         settleTransfer(_from, _to, _tokenId);
@@ -98,7 +100,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         assembly { size := extcodesize(_to) }  // solhint-disable-line no-inline-assembly
         if (size > 0) {
             // call on onERC721Received.
-            require(EIP721TokenReceiverInterface(_to).onERC721Received(_from, _tokenId, data) == 0xf0b9e5ba);
+            require(EIP721TokenReceiverInterface(_to).onERC721Received(_from, _tokenId, _data) == ONERC721RECEIVED_FUNCTION_SIGNATURE);
         }
     }
 
@@ -143,7 +145,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     /// @param _approved True if the operator is approved, false to revoke approval
     function setApprovalForAll(address _operator, bool _approved) external {
         require(_operator != msg.sender); // can't make oneself an operator
-        approvedOperators[msg.sender][_operator] = _approved;
+        operators[msg.sender][_operator] = _approved;
         emit ApprovalForAll(msg.sender, _operator, _approved);
     }
 
@@ -212,7 +214,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     /// @param _operator The address that acts on behalf of the owner
     /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
     function isApprovedForAll(address _owner, address _operator) external view returns (bool) {
-        return approvedOperators[_owner][_operator];
+        return operators[_owner][_operator];
     }
 
     /// @notice A distinct Uniform Resource Identifier (URI) for a given asset.
@@ -240,7 +242,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
 
     /* -- Internal Functions -- */
     function checkIfAllowedToOperate(uint256 _tokenId) internal view returns (bool) {
-        return ownerOfToken[_tokenId] == msg.sender || approvedOperators[ownerOfToken[_tokenId]][msg.sender];
+        return ownerOfToken[_tokenId] == msg.sender || operators[ownerOfToken[_tokenId]][msg.sender];
     }
 
     function internalApprove(address _owner, address _approved, uint256 _tokenId) internal {
@@ -269,14 +271,16 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     }
 
     function addToken(address _to, uint256 _tokenId) internal {
+        // add new token to all tokens
         allTokens.push(_tokenId);
+        // add new token to index of all tokens.
         allTokensIndex[_tokenId] = allTokens.length-1;
 
         // set token to be owned by address _to
         ownerOfToken[_tokenId] = _to;
         // add that token to an array keeping track of tokens owned by that address
         ownedTokens[_to].push(_tokenId);
-        // shorten length
+        // add newly pushed to index.
         ownedTokensIndex[_tokenId] = ownedTokens[_to].length-1;
     }
 
@@ -287,10 +291,11 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         uint256 allTokensLength = allTokens.length;
         //1) Put last item into index of token to be removed.
         allTokens[allIndex] = allTokens[allTokensLength - 1];
-        allTokensIndex[allTokensLength - 1] = allIndex;
-        //2) delete last item (since it's now a duplicate)
+        //2) Take last item that beens moved to the removed token & update its index
+        allTokensIndex[allTokens[allTokensLength-1]] = allIndex;
+        //3) delete last item (since it's now a duplicate)
         delete allTokens[allTokensLength-1];
-        //3) reduce length of array
+        //4) reduce length of array
         allTokens.length -= 1;
 
         // remove token from owner array.
@@ -300,10 +305,11 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         /* Remove Token From Index */
         //1) Put last item into index of token to be removed.
         ownedTokens[_from][ownerIndex] = ownedTokens[_from][ownerLength-1];
-        ownedTokensIndex[ownerLength-1] = ownerIndex;
-        //2) delete last item (since it's now a duplicate)
+        //2) Take last item that beens moved to the removed token & update its index
+        ownedTokensIndex[ownedTokens[_from][ownerLength-1]] = ownerIndex;
+        //3) delete last item (since it's now a duplicate)
         delete ownedTokens[_from][ownerLength-1];
-        //3) reduce length of array
+        //4) reduce length of array
         ownedTokens[_from].length -= 1;
 
         delete ownerOfToken[_tokenId];
