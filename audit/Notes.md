@@ -31,6 +31,10 @@ function safeTransferFrom(address _from, address _to, uint256 _tokenId) external
     tokenExists(_tokenId) allowedToTransfer(_from, _to, _tokenId) { doSomething(); }
 ```
 
+## tokenURIs
+
+This implementation has no means of writing to the tokenURIs mapping, so all that functionality is extraneous.
+
 
 # Requested comments
 
@@ -48,6 +52,8 @@ Possible suggestions for these two:
     uint256[] internal allTokens; // -> tokensArr; mapping(uint256 => uint256) internal
     allTokensIndex; // -> indexOfToken;
 
+    mapping(uint256 => address) internal approvedOwnerOfToken; // -> approvedSpenderOfToken
+
 
 ## No Function To Retrieve Token Arrays
 
@@ -64,6 +70,12 @@ I don't think solidity supports returning arrays yet. When I try this I get:
 
 I would say no. Unless the original internal dapps deploying this contract want it, I think payable should be removed. 
 
+
+## Data in a solidity call 
+
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable
+
+I'm of the impression that sending data in a solidity call is somewhat broken due to padding issues? Need to verify that, Goncalo will know.
 
 ## Blocking onERC721Received (Max 50k gas)
 
