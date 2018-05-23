@@ -15,8 +15,8 @@ npm run compile
 ## Tests
 The repo has a comprehensive test suite. You can run it with `npm run test`.
 
-## ethpm
-The contracts in this repo are published under `tokens` on EPM. EPM is the recommended means of consuming token contracts in this repo. Copy-pasting code is highly discouraged.
+## Ethereum Package Management (ethpm)
+The contracts in this repo are published under `tokens` on [EPM](https://www.ethpm.com/registry/packages). EPM is the recommended means of consuming token contracts in this repo. Copy-pasting code is highly discouraged.
 
 ## Contributing
 Pull requests are welcome! Please keep standards discussions to the EIP repos.
