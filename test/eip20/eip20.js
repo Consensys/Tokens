@@ -1,10 +1,6 @@
 const { assertRevert } = require('../helpers/assertRevert');
 
-testEIP20('EIP20');
-testEIP20('SafeEIP20');
-
-function testEIP20(eip20Compatible)
-{
+function testEIP20(eip20Compatible) {
   const EIP20Abstraction = artifacts.require(eip20Compatible);
   let HST;
   contract(eip20Compatible, (accounts) => {
@@ -146,18 +142,27 @@ function testEIP20(eip20Compatible)
 
       // FIRST tx done.
       // onto next.
-      await assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] }));
+      await assertRevert(HST.transferFrom.call(
+        accounts[0], accounts[2], 60,
+        { from: accounts[1] },
+      ));
     });
 
     it('approvals: attempt withdrawal from account with no allowance (should fail)', async () => {
-      await assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 60, { from: accounts[1] }));
+      await assertRevert(HST.transferFrom.call(
+        accounts[0], accounts[2], 60,
+        { from: accounts[1] },
+      ));
     });
 
     it('approvals: allow accounts[1] 100 to withdraw from accounts[0]. Withdraw 60 and then approve 0 & attempt transfer.', async () => {
       await HST.approve(accounts[1], 100, { from: accounts[0] });
       await HST.transferFrom(accounts[0], accounts[2], 60, { from: accounts[1] });
       await HST.approve(accounts[1], 0, { from: accounts[0] });
-      await assertRevert(HST.transferFrom.call(accounts[0], accounts[2], 10, { from: accounts[1] }));
+      await assertRevert(HST.transferFrom.call(
+        accounts[0], accounts[2], 10,
+        { from: accounts[1] },
+      ));
     });
 
     it('approvals: approve max (2^256 - 1)', async () => {
@@ -213,3 +218,7 @@ function testEIP20(eip20Compatible)
     });
   });
 }
+
+testEIP20('EIP20');
+testEIP20('SafeEIP20');
+
