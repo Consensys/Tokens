@@ -1,4 +1,4 @@
-import "./SafeEIP20.sol";
+import "./EIP20.sol";
 
 pragma solidity ^0.4.21;
 
@@ -37,7 +37,7 @@ contract EIP20Factory {
         public
     returns (address) {
 
-        SafeEIP20 newToken = (new SafeEIP20(_initialAmount, _name, _decimals, _symbol));
+        EIP20 newToken = (new EIP20(_initialAmount, _name, _decimals, _symbol));
         created[msg.sender].push(address(newToken));
         isEIP20[address(newToken)] = true;
         //the factory will own the created tokens. You must transfer them.
