@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.24;
 import "./EIP721Interface.sol";
 import "./EIP721MetadataInterface.sol";
 import "./EIP721EnumerableInterface.sol";
@@ -33,13 +33,10 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
 
     mapping(uint256 => string) internal tokenURIs;
 
-    // base ERC721 interface = 0x80ac58cd
-    // metadata interface = 0x5b5e139f
-    // enumerable interface = 0x780e9d63
     bytes4 internal constant ERC721_BASE_INTERFACE_SIGNATURE = 0x80ac58cd;
     bytes4 internal constant ERC721_METADATA_INTERFACE_SIGNATURE = 0x5b5e139f;
     bytes4 internal constant ERC721_ENUMERABLE_INTERFACE_SIGNATURE = 0x780e9d63;
-    bytes4 internal constant ONERC721RECEIVED_FUNCTION_SIGNATURE = 0xf0b9e5ba;
+    bytes4 internal constant ONERC721RECEIVED_FUNCTION_SIGNATURE = 0x150b7a02;
 
     /* Modifiers */
     modifier tokenExists(uint256 _tokenId) {
@@ -85,12 +82,12 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
     ///  `_tokenId` is not a valid NFT. When transfer is complete, this function
     ///  checks if `_to` is a smart contract (code size > 0). If so, it calls
     ///  `onERC721Received` on `_to` and throws if the return value is not
-    ///  `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`.
+    ///  `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`.
     /// @param _from The current owner of the NFT
     /// @param _to The new owner
     /// @param _tokenId The NFT to transfer
-    /// @param _data Additional data with no specified format, sent in call to `_to`
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) external payable
+    /// @param data Additional data with no specified format, sent in call to `_to`
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable
     tokenExists(_tokenId)
     allowedToTransfer(_from, _to, _tokenId) {
         settleTransfer(_from, _to, _tokenId);
@@ -100,7 +97,7 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         assembly { size := extcodesize(_to) }  // solhint-disable-line no-inline-assembly
         if (size > 0) {
             // call on onERC721Received.
-            require(EIP721TokenReceiverInterface(_to).onERC721Received(_from, _tokenId, _data) == ONERC721RECEIVED_FUNCTION_SIGNATURE);
+            require(EIP721TokenReceiverInterface(_to).onERC721Received(msg.sender, _from, _tokenId, data) == ONERC721RECEIVED_FUNCTION_SIGNATURE);
         }
     }
 
@@ -120,13 +117,13 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         assembly { size := extcodesize(_to) }  // solhint-disable-line no-inline-assembly
         if (size > 0) {
             // call on onERC721Received.
-            require(EIP721TokenReceiverInterface(_to).onERC721Received(_from, _tokenId, "") == 0xf0b9e5ba);
+            require(EIP721TokenReceiverInterface(_to).onERC721Received(msg.sender, _from, _tokenId, "") == ONERC721RECEIVED_FUNCTION_SIGNATURE);
         }
     }
 
-    /// @notice Set or reaffirm the approved address for an NFT
+    /// @notice Change or reaffirm the approved address for an NFT.
     /// @dev The zero address indicates there is no approved address.
-    /// @dev Throws unless `msg.sender` is the current NFT owner, or an authorized
+    ///  Throws unless `msg.sender` is the current NFT owner, or an authorized
     ///  operator of the current owner.
     /// @param _approved The new approved NFT controller
     /// @param _tokenId The NFT to approve
@@ -289,9 +286,9 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         // remove token from allTokens array.
         uint256 allIndex = allTokensIndex[_tokenId];
         uint256 allTokensLength = allTokens.length;
-        //1) Put last item into index of token to be removed.
+        //1) Put last tokenID into index of tokenID to be removed.
         allTokens[allIndex] = allTokens[allTokensLength - 1];
-        //2) Take last item that beens moved to the removed token & update its index
+        //2) Take last tokenID that has been moved to the removed token & update its new index
         allTokensIndex[allTokens[allTokensLength-1]] = allIndex;
         //3) delete last item (since it's now a duplicate)
         delete allTokens[allTokensLength-1];
@@ -303,9 +300,9 @@ contract EIP721 is EIP721Interface, EIP721MetadataInterface, EIP721EnumerableInt
         uint256 ownerIndex = ownedTokensIndex[_tokenId];
         uint256 ownerLength = ownedTokens[_from].length;
         /* Remove Token From Index */
-        //1) Put last item into index of token to be removed.
+        //1) Put last tokenID into index of token to be removed.
         ownedTokens[_from][ownerIndex] = ownedTokens[_from][ownerLength-1];
-        //2) Take last item that beens moved to the removed token & update its index
+        //2) Take last item that has been moved to the removed token & update its index
         ownedTokensIndex[ownedTokens[_from][ownerLength-1]] = ownerIndex;
         //3) delete last item (since it's now a duplicate)
         delete ownedTokens[_from][ownerLength-1];

@@ -202,8 +202,8 @@ contract('TestEIP72Implementation', (accounts) => {
     await assertRevert(nft.ownerOf.call(12));
   });
 
-  // create 3 token to one user and then burn/remove all.
-  it('creation: create 5 tokens to one user and then burn/remove all.', async () => {
+  // create 5 tokens to one user and then burn/remove all, then create 5 more.
+  it('creation: create 5 tokens to one user, check state and then burn/remove all, then create 5 more, the burn from the other end.', async () => {
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
     await nft.createToken(accounts[1], { from: accounts[0] });
@@ -216,14 +216,50 @@ contract('TestEIP72Implementation', (accounts) => {
     await nft.burnToken(13, { from: accounts[1] });
     await nft.burnToken(14, { from: accounts[1] });
 
-    const totalSupply = await nft.totalSupply.call();
-    const balance = await nft.balanceOf.call(accounts[1]);
+    let totalSupply = await nft.totalSupply.call();
+    let balance = await nft.balanceOf.call(accounts[1]);
 
     assert.strictEqual(totalSupply.toString(), '0');
     assert.strictEqual(balance.toString(), '0');
     await assertRevert(nft.ownerOf.call(10));
     await assertRevert(nft.ownerOf.call(11));
     await assertRevert(nft.ownerOf.call(12));
+    await assertRevert(nft.ownerOf.call(13));
+    await assertRevert(nft.ownerOf.call(14));
+
+    await nft.createToken(accounts[1], { from: accounts[0] });
+    await nft.createToken(accounts[1], { from: accounts[0] });
+    await nft.createToken(accounts[1], { from: accounts[0] });
+    await nft.createToken(accounts[1], { from: accounts[0] });
+    await nft.createToken(accounts[1], { from: accounts[0] });
+
+    totalSupply = await nft.totalSupply.call();
+    balance = await nft.balanceOf.call(accounts[1]);
+
+    assert.strictEqual(totalSupply.toString(), '5');
+    assert.strictEqual(balance.toString(), '5');
+    assert.equal(await nft.ownerOf.call(15), accounts[1]);
+    assert.equal(await nft.ownerOf.call(16), accounts[1]);
+    assert.equal(await nft.ownerOf.call(17), accounts[1]);
+    assert.equal(await nft.ownerOf.call(18), accounts[1]);
+    assert.equal(await nft.ownerOf.call(19), accounts[1]);
+
+    await nft.burnToken(19, { from: accounts[1] });
+    await nft.burnToken(18, { from: accounts[1] });
+    await nft.burnToken(17, { from: accounts[1] });
+    await nft.burnToken(16, { from: accounts[1] });
+    await nft.burnToken(15, { from: accounts[1] });
+
+    totalSupply = await nft.totalSupply.call();
+    balance = await nft.balanceOf.call(accounts[1]);
+
+    assert.strictEqual(totalSupply.toString(), '0');
+    assert.strictEqual(balance.toString(), '0');
+    await assertRevert(nft.ownerOf.call(15));
+    await assertRevert(nft.ownerOf.call(16));
+    await assertRevert(nft.ownerOf.call(17));
+    await assertRevert(nft.ownerOf.call(18));
+    await assertRevert(nft.ownerOf.call(19));
   });
 
   it('transfer: transfer token successfully', async () => {

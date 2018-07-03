@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.24;
 import "./EIP721.sol";
 
 
@@ -12,7 +12,7 @@ contract TestEIP721Implementation is EIP721 {
     address public admin;
     uint256 public counter = 10;
 
-    function TestEIP721Implementation() public {
+    constructor() public {
         admin = msg.sender;
         name = "Test Collectible";
         symbol = "TCL";
