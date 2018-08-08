@@ -82,8 +82,6 @@ contract('EIP20', (accounts) => {
     const balance2 = await HST.balanceOf.call(accounts[2]);
     assert.strictEqual(balance2.toNumber(), 0, 'balance2 not correct');
 
-    await HST.transferFrom.call(accounts[0], accounts[2], 20, { from: accounts[1] });
-    await HST.allowance.call(accounts[0], accounts[1]);
     await HST.transferFrom(accounts[0], accounts[2], 20, { from: accounts[1] }); // -20
     const allowance01 = await HST.allowance.call(accounts[0], accounts[1]);
     assert.strictEqual(allowance01.toNumber(), 80); // =80
