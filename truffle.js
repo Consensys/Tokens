@@ -8,8 +8,10 @@ if (fs.existsSync('secrets.json')) {
   secrets = JSON.parse(fs.readFileSync('secrets.json', 'utf8'))
   mnemonic = secrets.mnemonic
 } else {
-  console.log('No secrets.json found. If you are trying to publish EPM ' +
-              'this will fail. Otherwise, you can ignore this message!')
+  console.log(
+    'No secrets.json found. If you are trying to publish EPM ' +
+      'this will fail. Otherwise, you can ignore this message!'
+  )
   mnemonic = ''
 }
 
@@ -25,18 +27,19 @@ module.exports = {
       // from - default address to use for any transaction Truffle makes during migrations
     },
     ropsten: {
-      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io'),
-      network_id: '3'
+      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/'),
+      network_id: '3',
+      gas: 5300000
     },
     testrpc: {
       network_id: 'default'
     },
     coverage: {
-      host: "localhost",
-      network_id: "*",
-      port: 8555,        
+      host: 'localhost',
+      network_id: '*',
+      port: 8555,
       gas: 0xfffffffffff,
-      gasPrice: 0x01     
-    },
+      gasPrice: 0x01
+    }
   }
 }
