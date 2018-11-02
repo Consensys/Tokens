@@ -50,7 +50,7 @@ contract EIP20 is EIP20Interface {
 		allowed[_from][msg.sender] -= _value;
 		balances[_from] -= _value;
 		balances[_to] += _value;
-		emit Transfer(_from, _to, _value);
+		emit Transfer(_from, _to, _value); //solhint-disable-line indent, no-unused-vars
 		return true;
     }
 
