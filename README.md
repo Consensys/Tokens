@@ -5,6 +5,15 @@ This repo contains Solidity smart contract code for simple, standards-compliant 
 
 The repo currently implements [EIP20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md) tokens, and more may be added in the future.
 
+## Guiding Principles
+While other projects provide custom and feature-complete token implementations, the contracts found in this repository attempt to suit a slightly different purpose: to serve as the baseline reference implementations of token standards and to capture their essence. We strive to eschew bells and whistles and instead provide minimalist implementations that maximize learning and provide sturdy foundations. Each token implementation shall be accompanied by observations and dialectic regarding its use and evolution across production-grade projects.
+
+Here are the guiding principles for this repository:
+
+1. *Simplicity:* Our contracts shall be simple, keeping functionality to a minimum of what is necessary to implement the token standard.
+2. *Readability:* Solutions that make sense to humans should be prioritized over those heavily optimized or complex. 
+3. *Secure:* Modifications to the master branch will only be accepted after thorough review and scrutinization from the community, the project maintainers, and at least one professional vendor to ensure no security vulnerabilities are introduced.
+
 ## Initialize
 The only environmental dependency you need is Node. Presently we can guarantee this all works with Node 8.
 ```
