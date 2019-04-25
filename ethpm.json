@@ -1,14 +1,16 @@
 {
   "package_name": "tokens",
   "version": "1.0.0",
-  "description": "Ethereum Token Contracts",
+  "description": "Ebudz Token Contract",
   "authors": [
     "Simon de la Rouviere <simon.delarouviere@consensys.net>",
-    "Joseph Chow <joseph.chow@consensys.net>"
+    "Joseph Chow <joseph.chow@consensys.net>",
+    "Paul Miller <paul@metagroove.io>"
   ],
   "keywords": [
     "tokens",
-    "consensys"
+    "consensys",
+    "ebudz"
   ],
   "license": "MIT"
 }
