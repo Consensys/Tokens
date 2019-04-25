@@ -16,17 +16,18 @@ if (fs.existsSync('secrets.json')) {
 module.exports = {
   networks: {
     live: {
-      network_id: 1 // Ethereum public network
-      // optional config values
-      // host - defaults to "localhost"
-      // port - defaults to 8545
-      // gas
-      // gasPrice
-      // from - default address to use for any transaction Truffle makes during migrations
+      network_id: 1, // Ethereum public network
+      port: 8545,
+      host: "localhost",
+      from: "0xB03D0ae6e31c5ff9259fA85642009bF4ad6b2687",
+      gas: 4000000,
+      gasPrice: 8000000000,
     },
     ropsten: {
-      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io'),
-      network_id: '3'
+      network_id: '3',
+      port: 8545,
+      host: "localhost",
+      from: "0xB03D0ae6e31c5ff9259fA85642009bF4ad6b2687"
     },
     testrpc: {
       network_id: 'default'
