@@ -1,5 +1,6 @@
 const EIP20 = artifacts.require('./EIP20.sol');
 
 module.exports = (deployer) => {
-  deployer.deploy(EIP20, 10000, 'Simon Bucks', 1, 'SBX');
+  // 420,000,000 eBudz
+  deployer.deploy(EIP20, '420000000000000000000000000', 'eBudz', 18, 'EBUD');
 };
