@@ -38,5 +38,11 @@ module.exports = {
       gas: 0xfffffffffff,
       gasPrice: 0x01     
     },
+    compilers: {
+      solc: {
+        version : "0.4.21+commit.dfe3193c",
+        parser : "solcjs", // Leverages solc-js purely for speedy parsing
+      }
+    }
   }
 }

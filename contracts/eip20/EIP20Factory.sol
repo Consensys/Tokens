@@ -7,7 +7,7 @@ contract EIP20Factory {
 
     mapping(address => address[]) public created;
     mapping(address => bool) public isEIP20; //verify without having to do a bytecode check.
-    bytes public EIP20ByteCode; // solhint-disable-line var-name-mixedcase
+    bytes public EIP20ByteCode;
 
     function EIP20Factory() public {
         //upon creation of the factory, deploy a EIP20 (parameters are meaningless) and store the bytecode provably.
@@ -49,7 +49,8 @@ contract EIP20Factory {
     // any contract can use, lib-style.
     //retrieves the bytecode at a specific address.
     function codeAt(address _addr) internal view returns (bytes outputCode) {
-        assembly { // solhint-disable-line no-inline-assembly
+        // solium-disable-next-line security/no-inline-assembly
+        assembly {
             // retrieve the size of the code, this needs assembly
             let size := extcodesize(_addr)
             // allocate output byte array - this could also be done without assembly
