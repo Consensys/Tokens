@@ -1,6 +1,6 @@
 # DEPRECATED
 
-We recommend using the thoroughly vetted OpenZeppelin token implementations. 
+We recommend using the thoroughly vetted [OpenZeppelin token](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/contracts/token) implementations. 
 
 # Tokens
 
