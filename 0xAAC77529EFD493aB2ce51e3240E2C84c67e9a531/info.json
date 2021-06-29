@@ -1,1 +1,8 @@
-{ "name": "Bt", "website": "-", "description": "Bt", "explorer": "https://hecoinfo.com/token/0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531", "type": "HRC-20", "symbol": "BTG", "decimals": 18, "status": "active", "id": "0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531" }?
+{
+ "name": "Bt", 
+"website": "-", "description":"Bt", 
+"explorer":"https://hecoinfo.com/token/0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531", 
+"type": "HRC-20", "symbol": 
+"BTG", "decimals": 18, 
+"status": "active", "id":"0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531" 
+}?
