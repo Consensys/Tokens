@@ -1,11 +1,1 @@
-{
-    "name": "ÖÐ±Ò",
-    "website": "-",
-    "description": "-",
-    "explorer": "https://hecoinfo.com/token/0xf72606BeC7282D4342bdf0195EF00374CeE715E7",
-    "type": "HRC20",
-    "symbol": "RMB",
-    "decimals": 18,
-    "status": "active",
-    "id": "0xf72606BeC7282D4342bdf0195EF00374CeE715E7"
-   }
+{ "name": "Bt", "website": "-", "description": "Bt", "explorer": "https://hecoinfo.com/token/0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531", "type": "HRC-20", "symbol": "BTG", "decimals": 18, "status": "active", "id": "0xAAC77529EFD493aB2ce51e3240E2C84c67e9a531" }?
