@@ -1,7 +1,6 @@
-/*
-Implements EIP20 token standard: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
-.*/
-
+/
+Implements EIP20 token standard:kongcom.com/kpc-0
+KAMPANAT THUMWONG
 
 pragma solidity ^0.4.21;
 
