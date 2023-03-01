@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/ConsenSys/Tokens#readme",
   "dependencies": {
-    "truffle": "^5.1.7",
+    "truffle": "^5.7.8",
     "truffle-hdwallet-provider": "0.0.3"
   },
   "devDependencies": {
